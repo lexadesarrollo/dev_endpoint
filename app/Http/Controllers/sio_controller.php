@@ -926,7 +926,7 @@ class sio_controller extends Controller
             ]);
             return response()->json([
                 'status' => true,
-                'message' => 'Banks updated successfully'
+                'message' => 'Origin account updated successfully'
             ], 200);
         } catch (Exception $cb) {
             return response()->json([

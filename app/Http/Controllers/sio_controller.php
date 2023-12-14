@@ -873,7 +873,7 @@ class sio_controller extends Controller
         try {
             $id_status = sio_origin_accounts::where('id_origin_accounts', $request->id_origin_accounts)->first();
             switch ($id_status->id_status) {
-                case 11:
+                case 8:
                     sio_origin_accounts::where('id_origin_accounts', $request->id_origin_accounts)->update([
                         'id_status' => 4
                     ]);

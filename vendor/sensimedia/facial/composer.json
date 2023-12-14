@@ -1,0 +1,28 @@
+{
+    "name": "sensimedia/facial",
+    "description": "PHP class to detect one face in images. A pure PHP port of an existing JS code from Karthik Tharavad.",
+    "license": "GPL-2.0",
+    "homepage": "https://github.com/Sensi-Media/facial",
+    "authors": [
+        {
+            "name": "Maurice Svay",
+            "homepage": "https://github.com/mauricesvay/php-facedetection/graphs/contributors"
+        },
+        {
+            "name": "Marijn Ophorst",
+            "homepage": "https://github.com/Sensi-Media/facial/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "ext-gd": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sensi\\Facial\\": "./src"
+        }
+    },
+    "require-dev": {
+        "toast/unit": "^2.1"
+    }
+}

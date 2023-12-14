@@ -38,8 +38,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/view_origin_account_sio', [sio_controller::class, 'ctl_account_origin']);
         Route::post('/create_source_account_sio', [sio_controller::class, 'create_account_origin']);
         Route::post('/details_origin_account_sio', [sio_controller::class, 'detail_origin_account']);
-        Route::put('updated_status_origin_account_sio', [sio_controller::class, 'updated_status_origin_account']);
-        Route::put('updated_origin_account_sio', [sio_controller::class, 'updated_origin_account']);
+        Route::put('/updated_status_origin_account_sio', [sio_controller::class, 'updated_status_origin_account']);
+        Route::put('/updated_origin_account_sio', [sio_controller::class, 'updated_origin_account']);
 
         //Rutas empleaos
         Route::post('/create_employees_sio', [sio_controller::class, 'created_employees']);
@@ -64,6 +64,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         //Rutas compañias
         Route::get('/cia_sio', [sio_controller::class, 'ctl_cia']);
         Route::post('/create_cia_sio', [sio_controller::class, 'create_cia']);
+        Route::put('/updated_status_cia_sio', [sio_controller::class, 'updated_status_cia']);
+
 
          //Rutas estados de cuenta
          Route::get('/states_account_sio', [sio_controller::class, 'ct_states_accounts']);

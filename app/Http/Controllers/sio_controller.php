@@ -994,6 +994,44 @@ class sio_controller extends Controller
         }
     }
 
+    public function updated_status_cia(Request $request)
+    {
+        $rules = [
+            'id_cia' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        try {
+            $id_status = sio_bank::where('id_cia', $request->id_cia)->first();
+            switch ($id_status->id_status) {
+                case 11:
+                    sio_bank::where('id_cia', $request->id_cia)->update([
+                        'id_status' => 4
+                    ]);
+                    break;
+                case 4:
+                    sio_bank::where('id_cia', $request->id_cia)->update([
+                        'id_status' => 11
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Company status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
     ////---------------------Funciones compañias----------------------------------------
     public function ctl_doc_partners_global()
     {

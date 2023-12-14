@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class sio_employees extends Model
 {
     use HasFactory;
-    protected $connection = 'SIO';
+    protected $connection = 'DevSio';
     protected $table = "tbl_employees";
 }

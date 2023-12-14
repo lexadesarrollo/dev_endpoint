@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SocioComanditarioModel extends Model
 {
     use HasFactory;
-    protected $connection = 'SIO';
+    protected $connection = 'DevSio';
     protected $table = 'tbl_socioComanditario';
     public $timestamps = false;
 }

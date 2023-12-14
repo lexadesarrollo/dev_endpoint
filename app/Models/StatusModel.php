@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class StatusModel extends Model
 {
     use HasFactory;
-    protected $connection = 'SIO';
+    protected $connection = 'DevSio';
     protected $table = "ctl_status";
 }

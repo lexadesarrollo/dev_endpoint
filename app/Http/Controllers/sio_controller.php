@@ -858,6 +858,43 @@ class sio_controller extends Controller
         }
     }
 
+    public function updated_status_origin_account(Request $request)
+    {
+        $rules = [
+            'id_origin_accounts' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        try {
+            $id_status = sio_bank::where('id_origin_accounts', $request->id_origin_accounts)->first();
+            switch ($id_status->id_status) {
+                case 11:
+                    sio_bank::where('id_origin_accounts', $request->id_origin_accounts)->update([
+                        'id_status' => 4
+                    ]);
+                    break;
+                case 4:
+                    sio_bank::where('id_origin_accounts', $request->id_origin_accounts)->update([
+                        'id_status' => 11
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Origin account status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
 
 
     ////---------------------Funciones compañias----------------------------------------

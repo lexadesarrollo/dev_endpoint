@@ -825,6 +825,39 @@ class sio_controller extends Controller
         }
     }
 
+    public function detail_origin_account(Request $request)
+    {
+        $rules = [
+            'id_origin_accounts' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        if (!$request) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            $detail_origin_accounts = DB::connection('DevSio')->table('origin_account_view')->where('id_origin_accounts', $request->id_origin_accounts)->first();
+            if ($detail_origin_accounts == false) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'No results found',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => true,
+                    'data' => $detail_origin_accounts
+                ], 200);
+            }
+        }
+    }
+
 
 
     ////---------------------Funciones compañias----------------------------------------

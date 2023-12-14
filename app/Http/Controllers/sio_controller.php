@@ -897,6 +897,46 @@ class sio_controller extends Controller
     }
 
 
+    public function updated_origin_account(Request $request){
+        $rules = [
+            'account_number' => 'required',
+            'key_account' => 'required',
+            'card_number' => 'required',
+            'account_holder' => 'required', 
+            'exchange_rate' => 'required',
+            'id_bank' => 'required',
+            'id_origin_accounts' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        try {
+            DB::connection('DevSio')->update('exec updated_origin_accounts ?,?,?,?,?,?,?', [
+                $request->account_number,
+                $request->key_account,
+                $request->card_number,
+                $request->account_holder,
+                $request->exchange_rate,
+                $request->id_bank,
+                $request->id_origin_accounts
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Banks updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+
     ////---------------------Funciones compañias----------------------------------------
 
     public function ctl_cia()

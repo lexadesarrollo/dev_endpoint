@@ -39,6 +39,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/create_source_account_sio', [sio_controller::class, 'create_account_origin']);
         Route::post('/details_origin_account_sio', [sio_controller::class, 'detail_origin_account']);
         Route::put('updated_status_origin_account_sio', [sio_controller::class, 'updated_status_origin_account']);
+        Route::put('updated_origin_account_sio', [sio_controller::class, ''])
 
         //Rutas empleaos
         Route::post('/create_employees_sio', [sio_controller::class, 'created_employees']);

@@ -880,7 +880,7 @@ class sio_controller extends Controller
                     break;
                 case 4:
                     sio_origin_accounts::where('id_origin_accounts', $request->id_origin_accounts)->update([
-                        'id_status' => 11
+                        'id_status' => 8
                     ]);
                     break;
             }

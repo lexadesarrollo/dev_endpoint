@@ -32,6 +32,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/details_banks_sio', [sio_controller::class, 'detail_bank']);
         Route::post('/create_bank_sio', [sio_controller::class, 'created_banks']);
         Route::put('/updated_bank_sio', [sio_controller::class, 'updated_bank']);
+        Route::put('/updated_status_bank_sio', [sio_controller::class, 'updated_status_banks']);
 
         //Rutas cuentas origen
         Route::get('/view_origin_account_sio', [sio_controller::class, 'ctl_account_origin']);

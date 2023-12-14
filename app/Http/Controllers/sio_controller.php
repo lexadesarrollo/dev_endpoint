@@ -899,11 +899,7 @@ class sio_controller extends Controller
 
     public function updated_origin_account(Request $request){
         $rules = [
-            'account_number' => 'required',
             'key_account' => 'required',
-            'card_number' => 'required',
-            'account_holder' => 'required', 
-            'exchange_rate' => 'required',
             'id_bank' => 'required',
             'id_origin_accounts' => 'required'
         ];

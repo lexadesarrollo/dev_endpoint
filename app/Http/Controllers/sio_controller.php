@@ -735,8 +735,8 @@ class sio_controller extends Controller
             'id_sex' => 'required',
             'birthdate' => 'required',
             'curp' => 'required',
-            'descrip_status' => 'required',
-            'descrip_status' => 'required',
+            'id_bank' => 'required',
+            'account_number' => 'required',
             'descrip_status' => 'required',
             'descrip_status' => 'required',
             'descrip_status' => 'required',
@@ -1243,7 +1243,7 @@ class sio_controller extends Controller
      {
          try {
              set_time_limit(0);
-             $ctl_municipality = DB::connection('DevSio')->table('ctl_municipality')->where('id_states', $request->id_states)->get();
+             $ctl_municipality = DB::connection('DevSio')->table('ctl_municipality')->where('id_states', $request->id_states)->orderBy('id_municipality', 'desc')->get();
              return response()->json([
                  'status' => true,
                  'data' => $ctl_municipality

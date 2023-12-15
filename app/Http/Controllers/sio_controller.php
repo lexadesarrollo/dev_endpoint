@@ -1228,7 +1228,7 @@ class sio_controller extends Controller
      {
          try {
              set_time_limit(0);
-             $ctl_municipality = DB::connection('DevSio')->table('ctl_municipality')->where('id_municipality', $request->id_municipality)->get();
+             $ctl_municipality = DB::connection('DevSio')->table('ctl_municipality')->where('id_states', $request->id_states)->get();
              return response()->json([
                  'status' => true,
                  'data' => $ctl_municipality

@@ -54,6 +54,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/doc_partners_global_sio', [sio_controller::class, 'ctl_doc_partners_global']);
         Route::get('/partners_general_sio', [sio_controller::class, 'ctl_partners_general']);
         Route::post('/details_partners_sio', [sio_controller::class, 'detail_partners']);
+        Route::post('created_partners_sio', [sio_controller::class, 'created_partners']);
 
 
         //Rutas tipo de usuarios

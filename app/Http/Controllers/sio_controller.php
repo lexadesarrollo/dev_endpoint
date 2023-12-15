@@ -802,7 +802,6 @@ class sio_controller extends Controller
             'id_education_level' => 'required',
             'id_marital_status' => 'required',
             'id_employees' => 'required',
-            'id_status' => 'required',
             'id_nationality' => 'required'
         ];
 
@@ -831,12 +830,28 @@ class sio_controller extends Controller
                     'account_number' => $request->account_number,
                     'key_account' => $request->key_account,
                     'card_number' => $request->card_number,
-                    
+                    'id_lada_cell_phone' => $request->id_lada_cell_phone,
+                    'cell_phone_number' => $request->cell_phone_number,
+                    'email' => $request->email,
+                    'id_states' => $request->id_states,
+                    'id_municipality' => $request->id_municipality,
+                    'location' => $request->location,
+                    'street' => $request->street,
+                    'cologne' => $request->cologne,
+                    'outdoor_number' => $request->outdoor_number,
+                    'interior_number' => $request->interior_number,
+                    'cp' => $request->cp,
+                    'references_1' => $request->references_1,
+                    'references_2' => $request->references_2,
+                    'id_education_level' => $request->id_education_level,
+                    'id_marital_status' => $request->id_marital_status,
+                    'id_employees' => $request->id_employees,
+                    'id_nationality' => $request->id_nationality
                 ]);
 
                 return response()->json([
                     'status' => true,
-                    'message' => 'Bank created successfully'
+                    'message' => 'Partner created successfully'
                 ], 200);
             } catch (Exception $cb) {
                 return response()->json([

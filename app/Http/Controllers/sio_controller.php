@@ -669,6 +669,42 @@ class sio_controller extends Controller
         }
     }
 
+    public function detail_receipts(Request $request)
+    {
+        $rules = [
+            'id_payment_receipts' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        if (!$request) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            $details_receipts = DB::connection('DevSio')->table('tbl_payment_receipts')
+            ->where('id_payment_receipts', $request->input('id_payment_receipts'))->get();
+            if ($details_receipts == false) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'No results found',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => true,
+                    'data' => $details_receipts
+                ], 200);
+            }
+        }
+    }
+
+
+
 
     //------------------ Funciones socios comanditarios ---------
     public function ctl_partners()

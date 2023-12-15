@@ -736,7 +736,28 @@ class sio_controller extends Controller
             'id_sex' => 'required',
             'birthdate' => 'required',
             'curp' => 'required',
-            'rfc' => 'required'
+            'rfc' => 'required',
+            'id_bank' => 'required',
+            'account_number' => 'required',
+            'key_account' => 'required',
+            'card_number' => 'required',
+            'id_lada_cell_phone' => 'required',
+            'cell_phone_number' => 'required',
+            'email' => 'required',
+            'id_states' => 'required',
+            'id_municipality' => 'required',
+            'location' => 'required',
+            'street' => 'required',
+            'cologne' => 'required',
+            'outdoor_number' => 'required',
+            'interior_number' => 'required',
+            'cp' => 'required',
+            'references_1' => 'required',
+            'references_2' => 'required',
+            'id_education_level' => 'required',
+            'id_marital_status' => 'required',
+            'id_employees' => 'required',
+            'id_nationality' => 'required'
         ];
 
         $validator = Validator::make($request->input(), $rules);
@@ -748,7 +769,7 @@ class sio_controller extends Controller
         }
         
         try {
-            DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?', [
+            DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?', [
                 $data->id_partener,
                 $data->name,
                 $data->last_name,
@@ -776,7 +797,8 @@ class sio_controller extends Controller
                 $data->references_2,
                 $data->id_education_level,
                 $data->id_marital_status,
-                $data->id_employees
+                $data->id_employees,
+                $data->id_nationality
             ]);
             return response()->json([
                 'status' => true,

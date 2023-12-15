@@ -766,7 +766,6 @@ class sio_controller extends Controller
         }
         try {
             DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?', [
-                $data->id_partener,
                 $data->name,
                 $data->last_name,
                 $data->mother_last_name,
@@ -793,6 +792,7 @@ class sio_controller extends Controller
                 $data->id_education_level,
                 $data->id_marital_status,
                 $data->id_employees,
+                $data->id_partener,
             ]);
             return response()->json([
                 'status' => true,

@@ -1047,7 +1047,7 @@ class sio_controller extends Controller
             ], 400);
         }
         try {
-            DB::connection('DevSio')->update('exec updated_origin_accounts ?,?,?,?,?', [
+            DB::connection('DevSio')->update('exec updated_cia ?,?,?,?,?', [
                 $request->name_cia,
                 $request->abbreviation_cia,
                 $request->business_name,

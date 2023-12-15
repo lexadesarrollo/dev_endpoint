@@ -737,16 +737,25 @@ class sio_controller extends Controller
             'curp' => 'required',
             'id_bank' => 'required',
             'account_number' => 'required',
-            'descrip_status' => 'required',
-            'descrip_status' => 'required',
-            'descrip_status' => 'required',
-            'descrip_status' => 'required',
-            'descrip_status' => 'required',
-            'descrip_status' => 'required',
-            'descrip_status' => 'required',
-            'descrip_status' => 'required',
-            'descrip_status' => 'required',
-            'descrip_status' => 'required'
+            'key_account' => 'required',
+            'card_number' => 'required',
+            'id_lada_cell_phone' => 'required',
+            'cell_phone_number' => 'required',
+            'email' => 'required',
+            'id_states' => 'required',
+            'id_municipality' => 'required',
+            'location' => 'required',
+            'street' => 'required',
+            'cologne' => 'required',
+            'outdoor_number' => 'required',
+            'interior_number' => 'required',
+            'cp' => 'required',
+            'references_1' => 'required',
+            'references_2' => 'required',
+            'id_education_level' => 'required',
+            'id_marital_status' => 'required',
+            'id_employees' => 'required',
+            'id_partener' => 'required'
         ];
         $validator = Validator::make($request->input(), $rules);
         if ($validator->fails()) {
@@ -756,13 +765,39 @@ class sio_controller extends Controller
             ], 400);
         }
         try {
-            DB::connection('DevSio')->update('exec update_status ?,?', [
-                $data->id_status,
-                $data->descrip_status
+            DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?', [
+                $data->name,
+                $data->last_name,
+                $data->mother_last_name,
+                $data->id_sex,
+                $data->birthdate,
+                $data->curp,
+                $data->id_bank,
+                $data->account_number,
+                $data->key_account, 
+                $data->card_number,
+                $data->id_lada_cell_phone,
+                $data->cell_phone_number,
+                $data->email,
+                $data->id_states,
+                $data->id_municipality,
+                $data->location,
+                $data->street,
+                $data->cologne,
+                $data->outdoor_number,
+                $data->interior_number,
+                $data->cp,
+                $data->references_1,
+                $data->references_2,
+                $data->id_education_level,
+                $data->descrip_status,
+                $data->id_marital_status,
+                $data->id_employees,
+                $data->id_partener
             ]);
             return response()->json([
                 'status' => true,
-                'message' => 'Status updated successfully'
+                'message' => 'Partner updated successfully'
             ], 200);
         } catch (Exception $cb) {
             return response()->json([

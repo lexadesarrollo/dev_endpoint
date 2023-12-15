@@ -697,22 +697,36 @@ class sio_controller extends Controller
         }
     }
 
-    public function detail_partners($id_partner)
+    public function detail_partners(Request $request)
     {
-        if (!$id_partner) {
+        $rules = [
+            'id_partener' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        if (!$request) {
             return response()->json([
                 'status' => false,
                 'message' => 'No results found',
             ], 200);
         } else {
-            $status = sio_partners::where('id_partener', $id_partner)->first();
-            if ($status == false) {
+            $details_partener = DB::connection('DevSio')->table('tbl_partners')
+            ->where('id_partener', $request->input('id_partener'))->get();
+            if ($details_partener == false) {
                 return response()->json([
                     'status' => false,
                     'message' => 'No results found',
                 ], 200);
             } else {
-                return $status;
+                return response()->json([
+                    'status' => true,
+                    'data' => $details_partener
+                ], 200);
             }
         }
     }

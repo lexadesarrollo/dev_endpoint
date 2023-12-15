@@ -64,8 +64,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         //Rutas compañias
         Route::get('/cia_sio', [sio_controller::class, 'ctl_cia']);
         Route::post('/create_cia_sio', [sio_controller::class, 'create_cia']);
+        Route::post('/details_cia_sio', [sio_controller::class, 'detail_cia']);
         Route::put('/updated_status_cia_sio', [sio_controller::class, 'updated_status_cia']);
-
+        Route::put('/updated_cia_sio', [sio_controller::class, 'updated_cia']);
 
          //Rutas estados de cuenta
          Route::get('/states_account_sio', [sio_controller::class, 'ct_states_accounts']);

@@ -1032,6 +1032,73 @@ class sio_controller extends Controller
         }
     }
 
+
+    public function updated_cia(Request $request){
+        $rules = [
+            'name_cia' => 'required',
+            'abbreviation_cia' => 'required',
+            'id_cia' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        try {
+            DB::connection('DevSio')->update('exec updated_origin_accounts ?,?,?,?,?', [
+                $request->name_cia,
+                $request->abbreviation_cia,
+                $request->business_name,
+                $request->rfc_cia,
+                $request->id_cia
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Company updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_cia(Request $request)
+    {
+        $rules = [
+            'id_cia' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        if (!$request) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            $details_cia = DB::connection('DevSio')->table('cia_view')->where('id_cia', $request->id_cia)->first();
+            if ($details_cia == false) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'No results found',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => true,
+                    'data' => $details_cia
+                ], 200);
+            }
+        }
+    }
+
     ////---------------------Funciones compañias----------------------------------------
     public function ctl_doc_partners_global()
     {

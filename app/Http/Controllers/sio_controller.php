@@ -654,6 +654,21 @@ class sio_controller extends Controller
         }
     }
 
+    public function updated_receipts_cia(){
+        try {
+            DB::connection('DevSio')->update('exec updated_cia');
+            return response()->json([
+                'status' => true,
+                'message' => 'Receipts updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
 
     //------------------ Funciones socios comanditarios ---------
     public function ctl_partners()

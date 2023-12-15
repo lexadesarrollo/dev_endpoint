@@ -907,6 +907,44 @@ class sio_controller extends Controller
         }
     }
 
+    public function updated_status_partners(Request $request)
+    {
+        $rules = [
+            'id_partener' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        try {
+            $id_status = sio_partners::where('id_partener', $request->id_partener)->first();
+            switch ($id_status->id_status) {
+                case 15:
+                    sio_partners::where('id_partener', $request->id_partener)->update([
+                        'id_status' => 4
+                    ]);
+                    break;
+                case 4:
+                    sio_partners::where('id_partener', $request->id_partener)->update([
+                        'id_status' => 15
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Partner status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
     //----------------------Funciones cuentas origen----------------------------
     public function ctl_account_origin()
     {

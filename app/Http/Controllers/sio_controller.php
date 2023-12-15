@@ -765,7 +765,7 @@ class sio_controller extends Controller
             ], 400);
         }
         try {
-            DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?', [
+            DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?', [
                 $data->name,
                 $data->last_name,
                 $data->mother_last_name,
@@ -790,7 +790,6 @@ class sio_controller extends Controller
                 $data->references_1,
                 $data->references_2,
                 $data->id_education_level,
-                $data->descrip_status,
                 $data->id_marital_status,
                 $data->id_employees,
                 $data->id_partener

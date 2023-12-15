@@ -49,6 +49,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/receipts_complete_sio', [sio_controller::class, 'view_receipts_complete']);
         Route::get('/receipts_incomplete_sio', [sio_controller::class, 'view_receipts_incomplete']);
         Route::put('/updated_receipts_cia_sio', [sio_controller::class, 'updated_receipts_cia']);
+        Route::put('/update_receipts_cia_sio', [sio_controller::class, 'update_receipts_cia']);
         Route::post('/detail_receipts_sio', [sio_controller::class, 'detail_receipts']);
 
         //Rutas socios comanditarios

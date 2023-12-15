@@ -703,7 +703,34 @@ class sio_controller extends Controller
         }
     }
 
-
+    public function update_receipts_cia(Request $request){
+        $rules = [
+            'abbreviation_cia' => 'required',
+            'id_payment_receipts' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        try {
+            DB::connection('DevSio')->update('exec updated_cia_receipts ?,?', [
+                $request->abbreviation_cia,
+                $request->id_payment_receipts,
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Receipts updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
 
 
     //------------------ Funciones socios comanditarios ---------

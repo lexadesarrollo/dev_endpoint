@@ -807,7 +807,6 @@ class sio_controller extends Controller
             'references_2' => 'required',
             'id_education_level' => 'required',
             'id_marital_status' => 'required',
-            'id_employees' => 'required',
             'id_nationality' => 'required'
         ];
 

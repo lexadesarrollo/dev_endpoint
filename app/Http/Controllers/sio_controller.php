@@ -729,34 +729,14 @@ class sio_controller extends Controller
     {
         $data = json_decode($request->getContent());
         try {
-            DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?', [
+            DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?', [
                 $data->id_partener,
                 $data->name,
                 $data->last_name,
                 $data->mother_last_name,
                 $data->id_sex,
-                $data->birthdate,
-                $data->curp,
-                $data->id_bank,
-                $data->account_number,
-                $data->key_account, 
-                $data->card_number,
-                $data->id_lada_cell_phone,
-                $data->cell_phone_number,
-                $data->email,
-                $data->id_states,
-                $data->id_municipality,
-                $data->location,
-                $data->street,
-                $data->cologne,
-                $data->outdoor_number,
-                $data->interior_number,
-                $data->cp,
-                $data->references_1,
-                $data->references_2,
-                $data->id_education_level,
-                $data->id_marital_status,
-                $data->id_employees
+                $data->birthdate
+                
             ]);
             return response()->json([
                 'status' => true,

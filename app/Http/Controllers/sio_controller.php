@@ -1007,16 +1007,16 @@ class sio_controller extends Controller
             ], 400);
         }
         try {
-            $id_status = sio_::where('id_cia', $request->id_cia)->first();
+            $id_status = sio_cia::where('id_cia', $request->id_cia)->first();
             switch ($id_status->id_status) {
-                case 11:
-                    sio_::where('id_cia', $request->id_cia)->update([
-                        'id_status' => 4
+                case 18:
+                    sio_cia::where('id_cia', $request->id_cia)->update([
+                        'id_status' => 7
                     ]);
                     break;
-                case 4:
-                    sio_::where('id_cia', $request->id_cia)->update([
-                        'id_status' => 11
+                case 7:
+                    sio_cia::where('id_cia', $request->id_cia)->update([
+                        'id_status' => 18
                     ]);
                     break;
             }

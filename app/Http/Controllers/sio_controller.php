@@ -748,7 +748,7 @@ class sio_controller extends Controller
         }
         
         try {
-            DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?', [
+            DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?,?,?', [
                 $data->id_partener,
                 $data->name,
                 $data->last_name,

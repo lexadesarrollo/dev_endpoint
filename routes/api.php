@@ -73,7 +73,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
          Route::get('/states_account_sio', [sio_controller::class, 'ct_states_accounts']);
 
          //Rutas municipios
-         Route::get('/municipality_sio', [sio_controller::class, 'ctl_municipality']);
+         Route::post('/municipality_sio', [sio_controller::class, 'ctl_municipality']);
     });
 
     Route::prefix('apprisa')->group(function () {

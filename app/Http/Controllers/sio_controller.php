@@ -734,7 +734,7 @@ class sio_controller extends Controller
             'mother_last_name' => 'required',
             'id_sex' => 'required',
             'birthdate' => 'required',
-            'descrip_status' => 'required',
+            'curp' => 'required',
             'descrip_status' => 'required',
             'descrip_status' => 'required',
             'descrip_status' => 'required',

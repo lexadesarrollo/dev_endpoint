@@ -620,13 +620,6 @@ class sio_controller extends Controller
         }
     }
 
-    public function created_receipts()
-    {
-        $rules = [
-            'descrip_role' => 'required',
-        ];
-    }
-
     public function view_receipts_complete()
     {
         try {
@@ -775,6 +768,86 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function created_partners(Request $request)
+    {
+        $rules = [
+            'name' => 'required',
+            'last_name' => 'required',
+            'mother_last_name' => 'required',
+            'id_sex' => 'required',
+            'birthdate' => 'required',
+            'curp' => 'required',
+            'rfc' => 'required',
+            'id_bank' => 'required',
+            'account_number' => 'required',
+            'key_account' => 'required',
+            'card_number' => 'required',
+            'id_lada_cell_phone' => 'required',
+            'cell_phone_number' => 'required',
+            'email' => 'required',
+            'id_states' => 'required',
+            'id_municipality' => 'required',
+            'location' => 'required',
+            'street' => 'required',
+            'cologne' => 'required',
+            'outdoor_number' => 'required',
+            'interior_number' => 'required',
+            'cp' => 'required',
+            'references_1' => 'required',
+            'references_2' => 'required',
+            'id_education_level' => 'required',
+            'id_marital_status' => 'required',
+            'id_employees' => 'required',
+            'id_status' => 'required',
+            'id_nationality' => 'required'
+        ];
+
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        $details_parteners = DB::connection('DevSio')->table('tbl_partners')
+            ->where('name', $request->key_bank)
+            ->where('last_name', $request->name_bank)
+            ->where('mother_last_name', $request->business_name)->get();
+        if (sizeof($details_parteners) == 0) {
+            try {
+                sio_partners::insert([
+                    'name' => $request->name,
+                    'last_name' => $request->last_name,
+                    'mother_last_name' => $request->mother_last_name,
+                    'id_sex' => $request->id_sex,
+                    'birthdate' => $request->birthdate,
+                    'curp' => $request->curp,
+                    'rfc' => $request->rfc,
+                    'id_bank' => $request->id_bank,
+                    'account_number' => $request->account_number,
+                    'key_account' => $request->key_account,
+                    'card_number' => $request->card_number,
+                    
+                ]);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Bank created successfully'
+                ], 200);
+            } catch (Exception $cb) {
+                return response()->json([
+                    'status' => false,
+                    'message' =>  'An error ocurred during query: ' . $cb
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Already registered partner'
             ], 200);
         }
     }
@@ -1149,4 +1222,22 @@ class sio_controller extends Controller
             ], 200);
         }
     }
+
+     ////---------------------Funciones municipios----------------------------------------
+     public function ctl_municipality(Request $request)
+     {
+         try {
+             set_time_limit(0);
+             $ctl_municipality = DB::connection('DevSio')->table('ctl_municipality')->where('id_municipality', $request->id_municipality)->get();
+             return response()->json([
+                 'status' => true,
+                 'data' => $ctl_municipality
+             ], 200);
+         } catch (Exception $cb) {
+             return response()->json([
+                 'status' => false,
+                 'message' =>  'An error ocurred during query: ' . $cb
+             ], 200);
+         }
+     }
 }

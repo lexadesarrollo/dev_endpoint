@@ -815,7 +815,7 @@ class sio_controller extends Controller
         $details_parteners = DB::connection('DevSio')->table('tbl_partners')
             ->where('name', $request->name)
             ->where('last_name', $request->last_name)
-            ->where('mother_last_name', $request->mother_last_name)->first();
+            ->where('mother_last_name', $request->mother_last_name)->get();
         if (sizeof($details_parteners) == 0) {
             try {
                 sio_partners::insert([

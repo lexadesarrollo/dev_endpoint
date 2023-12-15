@@ -816,7 +816,6 @@ class sio_controller extends Controller
             ->where('name', $request->name)
             ->where('last_name', $request->last_name)
             ->where('mother_last_name', $request->mother_last_name)->first();
-            return($details_parteners);
         if (sizeof($details_parteners) == 0) {
             try {
                 sio_partners::insert([

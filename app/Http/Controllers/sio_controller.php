@@ -748,7 +748,7 @@ class sio_controller extends Controller
         }
         
         try {
-            DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?', [
+            DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?', [
                 $data->id_partener,
                 $data->name,
                 $data->last_name,
@@ -766,7 +766,12 @@ class sio_controller extends Controller
                 $data->email,
                 $data->id_states,
                 $data->id_municipality,
-                $data->location
+                $data->location,
+                $data->street,
+                $data->cologne,
+                $data->outdoor_number,
+                $data->interior_number,
+                $data->cp
             ]);
             return response()->json([
                 'status' => true,

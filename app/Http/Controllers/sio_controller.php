@@ -728,6 +728,25 @@ class sio_controller extends Controller
     public function updated_partners(Request $request)
     {
         $data = json_decode($request->getContent());
+
+        $rules = [
+            'name' => 'required',
+            'last_name' => 'required',
+            'mother_last_name' => 'required',
+            'id_sex' => 'required',
+            'birthdate' => 'required',
+            'curp' => 'required',
+            'rfc' => 'required'
+        ];
+
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        
         try {
             DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?', [
                 $data->id_partener,
@@ -735,8 +754,9 @@ class sio_controller extends Controller
                 $data->last_name,
                 $data->mother_last_name,
                 $data->id_sex,
-                $data->birthdate
-                
+                $data->birthdate,
+                $data->curp,
+                $data->rfc,
             ]);
             return response()->json([
                 'status' => true,

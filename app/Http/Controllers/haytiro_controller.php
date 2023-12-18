@@ -28,7 +28,7 @@ class haytiro_controller extends Controller
         'key_tsv' => 'demand_view',
         'key_pb'  => 'publicity_view',
         'key_ctA' => 'viewAttendedChats',
-        'key_cNA' => 'viewChats'
+        'key_cNA' => 'chat_for_attention_view'
     ];
 
     private static $key;

@@ -39,7 +39,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         $status_validate = sio_status::where(['descrip_status' => $request->descrip_status])->get();
@@ -78,7 +78,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -163,7 +163,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         $type_file_validate = sio_type_file::orwhere(['descrip_type_file' => $request->descrip_type_file])
@@ -203,7 +203,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -241,7 +241,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
     }
@@ -270,7 +270,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         $role_validate = sio_role::where(['descrip_role' => $request->descrip_role])->get();
@@ -308,7 +308,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         $descrip_role_validate = sio_role::where(['descrip_role' => $request->descrip_role])->where(['id_role' => $request->id_role])->get();
@@ -347,7 +347,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
     }
@@ -374,7 +374,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         $views_global = DB::connection('DevSio')->table('banks_view')
@@ -416,7 +416,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         if (!$request) {
@@ -452,7 +452,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -483,7 +483,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -530,7 +530,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
 
@@ -678,7 +678,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         if (!$request) {
@@ -712,7 +712,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -777,7 +777,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         if (!$request) {
@@ -841,7 +841,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         
@@ -926,7 +926,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         $details_parteners = DB::connection('DevSio')->table('tbl_partners')
@@ -993,7 +993,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -1051,7 +1051,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
 
@@ -1091,7 +1091,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         if (!$request) {
@@ -1124,7 +1124,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -1164,7 +1164,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -1220,7 +1220,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
 
@@ -1260,7 +1260,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -1300,7 +1300,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -1332,7 +1332,7 @@ class sio_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->errors()->all()
             ], 200);
         }
         if (!$request) {

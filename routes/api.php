@@ -128,5 +128,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/create_service_haytiro', [haytiro_controller::class, 'create_services']);
         Route::post('/create_demand_haytiro', [haytiro_controller::class, 'create_demand']);
         Route::post('/send_cv_haytiro', [haytiro_controller::class, 'sendCv']);
+        Route::put('/status_customer_haytiro', [haytiro_controller::class, 'status_customer']);
+        Route::post('/adviser_details_haytiro', [haytiro_controller::class, 'advisor_detail']);
+        Route::put('/update_adviser_haytiro', [haytiro_controller::class, 'update_adviser']);
+        Route::put('/status_service_haytiro', [haytiro_controller::class, 'status_service']);
+        Route::post('/service_detail_haytiro', [haytiro_controller::class, 'service_detail']);
+        Route::put('/update_service_haytiro', [haytiro_controller::class, 'update_service']);
     });
 });

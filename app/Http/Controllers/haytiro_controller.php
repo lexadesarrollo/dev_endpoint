@@ -217,6 +217,134 @@ class haytiro_controller extends Controller
         }
     }
 
+    ////---------- Actualización de clientes y/o asesores.------------//
+
+    public function status_customer(Request $request)
+    {
+        $rules = [
+            'customer' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        try {
+            $cliente = haytiro_credentials::where('id_credential', $request->customer)->first();
+            $status = haytiro_users::where('id_user', $cliente->id_user)->first();
+            switch ($status->id_status_user) {
+                case 1:
+                    haytiro_users::where('id_user', $cliente->id_user)->update([
+                        "id_status_user" => 3
+                    ]);
+
+                    if ($cliente->id_role_credential == 2) {
+                        $mensaje = 'El asesor ' . $status->name_user . ' ha sido suspendido.';
+                    } else {
+                        $mensaje = 'El cliente ' . $status->name_user . ' ha sido suspendido.';
+                    }
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => $mensaje,
+                    ], 200);
+                    break;
+                case 3:
+                    haytiro_users::where('id_user', $cliente->id_user)->update([
+                        "id_status_user" => 1
+                    ]);
+
+                    if ($cliente->id_role_credential == 2) {
+                        $mensaje = 'El asesor ' . $status->name_user . ' ha sido habilitado.';
+                    } else {
+                        $mensaje = 'El cliente ' . $status->name_user . ' ha sido habilitado.';
+                    }
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => $mensaje,
+                    ], 200);
+                    break;
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error ocurred, try again: ' . $th,
+            ], 200);
+        }
+    }
+
+    public function advisor_detail(Request $request)
+    {
+        $rules = [
+            'advisor' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        try {
+            $advisor = DB::connection('HayTiro')->table(self::$views['key_ad'])->where('id_user', $request->advisor)->get();
+            return response()->json([
+                'status' => true,
+                'data' =>  $advisor
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error ocurred, try again: ' . $th,
+            ], 200);
+        }
+    }
+
+    public function update_adviser(Request $request)
+    {
+        $rules = [
+            'id' => 'required',
+            'name' => 'required',
+            'last_name' => 'required',
+            'mother_last_name' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
+            'birthdate' => 'required',
+            'type' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        try {
+            haytiro_users::where('id_user', $request->id)->update([
+                'name_user'         => $request->name,
+                'last_name'         => $request->last_name,
+                'mother_last_name'  => $request->mother_last_name,
+                'cell_phone_number' => $request->phone,
+                'email'             => $request->email,
+                'birthdate '        => $request->birthdate
+            ]);
+            haytiro_credentials::where('id_user', $request->id)->update([
+                'id_type_advisor'   => $request->type
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'El asesor ' . $request->name . ' se ha actualizado.',
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error ocurred, try again: ' . $th,
+            ], 200);
+        }
+    }
+
     ////----------Funciones globales------------//
 
 
@@ -590,51 +718,7 @@ class haytiro_controller extends Controller
         }
     }
 
-    public function details_customer_view($id_credential)
-    {
-        if (!$id_credential) {
-            return response()->json([
-                'status' => false,
-                'message' => 'No results found',
-            ], 200);
-        } else {
-            $details_customer = DB::connection('HayTiro')->table('customers_view')->where('id_credential', $id_credential)->get();
-            if ($details_customer == false) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'No results found',
-                ], 200);
-            } else {
-                return response()->json([
-                    'status' => true,
-                    'data' => $details_customer
-                ], 200);
-            }
-        }
-    }
 
-    public function details_adviser_view($id_credential)
-    {
-        if (!$id_credential) {
-            return response()->json([
-                'status' => false,
-                'message' => 'No results found',
-            ], 200);
-        } else {
-            $details_adviser = DB::connection('HayTiro')->table('adviser_view')->where('id_credential', $id_credential)->get();
-            if ($details_adviser == false) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'No results found',
-                ], 200);
-            } else {
-                return response()->json([
-                    'status' => true,
-                    'data' => $details_adviser
-                ], 200);
-            }
-        }
-    }
 
     public function details_chats_attended_view($id_chat)
     {
@@ -775,4 +859,117 @@ class haytiro_controller extends Controller
             }
         }
     }
+
+    ////---------- Actualización de servicios, tipos de servicio.------------//
+
+    public function status_service(Request $request)
+    {
+        $rules = [
+            "service" => "required"
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        try {
+            $service = haytiro_services::where('id_services', $request->service)->first();
+            switch ($service->id_status_service) {
+                case 1:
+                    haytiro_services::where('id_services', $request->service)->update([
+                        "id_status_service" => 2
+                    ]);
+                    return response()->json([
+                        'status' => true,
+                        'message' => "Este servicio a sido deshabilitado"
+                    ], 200);
+
+                    break;
+
+                case 2:
+                    haytiro_services::where('id_services', $request->service)->update([
+                        "id_status_service" => 1
+                    ]);
+                    return response()->json([
+                        'status' => true,
+                        'message' => "Este servicio a sido habilitado"
+                    ], 200);
+
+                    break;
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again: " . $th
+            ], 200);
+        }
+    }
+
+    public function service_detail(Request $request)
+    {
+        $rules = [
+            'service' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        try {
+            $service = DB::connection('HayTiro')->table(self::$views['key_sv'])->where('id_services', $request->service)->get();
+            return response()->json([
+                'status' => true,
+                'data' =>  $service
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error ocurred, try again: ' . $th,
+            ], 200);
+        }
+    }
+
+    public function update_service(Request $request)
+    {
+        $rules = [
+            'id_services' => 'required',
+            'service_name' => 'required',
+            'descrip_service' => 'required',
+            'price_service' => 'required',
+            'id_payment_modalities' => 'required',
+            'id_type_services' => 'required',
+            'id_payment_types' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        try {
+            haytiro_services::where('id_services', $request->id_services)->update([
+                'service_name'          => $request->service_name,
+                'descrip_service'       => $request->descrip_service,
+                'price_service'         => $request->price_service,
+                'id_payment_modalities' => $request->id_payment_modalities,
+                'id_type_services'      => $request->id_type_services,
+                'id_payment_types '     => $request->id_payment_types
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'El servicio ' . $request->service_name . ' se ha actualizado.',
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error ocurred, try again: ' . $th,
+            ], 200);
+        }
+    }
+    
 }

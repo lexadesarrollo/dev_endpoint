@@ -59,7 +59,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         $customer_validate = haytiro_users::where(['name_user' => $request->name_user])
             ->where(['last_name'  => $request->last_name])
@@ -229,7 +229,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             $cliente = haytiro_credentials::where('id_credential', $request->customer)->first();
@@ -286,7 +286,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             $advisor = DB::connection('HayTiro')->table(self::$views['key_ad'])->where('id_user', $request->advisor)->get();
@@ -319,7 +319,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             haytiro_users::where('id_user', $request->id)->update([
@@ -402,7 +402,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         $cliente = haytiro_payment_control::where('id_credential', $request->id_user)->first();
 
@@ -436,7 +436,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             $cliente = haytiro_payment_control::where('id_credential', $request->id_credential)->first();
@@ -470,7 +470,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             $cliente = haytiro_payment_control::where('id_credential', $request->id_credential)->first();
@@ -517,7 +517,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
 
         try {
@@ -573,7 +573,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
 
         try {
@@ -658,7 +658,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
 
         try {
@@ -697,7 +697,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
 
         try {
@@ -836,7 +836,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         } else {
             $datos = [
                 'nombre' => $data->name_post,
@@ -872,7 +872,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             $service = haytiro_services::where('id_services', $request->service)->first();
@@ -917,7 +917,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             $service = DB::connection('HayTiro')->table(self::$views['key_sv'])->where('id_services', $request->service)->get();
@@ -949,7 +949,7 @@ class haytiro_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             haytiro_services::where('id_services', $request->id_services)->update([

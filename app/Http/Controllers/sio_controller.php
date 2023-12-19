@@ -40,7 +40,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         $status_validate = sio_status::where(['descrip_status' => $request->descrip_status])->get();
         if (sizeof($status_validate) == 0) {
@@ -79,7 +79,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             DB::connection('DevSio')->update('exec update_status ?,?', [
@@ -164,7 +164,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         $type_file_validate = sio_type_file::orwhere(['descrip_type_file' => $request->descrip_type_file])
             ->orwhere(['type_mime_file' => $request->type_mime_file])
@@ -204,7 +204,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             $id_status = sio_type_file::where('id_type_file', $request->id_type_file)->first();
@@ -242,7 +242,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
     }
 
@@ -271,7 +271,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         $role_validate = sio_role::where(['descrip_role' => $request->descrip_role])->get();
         if (sizeof($role_validate) == 0) {
@@ -309,7 +309,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         $descrip_role_validate = sio_role::where(['descrip_role' => $request->descrip_role])->where(['id_role' => $request->id_role])->get();
         if (sizeof($descrip_role_validate) == 0) {
@@ -348,7 +348,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
     }
 
@@ -375,7 +375,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         $views_global = DB::connection('DevSio')->table('banks_view')
             ->orwhere('key_bank', $request->key_bank)
@@ -417,7 +417,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         if (!$request) {
             return response()->json([
@@ -453,7 +453,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             DB::connection('DevSio')->update('exec updated_banks ?,?,?,?', [
@@ -484,7 +484,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             $id_status = sio_bank::where('id_bank', $request->id_bank)->first();
@@ -531,7 +531,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
 
         function generar_token_seguro($longitud)
@@ -679,7 +679,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         if (!$request) {
             return response()->json([
@@ -713,7 +713,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             DB::connection('DevSio')->update('exec updated_cia_receipts ?,?', [
@@ -778,7 +778,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         if (!$request) {
             return response()->json([
@@ -842,7 +842,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         
         try {
@@ -927,7 +927,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         $details_parteners = DB::connection('DevSio')->table('tbl_partners')
             ->where('name', $request->name)
@@ -994,7 +994,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             $id_status = sio_partners::where('id_partener', $request->id_partener)->first();
@@ -1052,7 +1052,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
 
         try {
@@ -1092,7 +1092,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         if (!$request) {
             return response()->json([
@@ -1125,7 +1125,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             $id_status = sio_origin_accounts::where('id_origin_accounts', $request->id_origin_accounts)->first();
@@ -1165,7 +1165,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             DB::connection('DevSio')->update('exec updated_origin_accounts ?,?,?,?,?,?,?', [
@@ -1221,7 +1221,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
 
         try {
@@ -1261,7 +1261,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             $id_status = sio_cia::where('id_cia', $request->id_cia)->first();
@@ -1301,7 +1301,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         try {
             DB::connection('DevSio')->update('exec updated_cia ?,?,?,?,?', [
@@ -1333,7 +1333,7 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
-            ], 400);
+            ], 200);
         }
         if (!$request) {
             return response()->json([

@@ -83,8 +83,5 @@ class auth_sio extends Controller
                 'message' => $validator->errors()->all()
             ], 200);
         }
-
-
-
     }
 }

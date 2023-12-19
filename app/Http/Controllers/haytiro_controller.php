@@ -58,7 +58,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
         $customer_validate = haytiro_users::where(['name_user' => $request->name_user])
@@ -228,7 +228,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -285,7 +285,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -318,7 +318,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -401,7 +401,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
         $cliente = haytiro_payment_control::where('id_credential', $request->id_user)->first();
@@ -435,7 +435,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -469,7 +469,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -516,7 +516,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
 
@@ -572,7 +572,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
 
@@ -657,7 +657,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
 
@@ -696,7 +696,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
 
@@ -835,7 +835,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         } else {
             $datos = [
@@ -871,7 +871,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -916,7 +916,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
         try {
@@ -948,7 +948,7 @@ class haytiro_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'errors' => $validator->errors()->all()
             ], 200);
         }
         try {

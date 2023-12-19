@@ -22,7 +22,7 @@ class auth_sio extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->message()->all()
             ], 400);
         }
         $user = User::create([
@@ -46,13 +46,13 @@ class auth_sio extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->message()->all()
             ], 400);
         }
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'status' => false,
-                'errors' => ['Unauthorized']
+                'message' => ['Unauthorized']
             ], 401);
         }
         $user = User::where('email', $request->email)->first();
@@ -80,7 +80,7 @@ class auth_sio extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->message()->all()
             ], 400);
         }
 

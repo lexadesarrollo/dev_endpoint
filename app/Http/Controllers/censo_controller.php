@@ -100,8 +100,8 @@ class censo_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
-            ], 400);
+                'message' => $validator->message()->all()
+            ], 200);
         }
         $comb = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         $pass = array();
@@ -178,8 +178,8 @@ class censo_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
-            ], 400);
+                'message' => $validator->message()->all()
+            ], 200);
         }
         $device_user_validate = censo_user_device::where([
             'id_users' => $request->input('id_users')
@@ -208,7 +208,7 @@ class censo_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->message()->all()
             ]);
         }
         $password_user = md5($request->input('password'));
@@ -283,7 +283,7 @@ class censo_controller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all()
+                'message' => $validator->message()->all()
             ]);
         }
         $create_register_bussines = censo_registered_businesses::insert(

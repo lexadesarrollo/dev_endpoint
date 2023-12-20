@@ -654,7 +654,7 @@ class sio_controller extends Controller
         }
     }
 
-    public function updated_receipts_cia(){
+    public function updated_receipts_all(){
         try {
             DB::connection('DevSio')->update('exec updated_cia');
             return response()->json([
@@ -723,6 +723,39 @@ class sio_controller extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Receipts updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+
+    public function cancel_receipts(Request $request){
+        $rules = [
+            'id_payment_receipts' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = sio_payment_receipts::where('id_payment_receipts', $request->id_payment_receipts)->first();
+            switch ($id_status->id_status) {
+                case 4:
+                    sio_payment_receipts::where('id_payment_receipts', $request->id_payment_receipts)->update([
+                        'id_status' => 8
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Receipts canceled successfully'
             ], 200);
         } catch (Exception $cb) {
             return response()->json([

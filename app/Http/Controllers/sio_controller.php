@@ -951,7 +951,6 @@ class sio_controller extends Controller
             'references_2' => 'required',
             'id_education_level' => 'required',
             'id_marital_status' => 'required',
-            'id_employees' => 'required',
             'id_nationality' => 'required'
         ];
 
@@ -995,7 +994,6 @@ class sio_controller extends Controller
                     'references_2' => $request->references_2,
                     'id_education_level' => $request->id_education_level,
                     'id_marital_status' => $request->id_marital_status,
-                    'id_employees' => $request->id_employees,
                     'id_nationality' => $request->id_nationality
                 ]);
 

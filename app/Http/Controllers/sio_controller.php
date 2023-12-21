@@ -1089,11 +1089,11 @@ class sio_controller extends Controller
         }
 
         try {
-            $origin_account_exist = sio_origin_accounts::where("account_number", $request->clabe)->where("id_bank", $request->bank)->get();
+            $origin_account_exist = sio_origin_accounts::where("key_account", $request->clabe)->where("id_bank", $request->bank)->get();
 
             if (sizeof($origin_account_exist) == 0) {
                 sio_origin_accounts::insert([
-                    "account_number" => $request->clabe,
+                    "key_account" => $request->clabe,
                     "id_bank" => $request->bank
                 ]);
 

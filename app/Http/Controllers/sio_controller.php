@@ -1323,10 +1323,11 @@ class sio_controller extends Controller
     }
 
 
-    public function updated_cia(Request $request){
+    public function updated_cia_details(Request $request){
         $rules = [
             'name_cia' => 'required',
             'abbreviation_cia' => 'required',
+            'rfc_cia' => 'required',
             'id_cia' => 'required'
         ];
         $validator = Validator::make($request->input(), $rules);
@@ -1337,10 +1338,9 @@ class sio_controller extends Controller
             ], 200);
         }
         try {
-            DB::connection('DevSio')->update('exec updated_cia ?,?,?,?,?', [
+            DB::connection('DevSio')->update('exec updated_cia_details ?,?,?,?', [
                 $request->name_cia,
                 $request->abbreviation_cia,
-                $request->business_name,
                 $request->rfc_cia,
                 $request->id_cia
             ]);

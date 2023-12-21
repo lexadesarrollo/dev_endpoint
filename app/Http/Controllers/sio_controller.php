@@ -1110,7 +1110,7 @@ class sio_controller extends Controller
         } catch (Exception $th) {
             return response()->json([
                 'status' => false,
-                'message' => "An error ocurred on query."
+                'message' => "An error ocurred on query." . " ". $th
             ], 200);
         }
     }

@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RestauranteModel extends Model
+class apprisa_user_credential extends Model
 {
     use HasFactory;
-    protected $connection = 'Apprisa';
-    protected $table = "tbl_restaurante"; 
+    protected $connection = "Apprisa";
+
+    protected $table = "users_global_view";
 }

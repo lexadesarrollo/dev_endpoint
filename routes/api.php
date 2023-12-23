@@ -83,16 +83,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::prefix('apprisa')->group(function () {
-        Route::post('/crearUsuario/', [apprisa_controller::class, 'createUser']);
-        Route::get('/restaurante/', [apprisa_controller::class, 'getRestaurante']);
-        Route::post('/createStatus/', [apprisa_controller::class, 'createStatus']);
-        Route::get('/usuario/', [apprisa_controller::class, 'getUser']);
-        Route::post('/crearGeocerca/', [apprisa_controller::class, 'createGeofence']);
-        Route::get('/verGeocercas/', [apprisa_controller::class, 'viewGeofences']);
-        Route::get('/verTGeocercas/', [apprisa_controller::class, 'viewAllGeofences']);
-        Route::post('/crearZona/', [apprisa_controller::class, 'createZone']);
-        Route::post('/disableGeofence/', [apprisa_controller::class, 'update']);
+        Route::post('/create_user_apprisa', [apprisa_controller::class, 'create_user']);
+        Route::post('/code_2fa_apprisa', [apprisa_controller::class, 'TwoFA_auth_code']);
+        Route::post('/autorize_TwoFA_apprisa', [apprisa_controller::class, 'autorize_TwoFA']);
     });
+    
     Route::prefix('sc_islasg')->group(function () {
         Route::get('/ocrImage/', [sc_islasg_controller::class, 'ocr']);
         Route::get('/municipios/{state}', [sc_islasg_controller::class, 'municipios']);

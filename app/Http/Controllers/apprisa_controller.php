@@ -236,7 +236,7 @@ class apprisa_controller extends Controller
                     "id" => $geofences[$i]->id_geofence,
                     "nombre" => $geofences[$i]->geofence_name,
                     "coordenadas" => $coords,
-                    "radio" => $radio[0],
+                    "radio" => $radio[0]->radio,
                     "figura" => $geofences[$i]->mode,
                     "color" => $geofences[$i]->geofence_color,
                     "id_status" => $geofences[$i]->id_status,
@@ -278,7 +278,7 @@ class apprisa_controller extends Controller
                     "id" => $active_geofences[$i]->id_geofence,
                     "nombre" => $active_geofences[$i]->geofence_name,
                     "coordenadas" => $coords,
-                    "radio" => $radio[0],
+                    "radio" => $radio[0]->radio,
                     "figura" => $active_geofences[$i]->mode,
                     "color" => $active_geofences[$i]->geofence_color
                 ];

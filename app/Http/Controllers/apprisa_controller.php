@@ -318,7 +318,7 @@ class apprisa_controller extends Controller
 
                 if ($geofence_validate == false || $geofence_validate = null) {
                     switch ($request->type) {
-                        case 'circle':
+                        case 'Circle':
                             $drawing = apprisa_drawing_modes::where('mode', $request->type);
                             $create_geofence = apprisa_geofences::insert([
                                 "geofence_name" => $request->name,
@@ -343,7 +343,7 @@ class apprisa_controller extends Controller
                             }
                             break;
 
-                        case 'polygon':
+                        case 'Polygon':
                             # code...
                             break;
                     }

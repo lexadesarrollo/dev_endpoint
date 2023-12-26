@@ -224,7 +224,7 @@ class apprisa_controller extends Controller
 
             $i = 0;
             while ($i < sizeof($geofences)) {
-                $coords = apprisa_geofences_coords::select("latitud", "longitud")
+                $coords = apprisa_geofences_coords::select("latitude", "longitude")
                     ->where('geofence', $geofences[$i]->id_geofence)
                     ->get();
 

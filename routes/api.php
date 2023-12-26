@@ -86,6 +86,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/create_user_apprisa', [apprisa_controller::class, 'create_user']);
         Route::post('/code_2fa_apprisa', [apprisa_controller::class, 'TwoFA_auth_code']);
         Route::post('/autorize_TwoFA_apprisa', [apprisa_controller::class, 'autorize_TwoFA']);
+        Route::get('/all_geofences_apprisa', [apprisa_controller::class, 'getAllGeofences']);
+        Route::get('/active_geofences_apprisa', [apprisa_controller::class, 'getActiveGeofences']);
     });
     
     Route::prefix('sc_islasg')->group(function () {

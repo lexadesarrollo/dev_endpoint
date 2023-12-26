@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\apprisa_credentials;
+use App\Models\apprisa_geofences;
+use App\Models\apprisa_geofences_view;
 use App\Models\apprisa_tokens;
 use App\Models\apprisa_user_credential;
 use App\Models\apprisa_users;
@@ -38,43 +40,45 @@ class apprisa_controller extends Controller
                     ->where('last_name', $request->last_name)
                     ->where('mother_last_name', $request->mother_last_name)
                     ->first();
-
                 if ($validate_user == false || $validate_user == null) {
-                    $create = apprisa_users::insert([
-                        "name" => $request->name,
-                        "last_name" => $request->last_name,
-                        "mother_last_name" => $request->mother_last_name,
-                        "email" => $request->email,
-                        "role" => $request->role,
-                        "status" => 1
-                    ]);
-                    if ($create == true) {
+                    $validate_mail = apprisa_users::where('email', $request->email)->first();
+                    if ($validate_mail == false || $validate_mail == null) {
+                        $create = apprisa_users::insert([
+                            "name" => $request->name,
+                            "last_name" => $request->last_name,
+                            "mother_last_name" => $request->mother_last_name,
+                            "email" => $request->email,
+                            "role" => $request->role,
+                            "status" => 1
+                        ]);
+                        if ($create == true) {
 
-                        $credentials = credentials_global::created_credentials($request->name);
+                            $credentials = credentials_global::created_credentials($request->name);
 
-                        $data = [
-                            'email'    => $request->email,
-                            'name_complete' => $request->name . " " . $request->last_name . " " . $request->mother_last_name,
-                            'username' => $credentials['user_name'],
-                            'password' => $credentials['password']
-                        ];
+                            $data = [
+                                'email'    => $request->email,
+                                'name_complete' => $request->name . " " . $request->last_name . " " . $request->mother_last_name,
+                                'username' => $credentials['user_name'],
+                                'password' => $credentials['password']
+                            ];
 
-                        send_email_global::$empresa = 'Apprisa';
-                        $email = send_email_global::send_email_credentials($data);
+                            send_email_global::$empresa = 'Apprisa';
+                            $email = send_email_global::send_email_credentials($data);
 
-                        if ($email["status"] === true) {
-                            $new_user = apprisa_users::where('email', $request->email)->first();
+                            if ($email["status"] === true) {
+                                $new_user = apprisa_users::where('email', $request->email)->first();
 
-                            apprisa_credentials::insert([
-                                "user" => $new_user->id_user,
-                                "username" => $credentials['user_name'],
-                                "password" => $credentials['password_token']
-                            ]);
+                                apprisa_credentials::insert([
+                                    "user" => $new_user->id_user,
+                                    "username" => $credentials['user_name'],
+                                    "password" => $credentials['password_token']
+                                ]);
 
-                            return response()->json([
-                                'status' => true,
-                                'message' => "User created."
-                            ], 200);
+                                return response()->json([
+                                    'status' => true,
+                                    'message' => "User created."
+                                ], 200);
+                            }
                         } else {
                             return response()->json([
                                 'status' => false,
@@ -84,7 +88,7 @@ class apprisa_controller extends Controller
                     } else {
                         return response()->json([
                             'status' => false,
-                            'message' => "An error ocurred."
+                            'message' => "This email already exist."
                         ], 200);
                     }
                 } else {
@@ -124,7 +128,7 @@ class apprisa_controller extends Controller
                         send_email_global::$empresa = "Alba";
                         $data = [
                             "email" => $user->email,
-                            "id" => $user->id_user
+                            "id" => $user->credential
                         ];
                         $auth = send_email_global::twoFA_email($data);
                         if ($auth["status"] === true) {
@@ -201,6 +205,88 @@ class apprisa_controller extends Controller
                     ], 200);
                 }
             }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again: " . $th
+            ], 200);
+        }
+    }
+
+    public function getAllGeofences()
+    {
+        try {
+            $geofences = apprisa_geofences_view::all();
+
+            $geovalla = [];
+
+            $i = 0;
+            while ($i < sizeof($geofences)) {
+                $coords = apprisa_geofences::select("latitud", "longitud")
+                    ->where('geofence', $geofences[$i]->id_geofence)
+                    ->get();
+
+                $radio = apprisa_geofences::select("radio")
+                    ->where('geofence', $geofences[$i]->id_geofence)
+                    ->get();
+
+                $geovalla[$i] = [
+                    "id" => $geofences[$i]->id_geofence,
+                    "nombre" => $geofences[$i]->geofence_name,
+                    "coordenadas" => $coords,
+                    "radio" => $radio[0],
+                    "figura" => $geofences[$i]->mode,
+                    "color" => $geofences[$i]->geofence_color,
+                    "id_status" => $geofences[$i]->id_status,
+                    "status" => $geofences[$i]->status
+                ];
+                $i++;
+            }
+
+            return response()->json([
+                'status' => true,
+                'data' => $geovalla
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again: " . $th
+            ], 200);
+        }
+    }
+
+    public function getActiveGeofences()
+    {
+        try {
+            $active_geofences = apprisa_geofences_view::where('id_status', 1)->get();
+
+            $geovalla = [];
+
+            $i = 0;
+            while ($i < sizeof($active_geofences)) {
+                $coords = apprisa_geofences::select("latitude", "longitude")
+                    ->where('geofence', $active_geofences[$i]->id_geofence)
+                    ->get();
+
+                $radio = apprisa_geofences::select("radio")
+                    ->where('geofence', $active_geofences[$i]->id_geofence)
+                    ->get();
+
+                $geovalla[$i] = [
+                    "id" => $active_geofences[$i]->id_geofence,
+                    "nombre" => $active_geofences[$i]->geofence_name,
+                    "coordenadas" => $coords,
+                    "radio" => $radio[0],
+                    "figura" => $active_geofences[$i]->mode,
+                    "color" => $active_geofences[$i]->geofence_color
+                ];
+                $i++;
+            }
+
+            return response()->json([
+                'status' => true,
+                'data' => $geovalla
+            ], 200);
         } catch (Exception $th) {
             return response()->json([
                 'status' => false,

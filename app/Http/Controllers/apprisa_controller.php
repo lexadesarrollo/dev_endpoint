@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\apprisa_credentials;
+use App\Models\apprisa_drawing_modes;
 use App\Models\apprisa_geofences;
+use App\Models\apprisa_geofences_coords;
 use App\Models\apprisa_geofences_view;
 use App\Models\apprisa_tokens;
 use App\Models\apprisa_user_credential;
@@ -222,11 +224,11 @@ class apprisa_controller extends Controller
 
             $i = 0;
             while ($i < sizeof($geofences)) {
-                $coords = apprisa_geofences::select("latitud", "longitud")
+                $coords = apprisa_geofences_coords::select("latitud", "longitud")
                     ->where('geofence', $geofences[$i]->id_geofence)
                     ->get();
 
-                $radio = apprisa_geofences::select("radio")
+                $radio = apprisa_geofences_coords::select("radio")
                     ->where('geofence', $geofences[$i]->id_geofence)
                     ->get();
 
@@ -264,11 +266,11 @@ class apprisa_controller extends Controller
 
             $i = 0;
             while ($i < sizeof($active_geofences)) {
-                $coords = apprisa_geofences::select("latitude", "longitude")
+                $coords = apprisa_geofences_coords::select("latitude", "longitude")
                     ->where('geofence', $active_geofences[$i]->id_geofence)
                     ->get();
 
-                $radio = apprisa_geofences::select("radio")
+                $radio = apprisa_geofences_coords::select("radio")
                     ->where('geofence', $active_geofences[$i]->id_geofence)
                     ->get();
 
@@ -287,6 +289,75 @@ class apprisa_controller extends Controller
                 'status' => true,
                 'data' => $geovalla
             ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again: " . $th
+            ], 200);
+        }
+    }
+
+    public function create_geofence(Request $request)
+    {
+        try {
+            $rules = [
+                'type' => 'required',
+                'name' => 'required',
+                'lat' => 'required',
+                'lng' => 'required',
+                'color' => 'required',
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $geofence_validate = apprisa_geofences::where("geofence_name", $request->name)->first();
+
+                if ($geofence_validate == false || $geofence_validate = null) {
+                    switch ($request->type) {
+                        case 'circle':
+                            $drawing = apprisa_drawing_modes::where('mode', $request->type);
+                            $create_geofence = apprisa_geofences::insert([
+                                "geofence_name" => $request->name,
+                                "geofence_color" => $request->color,
+                                "drawing_mode" => $drawing->id_draw,
+                                "status" => 1
+                            ]);
+
+                            if ($create_geofence == true) {
+                                $geofence = apprisa_geofences::where("geofence_name", $request->name)->first();
+                                apprisa_geofences_coords::insert([
+                                    "latitude" => $request->lat,
+                                    "longitude" => $request->lng,
+                                    "radio" => $request->radio,
+                                    "geofence" => $geofence->id_geofence
+                                ]);
+                            } else {
+                                return response()->json([
+                                    'status' => false,
+                                    'message' => "An error ocurred, try again."
+                                ], 200);
+                            }
+                            break;
+
+                        case 'polygon':
+                            # code...
+                            break;
+                    }
+                    return response()->json([
+                        'status' => true,
+                        'message' => "Geofence created sucessfully."
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "This geofence already exist."
+                    ], 200);
+                }
+            }
         } catch (Exception $th) {
             return response()->json([
                 'status' => false,

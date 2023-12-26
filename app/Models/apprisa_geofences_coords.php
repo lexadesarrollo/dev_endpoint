@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class apprisa_geofences extends Model
+class apprisa_geofences_coords extends Model
 {
     use HasFactory;
 
     protected $connection = "Apprisa";
     
-    protected $table = "tbl_geofences";
+    protected $table = "tbl_geofence_coordinates";
 }

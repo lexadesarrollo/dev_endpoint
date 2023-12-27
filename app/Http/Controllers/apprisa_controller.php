@@ -107,6 +107,25 @@ class apprisa_controller extends Controller
             ], 200);
         }
     }
+
+    public function getAllAdmins(){
+        try {
+            $users = apprisa_user_credential::where('id_role', 1)->get();
+
+            if ($users) {
+                return response()->json([
+                    'status' => true,
+                    'data' => $users
+                ], 200);
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again: " . $th
+            ], 200);
+        }
+    }
+
     /*  Función de autenticación de dos factores */
 
     public function TwoFA_auth_code(Request $request)
@@ -123,7 +142,7 @@ class apprisa_controller extends Controller
                     'message' => $validator->errors()->all()
                 ], 200);
             } else {
-                $user = apprisa_user_credential::where('email', $request->email)->where('role', 1)->first();
+                $user = apprisa_user_credential::where('email', $request->email)->where('id_role', 1)->first();
                 if ($user != null || $user != false) {
                     $pass = Hash::check($request->password, $user->password);
                     if ($pass != false) {

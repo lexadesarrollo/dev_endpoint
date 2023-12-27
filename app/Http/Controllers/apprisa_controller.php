@@ -205,7 +205,6 @@ class apprisa_controller extends Controller
                     $token = apprisa_tokens::where('credential', $user->credential)->first();
 
                     $isToken = Hash::check($request->code, $token->token);
-
                     if ($isToken != false) {
                         apprisa_tokens::where('credential', $user->credential)->delete();
 

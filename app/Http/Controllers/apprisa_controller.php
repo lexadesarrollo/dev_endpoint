@@ -200,7 +200,7 @@ class apprisa_controller extends Controller
                     'message' => $validator->errors()->all()
                 ], 200);
             } else {
-                $user = apprisa_user_credential::where('email', $request->email)->where('role', 1)->first();
+                $user = apprisa_user_credential::where('email', $request->email)->where('id_role', 1)->first();
                 if ($user != null || $user != false) {
                     $token = apprisa_tokens::where('credential', $user->credential)->first();
 

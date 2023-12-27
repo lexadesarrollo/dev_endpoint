@@ -46,9 +46,9 @@ class apprisa_controller extends Controller
                     $validate_mail = apprisa_users::where('email', $request->email)->first();
                     if ($validate_mail == false || $validate_mail == null) {
                         $create = apprisa_users::insert([
-                            "name" => $request->name,
-                            "last_name" => $request->last_name,
-                            "mother_last_name" => $request->mother_last_name,
+                            "name" => ucwords(strtolower($request->name)),
+                            "last_name" => ucwords(strtolower($request->last_name)),
+                            "mother_last_name" => ucwords(strtolower($request->mother_last_name)),
                             "email" => $request->email,
                             "role" => $request->role,
                             "status" => 1
@@ -108,7 +108,8 @@ class apprisa_controller extends Controller
         }
     }
 
-    public function getAllAdmins(){
+    public function getAllAdmins()
+    {
         try {
             $users = apprisa_user_credential::where('id_role', 1)->get();
 
@@ -142,7 +143,7 @@ class apprisa_controller extends Controller
                     'message' => $validator->errors()->all()
                 ], 200);
             } else {
-                $user = apprisa_user_credential::where('email', $request->email)->where('id_role', 1)->first();
+                $user = apprisa_user_credential::where('email', $request->email)->where('id_role', 1)->where('id_status', 1)->first();
                 if ($user != null || $user != false) {
                     $pass = Hash::check($request->password, $user->password);
                     if ($pass != false) {
@@ -232,6 +233,8 @@ class apprisa_controller extends Controller
             ], 200);
         }
     }
+
+    /*  Función de geocercas */
 
     public function getAllGeofences()
     {
@@ -431,6 +434,56 @@ class apprisa_controller extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "An error ocurred, try again: " . $th
+            ], 200);
+        }
+    }
+
+    /*  Función de habilitar/deshabilitar cuentas */
+
+    public function status_user(Request $request)
+    {
+        try {
+            $rules = [
+                "user" => "required",
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $user = apprisa_users::where('id_user', $request->user)->first();
+                if ($user != null || $user == "") {
+                    switch ($user->status) {
+                        case 1:
+                            apprisa_users::where('id_user', $request->user)->update([
+                                "status" => 2
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha inhabilitado al usuario " . $user->name
+                            ], 200);
+                            break;
+
+                        case 2:
+                            apprisa_users::where('id_user', $request->user)->update([
+                                "status" => 1
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha habilitado al usuario " . $user->name
+                            ], 200);
+                            break;
+                    }
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
             ], 200);
         }
     }

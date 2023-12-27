@@ -75,15 +75,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/updated_status_cia_sio', [sio_controller::class, 'updated_status_cia']);
         Route::put('/updated_cia_sio', [sio_controller::class, 'updated_cia_details']);
 
-         //Rutas estados de cuenta
-         Route::get('/states_account_sio', [sio_controller::class, 'ct_states_accounts']);
+        //Rutas estados de cuenta
+        Route::get('/states_account_sio', [sio_controller::class, 'ct_states_accounts']);
 
-         //Rutas municipios
-         Route::post('/municipality_sio', [sio_controller::class, 'ctl_municipality']);
+        //Rutas municipios
+        Route::post('/municipality_sio', [sio_controller::class, 'ctl_municipality']);
     });
 
     Route::prefix('apprisa')->group(function () {
         Route::post('/create_user_apprisa', [apprisa_controller::class, 'create_user']);
+        Route::put('/status_user_apprisa', [apprisa_controller::class, 'status_user']);
         Route::post('/code_2fa_apprisa', [apprisa_controller::class, 'TwoFA_auth_code']);
         Route::post('/autorize_TwoFA_apprisa', [apprisa_controller::class, 'autorize_TwoFA']);
         Route::get('/all_admin_apprisa', [apprisa_controller::class, 'getAllAdmins']);
@@ -91,7 +92,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/active_geofences_apprisa', [apprisa_controller::class, 'getActiveGeofences']);
         Route::post('/create_geofence_apprisa', [apprisa_controller::class, 'create_geofence']);
     });
-    
+
     Route::prefix('sc_islasg')->group(function () {
         Route::get('/ocrImage/', [sc_islasg_controller::class, 'ocr']);
         Route::get('/municipios/{state}', [sc_islasg_controller::class, 'municipios']);

@@ -9,7 +9,7 @@ class apprisa_credentials extends Model
 {
     use HasFactory;
 
-    protected $connection = "Apprisa";
+    protected $connection = "DevApprisa";
 
     protected $table = "tbl_credentials";
 }

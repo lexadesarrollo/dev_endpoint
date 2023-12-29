@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class apprisa_user_credential extends Model
 {
     use HasFactory;
-    protected $connection = "Apprisa";
+    protected $connection = "DevApprisa";
 
     protected $table = "users_global_view";
 }

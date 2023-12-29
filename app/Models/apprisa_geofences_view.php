@@ -9,7 +9,7 @@ class apprisa_geofences_view extends Model
 {
     use HasFactory;
 
-    protected $connection = "Apprisa";
+    protected $connection = "DevApprisa";
     
     protected $table = "geofences_view";
 }

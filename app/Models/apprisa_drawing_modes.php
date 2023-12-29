@@ -9,7 +9,7 @@ class apprisa_drawing_modes extends Model
 {
     use HasFactory;
 
-    protected $connection = "Apprisa";
+    protected $connection = "DevApprisa";
     
     protected $table = "ctl_drawing_modes";
 }

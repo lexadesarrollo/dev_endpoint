@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class apprisa_users extends Model
 {
     use HasFactory;
-    protected $connection = "Apprisa";
+    protected $connection = "DevApprisa";
 
     protected $table = "tbl_users";
 }

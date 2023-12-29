@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class apprisa_tokens extends Model
 {
     use HasFactory;
-    protected $connection = "Apprisa";
+    protected $connection = "DevApprisa";
 
     protected $table = "tbl_tokens";
 }

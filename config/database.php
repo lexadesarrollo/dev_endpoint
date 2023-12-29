@@ -108,6 +108,21 @@ return [
             'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'DevApprisa' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DEVAPPRISA_HOST', 'localhost'),
+            'port' => env('DEVAPPRISA_PORT', '1433'),
+            'database' => env('DEVAPPRISA_DATABASE', 'forge'),
+            'username' => env('DEVAPPRISA_USERNAME', 'forge'),
+            'password' => env('DEVAPPRISA_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'encrypt' => env('DB_ENCRYPT', 'yes'),
+            'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],
+
         'Censo' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),

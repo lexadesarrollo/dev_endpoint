@@ -20,6 +20,7 @@ use App\Models\censo_type_business_v2;
 use App\Models\censo_users_v2;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -157,6 +158,36 @@ class censo_controller_v2 extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Role is already registered, verify information.',
+            ], 200);
+        }
+    }
+
+    public function updated_role(Request $request)
+    {
+        $rules = [
+            'id_role' => 'required',
+            'name_role' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            DB::connection('DevCenso')->update('exec updated_role ?,?', [
+                $request->id_role,
+                $request->name_role
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Role updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
             ], 200);
         }
     }

@@ -14,6 +14,7 @@ use App\Models\censo_roads_v2;
 use App\Models\censo_role_v2;
 use App\Models\censo_settlements_v2;
 use App\Models\censo_state_v2;
+use App\Models\censo_status;
 use App\Models\censo_status_v2;
 use App\Models\censo_type_business_v2;
 use App\Models\censo_users_v2;
@@ -74,6 +75,35 @@ class censo_controller_v2 extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Status is already registered, verify information.',
+            ], 200);
+        }
+    }
+
+    public function updated_status(Request $request)
+    {
+        $rules = [
+            'name_status' => 'required',
+            'id_status' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $status = censo_status::where('id_status', $request->id_status)->update([
+            'name_status' => $request->name_status
+        ]);
+        if ($status) {
+            return response()->json([
+                'status' => true,
+                'message' => 'The status has been successfully updated.',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while performing the operation.',
             ], 200);
         }
     }

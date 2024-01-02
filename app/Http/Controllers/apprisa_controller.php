@@ -486,7 +486,7 @@ class apprisa_controller extends Controller
 
                             return response()->json([
                                 'status' => true,
-                                'message' => "Se ha inhabilitado la geocerca " . $geofence->name
+                                'message' => "Se ha inhabilitado la geocerca " . $geofence->geofence_name
                             ], 200);
                             break;
 
@@ -497,7 +497,7 @@ class apprisa_controller extends Controller
 
                             return response()->json([
                                 'status' => true,
-                                'message' => "Se ha habilitado la geocerca " . $geofence->name
+                                'message' => "Se ha habilitado la geocerca " . $geofence->geofence_name
                             ], 200);
                             break;
                     }

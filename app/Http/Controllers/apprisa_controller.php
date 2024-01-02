@@ -261,7 +261,8 @@ class apprisa_controller extends Controller
                     "coordenadas" => $coords,
                     "radio" => $radio[0]->radio,
                     "figura" => $active_geofences_circle[$i]->mode,
-                    "color" => $active_geofences_circle[$i]->geofence_color
+                    "color" => $active_geofences_circle[$i]->geofence_color,
+                    "status" => $active_geofences_circle[$i]->status
                 ];
                 $i++;
             }
@@ -276,14 +277,15 @@ class apprisa_controller extends Controller
                     ->where('geofence', $active_geofences_polygon[$a]->id_geofence)
                     ->get();
 
-                $geo =  apprisa_geofences_view::where('id_status', 1)->where('id_geofence', $active_geofences_polygon[$a]->id_geofence)->get();
+                $geo =  apprisa_geofences_view::where('id_geofence', $active_geofences_polygon[$a]->id_geofence)->get();
 
                 $polygons[$a] = [
                     "id" => $geo[$a]->id_geofence,
                     "nombre" => $geo[$a]->geofence_name,
                     "coordenadas" => $coords,
                     "figura" => $geo[$a]->mode,
-                    "color" => $geo[$a]->geofence_color
+                    "color" => $geo[$a]->geofence_color,
+                    "status" => $geo[$a]->status
                 ];
                 $a++;
             }

@@ -56,12 +56,12 @@ class censo_controller_v2 extends Controller
         ])->get();
         if (sizeof($validate_status) == 0) {
             $name_status = ucfirst($request->input('name_status'));
-            $create_register_bussines = censo_status_v2::insert(
+            $created_status = censo_status_v2::insert(
                 [
                     'name_status' => $name_status
                 ]
             );
-            if ($create_register_bussines) {
+            if ($created_status) {
                 return response()->json([
                     'status' => true,
                     'message' => 'The status has been successfully registered.',
@@ -138,12 +138,12 @@ class censo_controller_v2 extends Controller
         ])->get();
         if (sizeof($validate_status) == 0) {
             $name_role = ucfirst($request->input('name_role'));
-            $create_register_bussines = censo_role_v2::insert(
+            $created_role = censo_role_v2::insert(
                 [
                     'name_role' => $name_role
                 ]
             );
-            if ($create_register_bussines) {
+            if ($created_role) {
                 return response()->json([
                     'status' => true,
                     'message' => 'The role has been successfully registered.',
@@ -220,7 +220,7 @@ class censo_controller_v2 extends Controller
             }
             return response()->json([
                 'status' => true,
-                'message' => 'Role updated successfully'
+                'message' => 'Role status updated successfully'
             ], 200);
         } catch (Exception $cb) {
             return response()->json([
@@ -257,6 +257,8 @@ class censo_controller_v2 extends Controller
         }
     }
 
+    //-------------------------Funciones Company-------------------------//
+
     public function ctl_company()
     {
         $ctl_company = censo_company_v2::all();
@@ -265,6 +267,142 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful response.',
             'data' => $ctl_company
         ], 200);
+    }
+
+    public function created_company(Request $request)
+    {
+        $rules = [
+            'name_company' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $validate_status = censo_company_v2::where([
+            'name_company' => $request->input('name_company')
+        ])->get();
+        if (sizeof($validate_status) == 0) {
+            $name_company = ucfirst($request->input('name_company'));
+            $created_company = censo_company_v2::insert(
+                [
+                    'name_company' => $name_company
+                ]
+            );
+            if ($created_company) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The company has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Company is already registered, verify information.',
+            ], 200);
+        }
+    }
+
+    public function updated_company(Request $request)
+    {
+        $rules = [
+            'id_company' => 'required',
+            'name_company' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            DB::connection('DevCenso')->update('exec updated_company ?,?', [
+                $request->id_company,
+                $request->name_company
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Company updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function updated_company_role(Request $request)
+    {
+        $rules = [
+            'id_company' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = censo_company_v2::where('id_company', $request->id_company)->first();
+            switch ($id_status->id_status) {
+                case 1:
+                    censo_company_v2::where('id_company', $request->id_company)->update([
+                        'id_status' => 2
+                    ]);
+                    break;
+                case 2:
+                    censo_company_v2::where('id_company', $request->id_company)->update([
+                        'id_status' => 1
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Company status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_company(Request $request)
+    {
+        $rules = [
+            'id_company' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $company = DB::connection('DevCenso')->table('ctl_company')->where('id_company', $request->id_company)->first();
+        if ($company == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $company
+            ], 200);
+        }
     }
 
     public function ctl_lada()

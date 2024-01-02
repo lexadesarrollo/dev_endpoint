@@ -138,6 +138,21 @@ return [
             'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'DevCenso' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DEVCENSO_HOST', 'localhost'),
+            'port' => env('DEVCENSO_PORT', '1433'),
+            'database' => env('DEVCENSO_DATABASE', 'forge'),
+            'username' => env('DEVCENSO_USERNAME', 'forge'),
+            'password' => env('DEVCENSO_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'encrypt' => env('DB_ENCRYPT', 'yes'),
+            'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],
+
         'DevSio' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),

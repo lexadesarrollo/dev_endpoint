@@ -46,7 +46,7 @@ class censo_controller_v2 extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->message()->all()
+                'message' => $validator->errors()->all()
             ]);
         }
         $validate_status = censo_status_v2::where([

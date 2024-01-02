@@ -18,7 +18,6 @@ use App\Models\censo_status_v2;
 use App\Models\censo_type_business_v2;
 use App\Models\censo_users_v2;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class censo_controller_v2 extends Controller

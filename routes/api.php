@@ -3,6 +3,7 @@
 use App\Http\Controllers\apprisa_controller;
 use App\Http\Controllers\auth_sio;
 use App\Http\Controllers\censo_controller;
+use App\Http\Controllers\censo_controller_v2;
 use App\Http\Controllers\haytiro_controller;
 use App\Http\Controllers\sc_islasg_controller;
 use App\Http\Controllers\sio_controller;
@@ -139,5 +140,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::prefix('censoApp-v2')->group(function () {
-    Route::get('/ctl_status_censo', [haytiro_controller::class, 'ctl_status']);
+    Route::get('/ctl_status_censo', [censo_controller_v2::class, 'ctl_status']);
 });

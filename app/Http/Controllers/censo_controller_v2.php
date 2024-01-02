@@ -243,8 +243,8 @@ class censo_controller_v2 extends Controller
             ], 200);
         }
 
-        $type_file = DB::connection('DevCenso')->table('type_file_view')->where('id_type_file', $request->id_type_file)->first();
-        if ($type_file == false) {
+        $role = DB::connection('DevCenso')->table('ctl_role')->where('id_role', $request->id_role)->first();
+        if ($role == false) {
             return response()->json([
                 'status' => false,
                 'message' => 'No results found',
@@ -252,7 +252,7 @@ class censo_controller_v2 extends Controller
         } else {
             return response()->json([
                 'status' => false,
-                'message' => $type_file
+                'message' => $role
             ], 200);
         }
     }

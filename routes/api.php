@@ -168,6 +168,8 @@ Route::prefix('censoApp-v2')->group(function () {
     //      Lada
     //-----------------
     Route::get('/ctl_lada_censo',          [censo_controller_v2::class, 'ctl_lada']);
+    Route::post('/created_lada_censo', [censo_controller_v2::class, 'created_lada']);
+
     //-----------------
     //      Line Business
     //-----------------

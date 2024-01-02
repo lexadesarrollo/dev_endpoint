@@ -192,6 +192,71 @@ class censo_controller_v2 extends Controller
         }
     }
 
+    public function updated_status_role(Request $request)
+    {
+        $rules = [
+            'id_role' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = censo_role_v2::where('id_role', $request->id_role)->first();
+            switch ($id_status->id_status) {
+                case 1:
+                    censo_role_v2::where('id_role', $request->id_role)->update([
+                        'id_status' => 2
+                    ]);
+                    break;
+                case 2:
+                    censo_role_v2::where('id_role', $request->id_role)->update([
+                        'id_status' => 1
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Role updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_role(Request $request)
+    {
+        $rules = [
+            'id_role' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $type_file = DB::connection('DevCenso')->table('type_file_view')->where('id_type_file', $request->id_type_file)->first();
+        if ($type_file == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => $type_file
+            ], 200);
+        }
+    }
+
     public function ctl_company()
     {
         $ctl_company = censo_company_v2::all();

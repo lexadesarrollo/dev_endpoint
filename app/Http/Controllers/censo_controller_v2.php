@@ -139,7 +139,7 @@ class censo_controller_v2 extends Controller
             $name_role = ucfirst($request->input('name_role'));
             $create_register_bussines = censo_role_v2::insert(
                 [
-                    'name_status' => $name_role
+                    'name_role' => $name_role
                 ]
             );
             if ($create_register_bussines) {

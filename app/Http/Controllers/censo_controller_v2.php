@@ -436,10 +436,10 @@ class censo_controller_v2 extends Controller
             ->orwhere(['country_lada' => $request->country_lada])
             ->get();
         if (sizeof($validate_lada) == 0) {
-            $lada_cell_phone = ucfirst($request->input('lada_cell_phone'));
             $created_company = censo_lada_v2::insert(
                 [
-                    'lada_cell_phone' => $lada_cell_phone
+                    'lada_cell_phone' => $request->lada_cell_phone,
+                    'country_lada' => $request->country_lada
                 ]
             );
             if ($created_company) {

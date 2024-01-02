@@ -137,3 +137,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/update_service_haytiro', [haytiro_controller::class, 'update_service']);
     });
 });
+
+Route::prefix('censoApp-v2')->group(function () {
+    Route::get('/ctl_status_censo', [haytiro_controller::class, 'ctl_status']);
+});

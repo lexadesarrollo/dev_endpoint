@@ -92,7 +92,7 @@ class censo_controller_v2 extends Controller
                 'message' => $validator->errors()->all()
             ]);
         }
-        $status = censo_status::where('id_status', $request->id_status)->update([
+        $status = censo_status_v2::where('id_status', $request->id_status)->update([
             'name_status' => $request->name_status
         ]);
         if ($status) {

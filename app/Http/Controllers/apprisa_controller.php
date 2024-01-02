@@ -458,7 +458,7 @@ class apprisa_controller extends Controller
         } catch (Exception $th) {
             return response()->json([
                 'status' => false,
-                'message' => "An error ocurred, try again: " . $th
+                'message' => "An error ocurred, try again"
             ], 200);
         }
     }
@@ -486,7 +486,7 @@ class apprisa_controller extends Controller
 
                             return response()->json([
                                 'status' => true,
-                                'message' => "Se ha inhabilitado al usuario " . $geofence->name
+                                'message' => "Se ha inhabilitado la geocerca " . $geofence->name
                             ], 200);
                             break;
 
@@ -497,10 +497,15 @@ class apprisa_controller extends Controller
 
                             return response()->json([
                                 'status' => true,
-                                'message' => "Se ha habilitado al usuario " . $geofence->name
+                                'message' => "Se ha habilitado la geocerca " . $geofence->name
                             ], 200);
                             break;
                     }
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "This geofence don't exist."
+                    ], 200);
                 }
             }
         } catch (Exception $th) {

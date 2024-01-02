@@ -133,10 +133,10 @@ class censo_controller_v2 extends Controller
                 'message' => $validator->errors()->all()
             ]);
         }
-        $validate_status = censo_role_v2::where([
+        $validate_role = censo_role_v2::where([
             'name_role' => $request->input('name_role')
         ])->get();
-        if (sizeof($validate_status) == 0) {
+        if (sizeof($validate_role) == 0) {
             $name_role = ucfirst($request->input('name_role'));
             $created_role = censo_role_v2::insert(
                 [
@@ -281,10 +281,10 @@ class censo_controller_v2 extends Controller
                 'message' => $validator->errors()->all()
             ]);
         }
-        $validate_status = censo_company_v2::where([
+        $validate_company = censo_company_v2::where([
             'name_company' => $request->input('name_company')
         ])->get();
-        if (sizeof($validate_status) == 0) {
+        if (sizeof($validate_company) == 0) {
             $name_company = ucfirst($request->input('name_company'));
             $created_company = censo_company_v2::insert(
                 [
@@ -405,6 +405,8 @@ class censo_controller_v2 extends Controller
         }
     }
 
+    //-------------------------Funciones Lada-------------------------//
+
     public function ctl_lada()
     {
         $ctl_lada = censo_lada_v2::all();
@@ -413,6 +415,50 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful response.',
             'data' => $ctl_lada
         ], 200);
+    }
+
+    public function created_lada(Request $request)
+    {
+        $rules = [
+            'lada_cell_phone' => 'required',
+            'country_lada' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $validate_lada = censo_lada_v2::orwhere([
+            'lada_cell_phone' => $request->input('lada_cell_phone')
+        ])
+            ->orwhere(['country_lada' => $request->country_lada])
+            ->get();
+        if (sizeof($validate_lada) == 0) {
+            $lada_cell_phone = ucfirst($request->input('lada_cell_phone'));
+            $created_company = censo_lada_v2::insert(
+                [
+                    'lada_cell_phone' => $lada_cell_phone
+                ]
+            );
+            if ($created_company) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The lada has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Lada is already registered, verify information.',
+            ], 200);
+        }
     }
 
     public function ctl_line_business()

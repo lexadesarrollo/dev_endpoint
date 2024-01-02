@@ -151,6 +151,8 @@ Route::prefix('censoApp-v2')->group(function () {
     //      Role
     //-----------------
     Route::get('/ctl_role_censo',          [censo_controller_v2::class, 'ctl_role']);
+    Route::post('/created_role_censo', [censo_controller_v2::class, 'created_role']);
+
     //-----------------
     //      Company
     //-----------------

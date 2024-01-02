@@ -27,7 +27,7 @@ class censo_controller_v2 extends Controller
 {
     protected $connection = 'DevCenso';
 
-    //Funciones status
+    //-------------------------Funciones status-------------------------//
     public function ctl_status()
     {
         $ctl_status = censo_status_v2::all();
@@ -108,6 +108,7 @@ class censo_controller_v2 extends Controller
         }
     }
 
+    //-------------------------Funciones role-------------------------//
 
     public function ctl_role()
     {
@@ -117,6 +118,47 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful response.',
             'data' => $ctl_role
         ], 200);
+    }
+
+    public function created_role(Request $request)
+    {
+        $rules = [
+            'name_role' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $validate_status = censo_role_v2::where([
+            'name_role' => $request->input('name_role')
+        ])->get();
+        if (sizeof($validate_status) == 0) {
+            $name_role = ucfirst($request->input('name_role'));
+            $create_register_bussines = censo_role_v2::insert(
+                [
+                    'name_status' => $name_role
+                ]
+            );
+            if ($create_register_bussines) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The role has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Role is already registered, verify information.',
+            ], 200);
+        }
     }
 
     public function ctl_company()

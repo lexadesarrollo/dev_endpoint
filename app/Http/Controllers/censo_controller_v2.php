@@ -251,7 +251,7 @@ class censo_controller_v2 extends Controller
             ], 200);
         } else {
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'message' => $role
             ], 200);
         }

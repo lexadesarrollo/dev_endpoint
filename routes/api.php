@@ -162,7 +162,7 @@ Route::prefix('censoApp-v2')->group(function () {
     Route::get('/ctl_company_censo',       [censo_controller_v2::class, 'ctl_company']);
     Route::post('/created_company_censo', [censo_controller_v2::class, 'created_company']);
     Route::post('/detail_company_censo', [censo_controller_v2::class, 'detail_company']);
-    Route::put('/updated_company_role_censo', [censo_controller_v2::class, 'updated_company_role']);
+    Route::put('/updated_status_company_censo', [censo_controller_v2::class, 'updated_status_company']);
     Route::put('/updated_company_censo', [censo_controller_v2::class, 'updated_company']);
     //-----------------
     //      Lada

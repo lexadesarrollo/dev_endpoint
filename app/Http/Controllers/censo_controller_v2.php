@@ -340,7 +340,7 @@ class censo_controller_v2 extends Controller
         }
     }
 
-    public function updated_company_role(Request $request)
+    public function updated_status_company(Request $request)
     {
         $rules = [
             'id_company' => 'required',

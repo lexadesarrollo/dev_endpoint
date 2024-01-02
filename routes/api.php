@@ -146,6 +146,7 @@ Route::prefix('censoApp-v2')->group(function () {
     //-----------------
     Route::get('/ctl_status_censo',        [censo_controller_v2::class, 'ctl_status']);
     Route::post('/created_status_censo', [censo_controller_v2::class, 'created_status']);
+    Route::put('/updated_status_censo', [censo_controller_v2::class, 'updated_status']);
     //-----------------
     //      Role
     //-----------------

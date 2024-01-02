@@ -239,36 +239,59 @@ class apprisa_controller extends Controller
     public function getAllGeofences()
     {
         try {
-            $geofences = apprisa_geofences_view::all();
+            $active_geofences_circle = apprisa_geofences_view::where('mode', "Circle")->get();
+            $active_geofences_polygon = apprisa_geofences_view::select('id_geofence')->distinct()->where('mode', "Polygon")->get();
 
-            $geovalla = [];
+            $circles = [];
+            $polygons = [];
 
             $i = 0;
-            while ($i < sizeof($geofences)) {
+            while ($i < sizeof($active_geofences_circle)) {
                 $coords = apprisa_geofences_coords::select("latitude", "longitude")
-                    ->where('geofence', $geofences[$i]->id_geofence)
+                    ->where('geofence', $active_geofences_circle[$i]->id_geofence)
                     ->get();
 
                 $radio = apprisa_geofences_coords::select("radio")
-                    ->where('geofence', $geofences[$i]->id_geofence)
+                    ->where('geofence', $active_geofences_circle[$i]->id_geofence)
                     ->get();
 
-                $geovalla[$i] = [
-                    "id" => $geofences[$i]->id_geofence,
-                    "nombre" => $geofences[$i]->geofence_name,
+                $circles[$i] = [
+                    "id" => $active_geofences_circle[$i]->id_geofence,
+                    "nombre" => $active_geofences_circle[$i]->geofence_name,
                     "coordenadas" => $coords,
                     "radio" => $radio[0]->radio,
-                    "figura" => $geofences[$i]->mode,
-                    "color" => $geofences[$i]->geofence_color,
-                    "id_status" => $geofences[$i]->id_status,
-                    "status" => $geofences[$i]->status
+                    "figura" => $active_geofences_circle[$i]->mode,
+                    "color" => $active_geofences_circle[$i]->geofence_color
                 ];
                 $i++;
             }
 
+            $a = 0;
+            while ($a < sizeof($active_geofences_polygon)) {
+                $coords = apprisa_geofences_coords::select("latitude", "longitude")
+                    ->where('geofence', $active_geofences_polygon[$a]->id_geofence)
+                    ->get();
+
+                $radio = apprisa_geofences_coords::select("radio")
+                    ->where('geofence', $active_geofences_polygon[$a]->id_geofence)
+                    ->get();
+
+                $geo =  apprisa_geofences_view::where('id_status', 1)->where('id_geofence', $active_geofences_polygon[$a]->id_geofence)->get();
+
+                $polygons[$a] = [
+                    "id" => $geo[$a]->id_geofence,
+                    "nombre" => $geo[$a]->geofence_name,
+                    "coordenadas" => $coords,
+                    "figura" => $geo[$a]->mode,
+                    "color" => $geo[$a]->geofence_color
+                ];
+                $a++;
+            }
+
             return response()->json([
                 'status' => true,
-                'data' => $geovalla
+                'circles' => $circles,
+                'polygons' => $polygons
             ], 200);
         } catch (Exception $th) {
             return response()->json([
@@ -434,6 +457,54 @@ class apprisa_controller extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "An error ocurred, try again: " . $th
+            ], 200);
+        }
+    }
+
+    public function status_geofence(Request $request)
+    {
+        try {
+            $rules = [
+                "geofence" => "required",
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $geofence = apprisa_geofences::where('id_geofence', $request->geofence)->first();
+                if ($geofence != null || $geofence == "") {
+                    switch ($geofence->status) {
+                        case 1:
+                            apprisa_geofences::where('id_geofence', $request->geofence)->update([
+                                "status" => 2
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha inhabilitado al usuario " . $geofence->name
+                            ], 200);
+                            break;
+
+                        case 2:
+                            apprisa_geofences::where('id_geofence', $request->geofence)->update([
+                                "status" => 1
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha habilitado al usuario " . $geofence->name
+                            ], 200);
+                            break;
+                    }
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
             ], 200);
         }
     }

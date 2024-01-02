@@ -82,7 +82,7 @@ class sio_controller extends Controller
             ], 200);
         }
         try {
-            DB::connection('DevSio')->update('exec update_status ?,?', [
+            DB::connection('SIO')->update('exec update_status ?,?', [
                 $data->id_status,
                 $data->descrip_status
             ]);
@@ -125,7 +125,7 @@ class sio_controller extends Controller
 
     public function ctl_type_file()
     {
-        $ctl_type_files = DB::connection('DevSio')->select('select * from type_file_view');
+        $ctl_type_files = DB::connection('SIO')->select('select * from type_file_view');
         return response()->json([
             'status' => true,
             'data' => $ctl_type_files
@@ -140,7 +140,7 @@ class sio_controller extends Controller
                 'message' => 'No results found',
             ], 200);
         } else {
-            $type_file = DB::connection('DevSio')->table('type_file_view')->where('id_type_file', $request->id_type_file)->first();
+            $type_file = DB::connection('SIO')->table('type_file_view')->where('id_type_file', $request->id_type_file)->first();
             if ($type_file == false) {
                 return response()->json([
                     'status' => false,
@@ -314,7 +314,7 @@ class sio_controller extends Controller
         $descrip_role_validate = sio_role::where(['descrip_role' => $request->descrip_role])->where(['id_role' => $request->id_role])->get();
         if (sizeof($descrip_role_validate) == 0) {
             try {
-                DB::connection('DevSio')->update('exec update_role ?,?', [
+                DB::connection('SIO')->update('exec update_role ?,?', [
                     $request->id_role,
                     $request->descrip_role
                 ]);
@@ -355,7 +355,7 @@ class sio_controller extends Controller
     //--------------------Funciones catalogo bancos --------------------------------
     public function view_banks()
     {
-        $view_banks = DB::connection('DevSio')->table('banks_view')->get();
+        $view_banks = DB::connection('SIO')->table('banks_view')->get();
         return response()->json([
             'status' => true,
             'data' => $view_banks
@@ -377,7 +377,7 @@ class sio_controller extends Controller
                 'message' => $validator->errors()->all()
             ], 200);
         }
-        $views_global = DB::connection('DevSio')->table('banks_view')
+        $views_global = DB::connection('SIO')->table('banks_view')
             ->orwhere('key_bank', $request->key_bank)
             ->orwhere('name_bank', $request->name_bank)
             ->orwhere('business_name', $request->business_name)->get();
@@ -425,7 +425,7 @@ class sio_controller extends Controller
                 'message' => 'No results found',
             ], 200);
         } else {
-            $detail_bank = DB::connection('DevSio')->table('banks_view')->where('id_bank', $request->id_bank)->first();
+            $detail_bank = DB::connection('SIO')->table('banks_view')->where('id_bank', $request->id_bank)->first();
             if ($detail_bank == false) {
                 return response()->json([
                     'status' => false,
@@ -456,7 +456,7 @@ class sio_controller extends Controller
             ], 200);
         }
         try {
-            DB::connection('DevSio')->update('exec updated_banks ?,?,?,?', [
+            DB::connection('SIO')->update('exec updated_banks ?,?,?,?', [
                 $request->id_bank,
                 $request->key_bank,
                 $request->name_bank,
@@ -624,7 +624,7 @@ class sio_controller extends Controller
     {
         try {
             set_time_limit(0);
-            $view_receipts_c = DB::connection('DevSio')->select('select * from receipts_complete_view order by pay_date desc');
+            $view_receipts_c = DB::connection('SIO')->select('select * from receipts_complete_view order by pay_date desc');
             return response()->json([
                 'status' => true,
                 'data' => $view_receipts_c
@@ -641,7 +641,7 @@ class sio_controller extends Controller
     {
         try {
             set_time_limit(0);
-            $view_receipts_i = DB::connection('DevSio')->select('select * from receipts_incomplete_view order by pay_date desc');
+            $view_receipts_i = DB::connection('SIO')->select('select * from receipts_incomplete_view order by pay_date desc');
             return response()->json([
                 'status' => true,
                 'data' => $view_receipts_i
@@ -656,7 +656,7 @@ class sio_controller extends Controller
 
     public function updated_receipts_all(){
         try {
-            DB::connection('DevSio')->update('exec updated_cia');
+            DB::connection('SIO')->update('exec updated_cia');
             return response()->json([
                 'status' => true,
                 'message' => 'Receipts updated successfully'
@@ -687,7 +687,7 @@ class sio_controller extends Controller
                 'message' => 'No results found',
             ], 200);
         } else {
-            $details_receipts = DB::connection('DevSio')->table('tbl_payment_receipts')
+            $details_receipts = DB::connection('SIO')->table('tbl_payment_receipts')
             ->where('id_payment_receipts', $request->input('id_payment_receipts'))->get();
             if ($details_receipts == false) {
                 return response()->json([
@@ -716,7 +716,7 @@ class sio_controller extends Controller
             ], 200);
         }
         try {
-            DB::connection('DevSio')->update('exec updated_cia_receipts ?,?', [
+            DB::connection('SIO')->update('exec updated_cia_receipts ?,?', [
                 $request->abbreviation_cia,
                 $request->id_payment_receipts,
             ]);
@@ -771,7 +771,7 @@ class sio_controller extends Controller
     {
         try {
             set_time_limit(0);
-            $ctl_receipts = DB::connection('DevSio')->table('partners_general')->orderBy('id_partener', 'desc')->get();
+            $ctl_receipts = DB::connection('SIO')->table('partners_general')->orderBy('id_partener', 'desc')->get();
             return response()->json([
                 'status' => true,
                 'data' => $ctl_receipts
@@ -819,7 +819,7 @@ class sio_controller extends Controller
                 'message' => 'No results found',
             ], 200);
         } else {
-            $details_partener = DB::connection('DevSio')->table('tbl_partners')
+            $details_partener = DB::connection('SIO')->table('tbl_partners')
             ->where('id_partener', $request->input('id_partener'))->get();
             if ($details_partener == false) {
                 return response()->json([
@@ -879,15 +879,15 @@ class sio_controller extends Controller
         }
         
         try {
-            DB::connection('DevSio')->update('exec update_partners ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?', [
+            DB::connection('SIO')->update('exec update_partners ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?', [
                 $data->id_partener,
-                $data->name,
-                $data->last_name,
-                $data->mother_last_name,
+                strtoupper($data->name),
+                strtoupper($data->last_name),
+                strtoupper($data->mother_last_name),
                 $data->id_sex,
                 $data->birthdate,
-                $data->curp,
-                $data->rfc,
+                strtoupper($data->curp),
+                strtoupper($data->rfc),
                 $data->id_bank,
                 $data->account_number,
                 $data->key_account, 
@@ -961,20 +961,20 @@ class sio_controller extends Controller
                 'message' => $validator->errors()->all()
             ], 200);
         }
-        $details_parteners = DB::connection('DevSio')->table('tbl_partners')
+        $details_parteners = DB::connection('SIO')->table('tbl_partners')
             ->where('name', $request->name)
             ->where('last_name', $request->last_name)
             ->where('mother_last_name', $request->mother_last_name)->get();
         if (sizeof($details_parteners) == 0) {
             try {
                 sio_partners::insert([
-                    'name' => $request->name,
-                    'last_name' => $request->last_name,
-                    'mother_last_name' => $request->mother_last_name,
+                    'name' => strtoupper($request->name),
+                    'last_name' => strtoupper($request->last_name),
+                    'mother_last_name' => strtoupper($request->mother_last_name),
                     'id_sex' => $request->id_sex,
                     'birthdate' => $request->birthdate,
-                    'curp' => $request->curp,
-                    'rfc' => $request->rfc,
+                    'curp' => strtoupper($request->curp),
+                    'rfc' => strtoupper($request->rfc),
                     'id_bank' => $request->id_bank,
                     'account_number' => $request->account_number,
                     'key_account' => $request->key_account,
@@ -1058,7 +1058,7 @@ class sio_controller extends Controller
     {
         try {
             set_time_limit(0);
-            $ctl_account_origin = DB::connection('DevSio')->table('origin_account_view')->get();
+            $ctl_account_origin = DB::connection('SIO')->table('origin_account_view')->get();
             return response()->json([
                 'status' => true,
                 'data' => $ctl_account_origin
@@ -1131,7 +1131,7 @@ class sio_controller extends Controller
                 'message' => 'No results found',
             ], 200);
         } else {
-            $detail_origin_accounts = DB::connection('DevSio')->table('origin_account_view')->where('id_origin_accounts', $request->id_origin_accounts)->first();
+            $detail_origin_accounts = DB::connection('SIO')->table('origin_account_view')->where('id_origin_accounts', $request->id_origin_accounts)->first();
             if ($detail_origin_accounts == false) {
                 return response()->json([
                     'status' => false,
@@ -1199,7 +1199,7 @@ class sio_controller extends Controller
             ], 200);
         }
         try {
-            DB::connection('DevSio')->update('exec updated_origin_accounts ?,?,?,?,?,?,?', [
+            DB::connection('SIO')->update('exec updated_origin_accounts ?,?,?,?,?,?,?', [
                 $request->account_number,
                 $request->key_account,
                 $request->card_number,
@@ -1227,7 +1227,7 @@ class sio_controller extends Controller
     {
         try {
             set_time_limit(0);
-            $ctl_cia = DB::connection('DevSio')->table('cia_view')->get();
+            $ctl_cia = DB::connection('SIO')->table('cia_view')->get();
             return response()->json([
                 'status' => true,
                 'data' => $ctl_cia
@@ -1336,7 +1336,7 @@ class sio_controller extends Controller
             ], 200);
         }
         try {
-            DB::connection('DevSio')->update('exec updated_cia_details ?,?,?,?', [
+            DB::connection('SIO')->update('exec updated_cia_details ?,?,?,?', [
                 $request->name_cia,
                 $request->abbreviation_cia,
                 $request->rfc_cia,
@@ -1372,7 +1372,7 @@ class sio_controller extends Controller
                 'message' => 'No results found',
             ], 200);
         } else {
-            $details_cia = DB::connection('DevSio')->table('cia_view')->where('id_cia', $request->id_cia)->first();
+            $details_cia = DB::connection('SIO')->table('cia_view')->where('id_cia', $request->id_cia)->first();
             if ($details_cia == false) {
                 return response()->json([
                     'status' => false,
@@ -1392,7 +1392,7 @@ class sio_controller extends Controller
     {
         try {
             set_time_limit(0);
-            $ctl_doc_global = DB::connection('DevSio')->table('partners_doc_global_view')->get();
+            $ctl_doc_global = DB::connection('SIO')->table('partners_doc_global_view')->get();
             return response()->json([
                 'status' => true,
                 'data' => $ctl_doc_global
@@ -1411,7 +1411,7 @@ class sio_controller extends Controller
     {
         try {
             set_time_limit(0);
-            $ctl_states_accounts = DB::connection('DevSio')->table('states_account_view')->get();
+            $ctl_states_accounts = DB::connection('SIO')->table('states_account_view')->get();
             return response()->json([
                 'status' => true,
                 'data' => $ctl_states_accounts
@@ -1429,7 +1429,7 @@ class sio_controller extends Controller
      {
          try {
              set_time_limit(0);
-             $ctl_municipality = DB::connection('DevSio')->table('ctl_municipality')->where('id_states', $request->id_states)->orderBy('id_municipality', 'desc')->get();
+             $ctl_municipality = DB::connection('SIO')->table('ctl_municipality')->where('id_states', $request->id_states)->orderBy('id_municipality', 'desc')->get();
              return response()->json([
                  'status' => true,
                  'data' => $ctl_municipality

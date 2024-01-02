@@ -14,16 +14,20 @@ use App\Models\censo_roads_v2;
 use App\Models\censo_role_v2;
 use App\Models\censo_settlements_v2;
 use App\Models\censo_state_v2;
+use App\Models\censo_status;
 use App\Models\censo_status_v2;
 use App\Models\censo_type_business_v2;
 use App\Models\censo_users_v2;
-use App\Models\ctl_type_business_v2;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class censo_controller_v2 extends Controller
 {
     protected $connection = 'DevCenso';
 
+    //Funciones status
     public function ctl_status()
     {
         $ctl_status = censo_status_v2::all();
@@ -34,6 +38,77 @@ class censo_controller_v2 extends Controller
         ], 200);
     }
 
+    public function created_status(Request $request)
+    {
+        $rules = [
+            'name_status' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $validate_status = censo_status_v2::where([
+            'name_status' => $request->input('name_status')
+        ])->get();
+        if (sizeof($validate_status) == 0) {
+            $name_status = ucfirst($request->input('name_status'));
+            $create_register_bussines = censo_status_v2::insert(
+                [
+                    'name_status' => $name_status
+                ]
+            );
+            if ($create_register_bussines) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The status has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Status is already registered, verify information.',
+            ], 200);
+        }
+    }
+
+    public function updated_status(Request $request)
+    {
+        $rules = [
+            'name_status' => 'required',
+            'id_status' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $status = censo_status_v2::where('id_status', $request->id_status)->update([
+            'name_status' => $request->name_status
+        ]);
+        if ($status) {
+            return response()->json([
+                'status' => true,
+                'message' => 'The status has been successfully updated.',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while performing the operation.',
+            ], 200);
+        }
+    }
+
+
     public function ctl_role()
     {
         $ctl_role = censo_role_v2::all();
@@ -41,7 +116,7 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $ctl_role
-        ], 200); 
+        ], 200);
     }
 
     public function ctl_company()
@@ -61,7 +136,7 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $ctl_lada
-        ], 200); 
+        ], 200);
     }
 
     public function ctl_line_business()
@@ -71,7 +146,7 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $ctl_line_business
-        ], 200); 
+        ], 200);
     }
 
     public function ctl_type_business()
@@ -81,7 +156,7 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $ctl_type_business
-        ], 200); 
+        ], 200);
     }
 
     public function ctl_state()
@@ -91,7 +166,7 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $ctl_state
-        ], 200);   
+        ], 200);
     }
 
     public function ctl_municipality()
@@ -101,7 +176,7 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $ctl_municipality
-        ], 200);   
+        ], 200);
     }
 
     public function ctl_roads()
@@ -111,7 +186,7 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $ctl_roads
-        ], 200);   
+        ], 200);
     }
 
     public function ctl_settlements()
@@ -121,7 +196,7 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $ctl_settlements
-        ], 200);   
+        ], 200);
     }
 
     public function tbl_commissions()
@@ -131,7 +206,7 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $tbl_commissions
-        ], 200);   
+        ], 200);
     }
 
     public function tbl_credentials()
@@ -141,7 +216,7 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $tbl_credentials
-        ], 200);   
+        ], 200);
     }
 
     public function tbl_device_user()
@@ -151,7 +226,7 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $tbl_device_user
-        ], 200);   
+        ], 200);
     }
 
     public function tbl_registered_businesses()
@@ -161,7 +236,7 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $tbl_registered_businesses
-        ], 200);   
+        ], 200);
     }
 
     public function tbl_users()
@@ -171,6 +246,6 @@ class censo_controller_v2 extends Controller
             'status' => true,
             'message' => 'Successful response.',
             'data' => $tbl_users
-        ], 200);   
+        ], 200);
     }
 }

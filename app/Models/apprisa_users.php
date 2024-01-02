@@ -9,6 +9,5 @@ class apprisa_users extends Model
 {
     use HasFactory;
     protected $connection = "DevApprisa";
-
     protected $table = "tbl_users";
 }

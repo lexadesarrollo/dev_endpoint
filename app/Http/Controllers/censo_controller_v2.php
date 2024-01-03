@@ -461,14 +461,101 @@ class censo_controller_v2 extends Controller
         }
     }
 
-    public function ctl_line_business()
+    public function updated_lada(Request $request)
     {
-        $ctl_line_business = censo_line_business_v2::all();
-        return response()->json([
-            'status' => true,
-            'message' => 'Successful response.',
-            'data' => $ctl_line_business
-        ], 200);
+        $rules = [
+            'id_lada' => 'required',
+            'lada_cell_phone' => 'required',
+            'country_lada' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            DB::connection('DevCenso')->update('exec updated_lada ?,?,?', [
+                $request->id_lada,
+                $request->lada_cell_phone,
+                $request->country_lada
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Lada updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function updated_status_lada(Request $request)
+    {
+        $rules = [
+            'id_lada' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = censo_lada_v2::where('id_lada', $request->id_lada)->first();
+            switch ($id_status->id_status) {
+                case 1:
+                    censo_lada_v2::where('id_lada', $request->id_lada)->update([
+                        'id_status' => 2
+                    ]);
+                    break;
+                case 2:
+                    censo_lada_v2::where('id_lada', $request->id_lada)->update([
+                        'id_status' => 1
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Lada status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_lada(Request $request)
+    {
+        $rules = [
+            'id_lada' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $lada = DB::connection('DevCenso')->table('ctl_lada')->where('id_lada', $request->id_lada)->first();
+        if ($lada == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $lada
+            ], 200);
+        }
     }
 
     public function ctl_type_business()

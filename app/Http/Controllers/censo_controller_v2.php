@@ -1344,7 +1344,7 @@ class censo_controller_v2 extends Controller
             $imageF = str_replace($replace, '', $image_64F);
             $imageF = str_replace(' ', '+', $imageF);
             $imageNameF = 'Picture_User_'. $name_user . uniqid() . '.' . $extends_picture;
-            Storage::disk('public')->put($imageNameF, base64_decode($imageF));
+            Storage::disk('censo')->put($imageNameF, base64_decode($imageF));
             $created_user = censo_users_v2::insert(
                 [
                     'name_user' => $name_user,

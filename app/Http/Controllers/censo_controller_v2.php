@@ -998,6 +998,8 @@ class censo_controller_v2 extends Controller
         }
     }
 
+    //-------------------------Funciones Municipality-------------------------//
+
     public function ctl_roads()
     {
         $ctl_roads = censo_roads_v2::all()->where('id_status', 1);
@@ -1006,6 +1008,133 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful response.',
             'data' => $ctl_roads
         ], 200);
+    }
+
+    public function created_roads(Request $request)
+    {
+        $rules = [
+            'name_roads' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $name_roads = ucfirst($request->input('name_roads'));
+        $created_roads = censo_roads_v2::insert(
+            [
+                'name_roads' => $name_roads
+            ]
+        );
+        if ($created_roads) {
+            return response()->json([
+                'status' => true,
+                'message' => 'The roads has been successfully registered.',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while performing the operation.',
+            ], 200);
+        }
+    }
+
+    public function updated_roads(Request $request)
+    {
+        $rules = [
+            'id_roads' => 'required',
+            'name_roads' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $name_roads = ucfirst($request->input('name_roads'));
+            DB::connection('DevCenso')->update('exec updated_roads ?,?', [
+                $request->id_roads,
+                $name_roads
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Roads updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function updated_status_roads(Request $request)
+    {
+        $rules = [
+            'id_roads' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = censo_roads_v2::where('id_roads', $request->id_roads)->first();
+            switch ($id_status->id_status) {
+                case 1:
+                    censo_roads_v2::where('id_roads', $request->id_roads)->update([
+                        'id_status' => 2
+                    ]);
+                    break;
+                case 2:
+                    censo_roads_v2::where('id_roads', $request->id_roads)->update([
+                        'id_status' => 1
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Roads status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_roads(Request $request)
+    {
+        $rules = [
+            'id_roads' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $roads = DB::connection('DevCenso')->table('ctl_roads')->where('id_roads', $request->id_roads)->first();
+        if ($roads == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $roads
+            ], 200);
+        }
     }
 
     public function ctl_settlements()

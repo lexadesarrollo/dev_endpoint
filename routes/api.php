@@ -200,6 +200,10 @@ Route::prefix('censoApp-v2')->group(function () {
     //      Roads
     //-----------------
     Route::get('/ctl_roads_censo',         [censo_controller_v2::class, 'ctl_roads']);
+    Route::post('/created_roads_censo', [censo_controller_v2::class, 'created_roads']);
+    Route::post('/detail_roads_censo', [censo_controller_v2::class, 'detail_roads']);
+    Route::put('/updated_roads_censo', [censo_controller_v2::class, 'updated_roads']);
+    Route::put('/updated_status_roads_censo', [censo_controller_v2::class, 'updated_status_roads']);
     //-----------------
     //      Settlements
     //-----------------

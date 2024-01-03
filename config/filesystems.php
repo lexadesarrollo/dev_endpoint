@@ -38,7 +38,7 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/CensoApp'),
+            'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
@@ -46,7 +46,7 @@ return [
 
         'ocr' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/Temps'),
+            'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
@@ -78,8 +78,7 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public/Temps'),
-        public_path('CensoApp') => storage_path('app/public/CensoApp'),
+        public_path('storage') => storage_path('app/public'),
     ],
 
 ];

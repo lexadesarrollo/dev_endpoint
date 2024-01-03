@@ -208,6 +208,10 @@ Route::prefix('censoApp-v2')->group(function () {
     //      Settlements
     //-----------------
     Route::get('/ctl_settlements_censo',   [censo_controller_v2::class, 'ctl_settlements']);
+    Route::post('/created_settlements_censo', [censo_controller_v2::class, 'created_settlements']);
+    Route::post('/detail_settlements_censo', [censo_controller_v2::class, 'detail_settlements']);
+    Route::put('/updated_settlements_censo', [censo_controller_v2::class, 'updated_settlements']);
+    Route::put('/updated_status_settlements_censo', [censo_controller_v2::class, 'updated_status_settlements']);
     //Rutas de tablas
     //-----------------
     //      Commissions

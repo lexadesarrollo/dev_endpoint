@@ -436,13 +436,13 @@ class censo_controller_v2 extends Controller
             ->orwhere(['country_lada' => $request->country_lada])
             ->get();
         if (sizeof($validate_lada) == 0) {
-            $created_company = censo_lada_v2::insert(
+            $created_lada = censo_lada_v2::insert(
                 [
                     'lada_cell_phone' => $request->lada_cell_phone,
                     'country_lada' => $request->country_lada
                 ]
             );
-            if ($created_company) {
+            if ($created_lada) {
                 return response()->json([
                     'status' => true,
                     'message' => 'The lada has been successfully registered.',
@@ -558,6 +558,8 @@ class censo_controller_v2 extends Controller
         }
     }
 
+    //-------------------------Funciones Type Business-------------------------//
+
     public function ctl_type_business()
     {
         $ctl_type_business = censo_type_business_v2::all();
@@ -566,6 +568,141 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful response.',
             'data' => $ctl_type_business
         ], 200);
+    }
+
+    public function created_type_business(Request $request)
+    {
+        $rules = [
+            'descrip_type_business' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $validate_type_business = censo_type_business_v2::where([
+            'descrip_type_business' => $request->input('descrip_type_business')
+        ])->get();
+        if (sizeof($validate_type_business) == 0) {
+            $created_type_bussiness = censo_type_business_v2::insert(
+                [
+                    'descrip_type_business' => $request->descrip_type_business
+                ]
+            );
+            if ($created_type_bussiness) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The type business has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Type business is already registered, verify information.',
+            ], 200);
+        }
+    }
+
+    public function updated_type_business(Request $request)
+    {
+        $rules = [
+            'id_type_business' => 'required',
+            'descrip_type_business' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            DB::connection('DevCenso')->update('exec updated_type_business ?,?', [
+                $request->id_type_business,
+                $request->descrip_type_business
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Type business updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function updated_status_type_business(Request $request)
+    {
+        $rules = [
+            'id_type_business' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = censo_type_business_v2::where('id_type_business', $request->id_type_business)->first();
+            switch ($id_status->id_status) {
+                case 1:
+                    censo_type_business_v2::where('id_type_business', $request->id_type_business)->update([
+                        'id_status' => 2
+                    ]);
+                    break;
+                case 2:
+                    censo_type_business_v2::where('id_type_business', $request->id_type_business)->update([
+                        'id_status' => 1
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Type business status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_type_business(Request $request)
+    {
+        $rules = [
+            'id_type_business' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $lada = DB::connection('DevCenso')->table('ctl_type_business')->where('id_type_business', $request->id_type_business)->first();
+        if ($lada == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $lada
+            ], 200);
+        }
     }
 
     public function ctl_state()

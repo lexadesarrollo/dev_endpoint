@@ -173,13 +173,13 @@ Route::prefix('censoApp-v2')->group(function () {
     Route::put('/updated_status_lada_censo', [censo_controller_v2::class, 'updated_status_lada']);
     Route::put('/updated_lada_censo', [censo_controller_v2::class, 'updated_lada']);
     //-----------------
-    //      Line Business
-    //-----------------
-    Route::get('/ctl_line_business_censo', [censo_controller_v2::class, 'ctl_line_business']);
-    //-----------------
     //      Type Business
     //-----------------
     Route::get('/ctl_type_business_censo', [censo_controller_v2::class, 'ctl_type_business']);
+    Route::post('/created_type_business_censo', [censo_controller_v2::class, 'created_type_business']);
+    Route::post('/detail_type_business_censo', [censo_controller_v2::class, 'detail_type_business']);
+    Route::put('/updated_status_type_business_censo', [censo_controller_v2::class, 'updated_status_type_business']);
+    Route::put('/updated_type_business_censo', [censo_controller_v2::class, 'updated_type_business']);
     //-----------------
     //      State
     //-----------------

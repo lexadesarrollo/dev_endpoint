@@ -1347,8 +1347,6 @@ class censo_controller_v2 extends Controller
 
             Storage::disk('public')->put($imageNameF, base64_decode($image));
             $url_profile_user = $imageNameF;
-            // $url_profile_user = $imageNameF;
-
             $created_user = censo_users_v2::insert(
                 [
                     'name_user' => $name_user,
@@ -1401,9 +1399,19 @@ class censo_controller_v2 extends Controller
             ], 200);
         }
         try {
-            $name_user = ucfirst($request->input('name_user'));
-            $last_name_user = ucfirst($request->input('last_name_user'));
-            $mother_last_name_user = ucfirst($request->input('mother_last_name_user'));
+            $data = json_decode($request->getContent());
+            $name_user = ucfirst($data->name_user);
+            $last_name_user = ucfirst($data->last_name_user);
+            $mother_last_name_user = ucfirst($data->mother_last_name_user);
+            $image_64F = $data->picture_profile;
+            $extends_picture = explode('/', explode(':', substr($image_64F, 0, strpos($image_64F, ';')))[1])[1];
+            $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
+            $image = str_replace($replace, '', $image_64F);
+            $image = str_replace(' ', '+', $image);
+            $imageNameF = 'CensoApp/' . $name_user.'/Picture_User_'. $name_user . uniqid() . '.' . $extends_picture;
+
+            Storage::disk('public')->put($imageNameF, base64_decode($image));
+            $url_profile_user = $imageNameF;
             DB::connection('DevCenso')->update('exec updated_user ?,?,?,?,?,?,?,?,?', [
                 $request->id_users,
                 $name_user,
@@ -1413,7 +1421,7 @@ class censo_controller_v2 extends Controller
                 $request->id_lada,
                 $request->cell_phone,
                 $request->id_state,
-                $request->picture_profile
+                $url_profile_user
             ]);
             return response()->json([
                 'status' => true,
@@ -1502,6 +1510,163 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful response.',
             'data' => $tbl_credentials
         ], 200);
+    }
+
+    public function created_credentials(Request $request)
+    {
+        $rules = [
+            'user_name' => 'required',
+            'password' => 'required',
+            'id_user' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $data = json_decode($request->getContent());
+
+        $validate_credentials = censo_credentials_v2::orwhere([
+            'id_user' => $data->id_user
+        ])->get();
+        if (sizeof($validate_credentials) == 0) {
+            
+            $created_credentials = censo_credentials_v2::insert(
+                [
+                    
+                ]
+            );
+            if ($created_credentials) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The credentials has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Credentials is already registered, verify information.',
+            ], 200);
+        }
+    }
+
+    public function updated_credentials(Request $request)
+    {
+        $rules = [
+            'id_users' => 'required',
+            'name_user' => 'required',
+            'last_name_user' => 'required',
+            'mother_last_name_user' => 'required',
+            'email' => 'required',
+            'id_lada' => 'required',
+            'cell_phone' => 'required',
+            'id_state' => 'required',
+            'picture_profile' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $name_user = ucfirst($request->input('name_user'));
+            $last_name_user = ucfirst($request->input('last_name_user'));
+            $mother_last_name_user = ucfirst($request->input('mother_last_name_user'));
+            DB::connection('DevCenso')->update('exec updated_user ?,?,?,?,?,?,?,?,?', [
+                $request->id_users,
+                $name_user,
+                $last_name_user,
+                $mother_last_name_user,
+                $request->email,
+                $request->id_lada,
+                $request->cell_phone,
+                $request->id_state,
+                $request->picture_profile
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'User updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function updated_status_credentials(Request $request)
+    {
+        $rules = [
+            'id_users' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = censo_users_v2::where('id_users', $request->id_users)->first();
+            switch ($id_status->id_status) {
+                case 1:
+                    censo_users_v2::where('id_users', $request->id_users)->update([
+                        'id_status' => 2
+                    ]);
+                    break;
+                case 2:
+                    censo_users_v2::where('id_users', $request->id_users)->update([
+                        'id_status' => 1
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'User status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_credentials(Request $request)
+    {
+        $rules = [
+            'id_users' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $user = DB::connection('DevCenso')->table('tbl_users')->where('id_users', $request->id_users)->first();
+        if ($user == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $user
+            ], 200);
+        }
     }
 
     //-------------------------Funciones Device User-------------------------//

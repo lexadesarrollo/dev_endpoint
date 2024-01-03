@@ -7,14 +7,12 @@ use App\Models\censo_company_v2;
 use App\Models\censo_credentials_v2;
 use App\Models\censo_device_user_v2;
 use App\Models\censo_lada_v2;
-use App\Models\censo_line_business_v2;
 use App\Models\censo_municipality_v2;
 use App\Models\censo_registered_businesses_v2;
 use App\Models\censo_roads_v2;
 use App\Models\censo_role_v2;
 use App\Models\censo_settlements_v2;
 use App\Models\censo_state_v2;
-use App\Models\censo_status;
 use App\Models\censo_status_v2;
 use App\Models\censo_type_business_v2;
 use App\Models\censo_users_v2;
@@ -176,9 +174,10 @@ class censo_controller_v2 extends Controller
             ], 200);
         }
         try {
+            $name_role = ucfirst($request->input('name_role'));
             DB::connection('DevCenso')->update('exec updated_role ?,?', [
                 $request->id_role,
-                $request->name_role
+                $name_role
             ]);
             return response()->json([
                 'status' => true,
@@ -324,9 +323,10 @@ class censo_controller_v2 extends Controller
             ], 200);
         }
         try {
+            $name_company = ucfirst($request->input('name_company'));
             DB::connection('DevCenso')->update('exec updated_company ?,?', [
                 $request->id_company,
-                $request->name_company
+                $name_company
             ]);
             return response()->json([
                 'status' => true,
@@ -625,9 +625,10 @@ class censo_controller_v2 extends Controller
             ], 200);
         }
         try {
+            $descrip_type_business = ucfirst($request->input('descrip_type_business'));
             DB::connection('DevCenso')->update('exec updated_type_business ?,?', [
                 $request->id_type_business,
-                $request->descrip_type_business
+                $descrip_type_business
             ]);
             return response()->json([
                 'status' => true,

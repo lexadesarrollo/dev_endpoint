@@ -1296,6 +1296,8 @@ class censo_controller_v2 extends Controller
         }
     }
 
+    //-------------------------Funciones Users-------------------------//
+
     public function tbl_users()
     {
         $tbl_users = censo_users_v2::all()->where('id_status', 1);
@@ -1304,6 +1306,175 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful response.',
             'data' => $tbl_users
         ], 200);
+    }
+
+    public function created_users(Request $request)
+    {
+        $rules = [
+            'name_user' => 'required',
+            'last_name_user' => 'required',
+            'mother_last_name_user' => 'required',
+            'email' => 'required',
+            'id_lada' => 'required',
+            'cell_phone' => 'required',
+            'id_state' => 'required',
+            'picture_profile' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $validate_user = censo_users_v2::orwhere([
+            'email' => $request->input('email')
+        ])
+            ->orwhere(['cell_phone' => $request->input('cell_phone')])->get();
+        if (sizeof($validate_user) == 0) {
+            $name_user = ucfirst($request->input('name_user'));
+            $last_name_user = ucfirst($request->input('last_name_user'));
+            $mother_last_name_user = ucfirst($request->input('mother_last_name_user'));
+            $created_user = censo_users_v2::insert(
+                [
+                    'name_user' => $name_user,
+                    'last_name_user' => $last_name_user,
+                    'mother_last_name_user' => $mother_last_name_user,
+                    'email' => $request->email,
+                    'id_lada' => $request->id_lada,
+                    'cell_phone' => $request->cell_phone,
+                    'id_state' => $request->picture_profile
+                ]
+            );
+            if ($created_user) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The user has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'User is already registered, verify information.',
+            ], 200);
+        }
+    }
+
+    public function updated_user(Request $request)
+    {
+        $rules = [
+            'id_users' => 'required',
+            'name_user' => 'required',
+            'last_name_user' => 'required',
+            'mother_last_name_user' => 'required',
+            'email' => 'required',
+            'id_lada' => 'required',
+            'cell_phone' => 'required',
+            'id_state' => 'required',
+            'picture_profile' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $name_user = ucfirst($request->input('name_user'));
+            $last_name_user = ucfirst($request->input('last_name_user'));
+            $mother_last_name_user = ucfirst($request->input('mother_last_name_user'));
+            DB::connection('DevCenso')->update('exec updated_user ?,?,?,?,?,?,?,?,?', [
+                $request->id_users,
+                $name_user,
+                $last_name_user,
+                $mother_last_name_user,
+                $request->email,
+                $request->id_lada,
+                $request->cell_phone,
+                $request->id_state,
+                $request->picture_profile
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'User updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function updated_status_user(Request $request)
+    {
+        $rules = [
+            'id_users' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = censo_users_v2::where('id_users', $request->id_users)->first();
+            switch ($id_status->id_status) {
+                case 1:
+                    censo_users_v2::where('id_users', $request->id_users)->update([
+                        'id_status' => 2
+                    ]);
+                    break;
+                case 2:
+                    censo_users_v2::where('id_users', $request->id_users)->update([
+                        'id_status' => 1
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'User status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_users(Request $request)
+    {
+        $rules = [
+            'id_users' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $user = DB::connection('DevCenso')->table('tbl_users')->where('id_users', $request->id_users)->first();
+        if ($user == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $user
+            ], 200);
+        }
     }
 
     public function tbl_credentials()

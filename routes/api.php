@@ -214,9 +214,13 @@ Route::prefix('censoApp-v2')->group(function () {
     Route::put('/updated_status_settlements_censo', [censo_controller_v2::class, 'updated_status_settlements']);
     //Rutas de tablas
     //-----------------
-    //      Commissions
+    //      Users
     //-----------------
-    Route::get('/tbl_commissions_censo',   [censo_controller_v2::class, 'tbl_commissions']);
+    Route::get('/tbl_users_censo',                 [censo_controller_v2::class, 'tbl_users']);
+    Route::post('/created_users_censo', [censo_controller_v2::class, 'created_users']);
+    Route::post('/detail_users_censo', [censo_controller_v2::class, 'detail_users']);
+    Route::put('/updated_user_censo', [censo_controller_v2::class, 'updated_user']);
+    Route::put('/updated_status_user_censo', [censo_controller_v2::class, 'updated_status_user']);
     //-----------------
     //      Credentials
     //-----------------
@@ -230,7 +234,7 @@ Route::prefix('censoApp-v2')->group(function () {
     //-----------------
     Route::get('/tbl_registered_businesses_censo', [censo_controller_v2::class, 'tbl_registered_businesses']);
     //-----------------
-    //      Users
+    //      Commissions
     //-----------------
-    Route::get('/tbl_users_censo',                 [censo_controller_v2::class, 'tbl_users']);
+    Route::get('/tbl_commissions_censo',   [censo_controller_v2::class, 'tbl_commissions']);
 });

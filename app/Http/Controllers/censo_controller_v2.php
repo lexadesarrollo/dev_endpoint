@@ -1343,7 +1343,8 @@ class censo_controller_v2 extends Controller
                     'email' => $request->email,
                     'id_lada' => $request->id_lada,
                     'cell_phone' => $request->cell_phone,
-                    'id_state' => $request->picture_profile
+                    'id_state' => $request->id_state,
+                    'picture_profile' => $request->picture_profile
                 ]
             );
             if ($created_user) {

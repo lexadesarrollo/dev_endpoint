@@ -586,9 +586,10 @@ class censo_controller_v2 extends Controller
             'descrip_type_business' => $request->input('descrip_type_business')
         ])->get();
         if (sizeof($validate_type_business) == 0) {
+            $descrip_type_business = ucfirst($request->input('descrip_type_business'));
             $created_type_bussiness = censo_type_business_v2::insert(
                 [
-                    'descrip_type_business' => $request->descrip_type_business
+                    'descrip_type_business' => $descrip_type_business
                 ]
             );
             if ($created_type_bussiness) {

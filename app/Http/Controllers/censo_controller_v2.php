@@ -259,7 +259,7 @@ class censo_controller_v2 extends Controller
 
     public function ctl_company()
     {
-        $ctl_company = censo_company_v2::all();
+        $ctl_company = censo_company_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',
@@ -408,7 +408,7 @@ class censo_controller_v2 extends Controller
 
     public function ctl_lada()
     {
-        $ctl_lada = censo_lada_v2::all();
+        $ctl_lada = censo_lada_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',
@@ -561,7 +561,7 @@ class censo_controller_v2 extends Controller
 
     public function ctl_type_business()
     {
-        $ctl_type_business = censo_type_business_v2::all();
+        $ctl_type_business = censo_type_business_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',
@@ -710,7 +710,7 @@ class censo_controller_v2 extends Controller
 
     public function ctl_state()
     {
-        $ctl_state = censo_state_v2::all();
+        $ctl_state = censo_state_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',

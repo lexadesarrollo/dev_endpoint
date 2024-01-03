@@ -192,6 +192,10 @@ Route::prefix('censoApp-v2')->group(function () {
     //      Municipality
     //-----------------
     Route::get('/ctl_municipality_censo',  [censo_controller_v2::class, 'ctl_municipality']);
+    Route::post('/created_municipality_censo', [censo_controller_v2::class, 'created_municipality']);
+    Route::post('/detail_municipality_censo', [censo_controller_v2::class, 'detail_municipality']);
+    Route::put('/updated_municipality_censo', [censo_controller_v2::class, 'updated_municipality']);
+    Route::put('/updated_status_municipality_censo', [censo_controller_v2::class, 'updated_status_municipality']);
     //-----------------
     //      Roads
     //-----------------

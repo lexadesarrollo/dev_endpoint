@@ -47,7 +47,7 @@ return [
         'censo' => [
             'driver' => 'local',
             'root' => storage_path('app/public/CensoApp'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL').'/storage/CensoApp',
             'visibility' => 'public',
             'throw' => false,
         ],

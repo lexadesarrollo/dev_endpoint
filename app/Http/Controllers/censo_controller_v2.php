@@ -1022,21 +1022,31 @@ class censo_controller_v2 extends Controller
                 'message' => $validator->errors()->all()
             ]);
         }
-        $name_roads = ucfirst($request->input('name_roads'));
-        $created_roads = censo_roads_v2::insert(
-            [
-                'name_roads' => $name_roads
-            ]
-        );
-        if ($created_roads) {
-            return response()->json([
-                'status' => true,
-                'message' => 'The roads has been successfully registered.',
-            ], 200);
+        $validate_roads = censo_roads_v2::where([
+            'name_roads' => $request->input('name_roads')
+        ])->get();
+        if (sizeof($validate_roads) == 0) {
+            $name_roads = ucfirst($request->input('name_roads'));
+            $created_roads = censo_roads_v2::insert(
+                [
+                    'name_roads' => $name_roads
+                ]
+            );
+            if ($created_roads) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The roads has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
         } else {
             return response()->json([
                 'status' => false,
-                'message' => 'An error occurred while performing the operation.',
+                'message' => 'Roads is already registered, verify information.',
             ], 200);
         }
     }

@@ -70,7 +70,7 @@ class send_email_global extends Controller
             $mail->Body = ' <body style="background-image: url(' . self::$background . ') !important; background-size: cover; background-repeat: no-repeat;">
                                 <center><img style="width:65%; padding-bottom: 1.5em; padding-top: 1.5em" src="' . self::$logo . '"></center>
                                 <h1 style="text-align:center"><b>Te damos la bienvenida, ' . $data['name_complete'] . '</b></h1><br>
-                                <div style="padding: 10px !important; background-color: rgba(255, 255, 255, 0.8); border-radius: 15px; text-align: justify; -webkit-box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                                <div style="padding: 10px !important; background-color: rgba(255, 255, 255, 0.8); border-radius: 15px; text-align: start; -webkit-box-shadow: 0 2px 10px rgba(0,0,0,0.2);
                                 -moz-box-shadow: 0 2px 10px rgba(0,0,0,0.2);
                                 box-shadow: 0 2px 6px rgba(0,0,0,0.2); backdrop-filter: blur(50px) !important">
                                 <p style="font-size: 16px; padding: 0 1.5em 0 1.5em">Aquí están tus credenciales de acceso:</p> 

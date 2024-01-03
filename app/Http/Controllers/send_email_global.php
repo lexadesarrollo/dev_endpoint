@@ -10,7 +10,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class send_email_global extends Controller
 {
-    public static  $empresa, $host, $username, $password, $background, $logo;
+    public static  $empresa, $host, $username, $password, $background, $logo, $color, $url, $texto;
 
     public static function send_email_credentials($data)
     {
@@ -21,11 +21,29 @@ class send_email_global extends Controller
                 self::$password = 'Iy0~ZhSl@s%6';
                 self::$background = 'https://haytiro.mx/images/textura.webp';
                 self::$logo = 'https://haytiro.mx/images/logo2.png';
+                self::$color = '#e40f20';
+                self::$url = 'https://haytiro.mx/';
+                self::$texto = 'Iniciar Sesión';
                 break;
             case 'Apprisa':
-                self::$host = 'mail.haytiro.mx';
-                self::$username = 'ventas@haytiro.mx';
-                self::$password = 'Iy0~ZhSl@s%6';
+                self::$host = 'apprisa.com.mx';
+                self::$username = 'soporte@apprisa.com.mx';
+                self::$password = 'nj!Be_xEAACJ';
+                self::$background = 'https://da-pw.mx/storage/Wallpapers/wallpaper_apprisa.jpg';
+                self::$logo = 'https://apprisa.com.mx/img/logo.png';
+                self::$color = '#ffc100';
+                self::$url = 'https://apprisa.com.mx/';
+                self::$texto = 'Descargar la aplicación';
+                break;
+            case 'Censo':
+                self::$host = 'adminalba.mx';
+                self::$username = 'soporte@adminalba.mx';
+                self::$password = '4T,1CUNJ^J8Z';
+                self::$background = 'https://da-pw.mx/storage/Wallpapers/wallpaper_censo.jpg';
+                self::$logo = 'https://adminalba.mx/images/logo.png';
+                self::$color = '#ead22d';
+                self::$url = 'https://adminalba.mx/';
+                self::$texto = 'Descargar la aplicación';
                 break;
             case 'SIO':
 
@@ -62,7 +80,7 @@ class send_email_global extends Controller
                                 </div>
                                 <br>
                                 <br> 
-                                <center><a style="text-decoration: none; background-color: #c00000; color: #fff; padding: 10px; border-radius: 15px; cursor: pointer; font-size: 15px" href="https://haytiro.mx/"><b>Iniciar Sesión</b></a></center>
+                                <center><a style="text-decoration: none; background-color:'. self::$color . '; color: #fff; padding: 10px; border-radius: 15px; cursor: pointer; font-size: 15px" href="'.self::$url.'"><b>'.self::$texto.'</b></a></center>
                                 <br>
                                 <br>
                                 </body>';

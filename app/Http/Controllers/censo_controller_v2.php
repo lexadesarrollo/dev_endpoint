@@ -1319,7 +1319,8 @@ class censo_controller_v2 extends Controller
             'id_lada' => 'required',
             'cell_phone' => 'required',
             'id_state' => 'required',
-            'picture_profile' => 'required'
+            'picture_profile' => 'required',
+            'id_role' => 'required'
         ];
         $validator = Validator::make($request->input(), $rules);
         if ($validator->fails()) {
@@ -1343,7 +1344,7 @@ class censo_controller_v2 extends Controller
             $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
             $image = str_replace($replace, '', $image_64F);
             $image = str_replace(' ', '+', $image);
-            $imageNameF = 'CensoApp/' . $name_user.'/Picture_User_'. $name_user . uniqid() . '.' . $extends_picture;
+            $imageNameF = 'CensoApp/' . $name_user . '/Picture_User_' . $name_user . uniqid() . '.' . $extends_picture;
 
             Storage::disk('public')->put($imageNameF, base64_decode($image));
             $url_profile_user = $imageNameF;
@@ -1356,14 +1357,46 @@ class censo_controller_v2 extends Controller
                     'id_lada' => $data->id_lada,
                     'cell_phone' => $data->cell_phone,
                     'id_state' => $data->id_state,
-                    'picture_profile' => $url_profile_user
+                    'picture_profile' => $url_profile_user,
+                    'id_role' => $data->id_role
                 ]
             );
             if ($created_user) {
-                return response()->json([
-                    'status' => true,
-                    'message' => 'The user has been successfully registered.',
-                ], 200);
+                send_email_global::$empresa = 'Censo';
+                $credentials = credentials_global::created_credentials($request->name_user);
+                $name_complete = ucwords(strtolower($request->name_user)) . ' ' . ucwords(strtolower($request->last_name)) . ' ' . ucwords(strtolower($request->mother_last_name));
+                $data = [
+                    'name_complete' => $name_complete,
+                    'email'    => $request->email,
+                    'username' => $credentials['user_name'],
+                    'password' => $credentials['password']
+                ];
+                $email = send_email_global::send_email_credentials($data);
+                if ($email['status'] == true) {
+                    $last_customer_id = censo_users_v2::where('email', $request->email)->first();
+                    $id_user = $last_customer_id->id_users;
+                    $created_credentials = censo_credentials_v2::insert([
+                        'username' => $credentials['user_name'],
+                        'password' => $credentials['password_token'],
+                        'id_user' => $id_user
+                    ]);
+                    if ($created_credentials) {
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'The user has been successfully registered.'
+                        ], 200);
+                    } else {
+                        return response()->json([
+                            'status' => false,
+                            'message' =>  'An error ocurred during query created credentials.'
+                        ], 200);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' =>  'An error occurred, retry later.'
+                    ], 200);
+                }
             } else {
                 return response()->json([
                     'status' => false,
@@ -1408,7 +1441,7 @@ class censo_controller_v2 extends Controller
             $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
             $image = str_replace($replace, '', $image_64F);
             $image = str_replace(' ', '+', $image);
-            $imageNameF = 'CensoApp/' . $name_user.'/Picture_User_'. $name_user . uniqid() . '.' . $extends_picture;
+            $imageNameF = 'CensoApp/' . $name_user . '/Picture_User_' . $name_user . uniqid() . '.' . $extends_picture;
 
             Storage::disk('public')->put($imageNameF, base64_decode($image));
             $url_profile_user = $imageNameF;
@@ -1510,51 +1543,6 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful response.',
             'data' => $tbl_credentials
         ], 200);
-    }
-
-    public function created_credentials(Request $request)
-    {
-        $rules = [
-            'user_name' => 'required',
-            'password' => 'required',
-            'id_user' => 'required'
-        ];
-        $validator = Validator::make($request->input(), $rules);
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => $validator->errors()->all()
-            ]);
-        }
-        $data = json_decode($request->getContent());
-
-        $validate_credentials = censo_credentials_v2::orwhere([
-            'id_user' => $data->id_user
-        ])->get();
-        if (sizeof($validate_credentials) == 0) {
-            
-            $created_credentials = censo_credentials_v2::insert(
-                [
-                    
-                ]
-            );
-            if ($created_credentials) {
-                return response()->json([
-                    'status' => true,
-                    'message' => 'The credentials has been successfully registered.',
-                ], 200);
-            } else {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'An error occurred while performing the operation.',
-                ], 200);
-            }
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'Credentials is already registered, verify information.',
-            ], 200);
-        }
     }
 
     public function updated_credentials(Request $request)

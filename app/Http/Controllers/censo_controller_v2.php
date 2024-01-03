@@ -1341,11 +1341,11 @@ class censo_controller_v2 extends Controller
             $image_64F = $data->picture_profile;
             $extends_picture = explode('/', explode(':', substr($image_64F, 0, strpos($image_64F, ';')))[1])[1];
             $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
-            $imageF = str_replace($replace, '', $image_64F);
-            $imageF = str_replace(' ', '+', $imageF);
+            $image = str_replace($replace, '', $image_64F);
+            $image = str_replace(' ', '+', $image);
             $imageNameF = $name_user.'/Picture_User_'. $name_user . uniqid() . '.' . $extends_picture;
 
-            Storage::disk('censo')->put($imageNameF, base64_decode($imageF));
+            Storage::disk('censo')->put($imageNameF, base64_decode($image));
             $url_profile_user = $imageNameF;
 
             $created_user = censo_users_v2::insert(

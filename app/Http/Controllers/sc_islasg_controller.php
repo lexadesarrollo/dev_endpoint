@@ -57,11 +57,11 @@ class sc_islasg_controller extends Controller
                     $imageR = str_replace(' ', '+', $imageR);
                     $imageNameR = 'Temp_Reverso_' . uniqid() . '.' . $extensionR;
 
-                    Storage::disk('public')->put($imageNameF, base64_decode($imageF));
+                    Storage::disk('ocr')->put($imageNameF, base64_decode($imageF));
 
                     $pathF = storage_path('app/public/Temps/' . $imageNameF);
 
-                    Storage::disk('public')->put($imageNameR, base64_decode($imageR));
+                    Storage::disk('ocr')->put($imageNameR, base64_decode($imageR));
 
                     $pathR = storage_path('app/public/Temps/' . $imageNameR);
 

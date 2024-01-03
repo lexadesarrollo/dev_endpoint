@@ -36,7 +36,7 @@ return [
             'throw' => false,
         ],
 
-        'public' => [
+        'ocr' => [
             'driver' => 'local',
             'root' => storage_path('app/public/Temps'),
             'url' => env('APP_URL').'/storage',
@@ -44,10 +44,10 @@ return [
             'throw' => false,
         ],
 
-        'censo' => [
+        'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/CensoApp'),
-            'url' => env('APP_URL').'/storage/CensoApp',
+            'root' => storage_path('app/public'),
+            'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
         ],

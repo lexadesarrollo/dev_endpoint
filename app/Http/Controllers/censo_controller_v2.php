@@ -1346,7 +1346,7 @@ class censo_controller_v2 extends Controller
             $imageNameF = $name_user.'/Picture_User_'. $name_user . uniqid() . '.' . $extends_picture;
 
             Storage::disk('censo')->put($imageNameF, base64_decode($image));
-            $url_profile_user = Storage::url($imageNameF);
+            $url_profile_user = Storage::disk('censo')->get($imageNameF);
             // $url_profile_user = $imageNameF;
 
             $created_user = censo_users_v2::insert(

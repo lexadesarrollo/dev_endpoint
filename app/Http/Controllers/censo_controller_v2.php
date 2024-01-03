@@ -1343,8 +1343,9 @@ class censo_controller_v2 extends Controller
             $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
             $imageF = str_replace($replace, '', $image_64F);
             $imageF = str_replace(' ', '+', $imageF);
-            $imageNameF = 'Picture_User_'. $name_user . uniqid() . '.' . $extends_picture;
+            $imageNameF = $name_user.'/Picture_User_'. $name_user . uniqid() . '.' . $extends_picture;
             Storage::disk('censo')->put($imageNameF, base64_decode($imageF));
+            $url_profile_user = Storage::path($imageNameF);
             $created_user = censo_users_v2::insert(
                 [
                     'name_user' => $name_user,
@@ -1354,7 +1355,7 @@ class censo_controller_v2 extends Controller
                     'id_lada' => $data->id_lada,
                     'cell_phone' => $data->cell_phone,
                     'id_state' => $data->id_state,
-                    'picture_profile' => $data->picture_profile
+                    'picture_profile' => $url_profile_user
                 ]
             );
             if ($created_user) {

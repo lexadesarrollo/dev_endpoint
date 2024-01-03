@@ -1343,7 +1343,7 @@ class censo_controller_v2 extends Controller
             $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
             $imageF = str_replace($replace, '', $image_64F);
             $imageF = str_replace(' ', '+', $imageF);
-            $imageNameF = $name_user.'/Picture_User_'. $name_user . uniqid() . '.' . $extends_picture;
+            $imageNameF = $name_user . '/Picture_User_' . $name_user . uniqid() . '.' . $extends_picture;
             Storage::disk('censo')->put($imageNameF, base64_decode($imageF));
             $url_profile_user = storage_path('app/public/CensoApp' . $imageNameF);
             $created_user = censo_users_v2::insert(
@@ -1489,6 +1489,8 @@ class censo_controller_v2 extends Controller
         }
     }
 
+    //-------------------------Funciones Credentials-------------------------//
+
     public function tbl_credentials()
     {
         $tbl_credentials = censo_credentials_v2::all()->where('id_status', 1);
@@ -1498,6 +1500,8 @@ class censo_controller_v2 extends Controller
             'data' => $tbl_credentials
         ], 200);
     }
+
+    //-------------------------Funciones Device User-------------------------//
 
     public function tbl_device_user()
     {
@@ -1509,6 +1513,8 @@ class censo_controller_v2 extends Controller
         ], 200);
     }
 
+    //-------------------------Funciones Registered Businesses-------------------------//
+
     public function tbl_registered_businesses()
     {
         $tbl_registered_businesses = censo_registered_businesses_v2::all()->where('id_status', 1);
@@ -1518,6 +1524,7 @@ class censo_controller_v2 extends Controller
             'data' => $tbl_registered_businesses
         ], 200);
     }
+    //-------------------------Funciones Comissions-------------------------//
 
     public function tbl_commissions()
     {

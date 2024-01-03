@@ -110,7 +110,7 @@ class censo_controller_v2 extends Controller
 
     public function ctl_role()
     {
-        $ctl_role = censo_role_v2::all();
+        $ctl_role = censo_role_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',

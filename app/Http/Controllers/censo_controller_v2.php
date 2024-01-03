@@ -855,9 +855,11 @@ class censo_controller_v2 extends Controller
         }
     }
 
+    //-------------------------Funciones Municipality-------------------------//
+
     public function ctl_municipality()
     {
-        $ctl_municipality = censo_municipality_v2::all();
+        $ctl_municipality = censo_municipality_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',
@@ -865,9 +867,139 @@ class censo_controller_v2 extends Controller
         ], 200);
     }
 
+    public function created_municipality(Request $request)
+    {
+        $rules = [
+            'name_municipality' => 'required',
+            'id_state' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $name_municipality = ucfirst($request->input('name_municipality'));
+        $created_municipality = censo_municipality_v2::insert(
+            [
+                'name_municipality' => $name_municipality
+            ]
+        );
+        if ($created_municipality) {
+            return response()->json([
+                'status' => true,
+                'message' => 'The municipality has been successfully registered.',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while performing the operation.',
+            ], 200);
+        }
+    }
+
+    public function updated_municipality(Request $request)
+    {
+        $rules = [
+            'id_municipality' => 'required',
+            'name_municipality' => 'required',
+            'id_state'  => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $name_municipality = ucfirst($request->input('name_municipality'));
+            DB::connection('DevCenso')->update('exec updated_municipality ?,?,?', [
+                $request->id_municipality,
+                $name_municipality,
+                $request->id_state
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Municipality updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function updated_status_municipality(Request $request)
+    {
+        $rules = [
+            'id_municipality' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = censo_municipality_v2::where('id_municipality', $request->id_municipality)->first();
+            switch ($id_status->id_status) {
+                case 1:
+                    censo_municipality_v2::where('id_municipality', $request->id_municipality)->update([
+                        'id_status' => 2
+                    ]);
+                    break;
+                case 2:
+                    censo_municipality_v2::where('id_municipality', $request->id_municipality)->update([
+                        'id_status' => 1
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Municipality status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_municipality(Request $request)
+    {
+        $rules = [
+            'id_municipality' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $municipality = DB::connection('DevCenso')->table('ctl_municipality')->where('id_municipality', $request->id_municipality)->first();
+        if ($municipality == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $municipality
+            ], 200);
+        }
+    }
+
     public function ctl_roads()
     {
-        $ctl_roads = censo_roads_v2::all();
+        $ctl_roads = censo_roads_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',
@@ -877,7 +1009,7 @@ class censo_controller_v2 extends Controller
 
     public function ctl_settlements()
     {
-        $ctl_settlements = censo_settlements_v2::all();
+        $ctl_settlements = censo_settlements_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',
@@ -885,19 +1017,19 @@ class censo_controller_v2 extends Controller
         ], 200);
     }
 
-    public function tbl_commissions()
+    public function tbl_users()
     {
-        $tbl_commissions = censo_commissions_v2::all();
+        $tbl_users = censo_users_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',
-            'data' => $tbl_commissions
+            'data' => $tbl_users
         ], 200);
     }
 
     public function tbl_credentials()
     {
-        $tbl_credentials = censo_credentials_v2::all();
+        $tbl_credentials = censo_credentials_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',
@@ -907,7 +1039,7 @@ class censo_controller_v2 extends Controller
 
     public function tbl_device_user()
     {
-        $tbl_device_user = censo_device_user_v2::all();
+        $tbl_device_user = censo_device_user_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',
@@ -917,7 +1049,7 @@ class censo_controller_v2 extends Controller
 
     public function tbl_registered_businesses()
     {
-        $tbl_registered_businesses = censo_registered_businesses_v2::all();
+        $tbl_registered_businesses = censo_registered_businesses_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',
@@ -925,13 +1057,13 @@ class censo_controller_v2 extends Controller
         ], 200);
     }
 
-    public function tbl_users()
+    public function tbl_commissions()
     {
-        $tbl_users = censo_users_v2::all();
+        $tbl_commissions = censo_commissions_v2::all()->where('id_status', 1);
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',
-            'data' => $tbl_users
+            'data' => $tbl_commissions
         ], 200);
     }
 }

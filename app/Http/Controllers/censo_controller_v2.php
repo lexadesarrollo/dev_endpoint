@@ -19,6 +19,7 @@ use App\Models\censo_users_v2;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class censo_controller_v2 extends Controller
@@ -1327,24 +1328,33 @@ class censo_controller_v2 extends Controller
                 'message' => $validator->errors()->all()
             ]);
         }
+        $data = json_decode($request->getContent());
+
         $validate_user = censo_users_v2::orwhere([
-            'email' => $request->input('email')
+            'email' => $data->email
         ])
-            ->orwhere(['cell_phone' => $request->input('cell_phone')])->get();
+            ->orwhere(['cell_phone' => $data->cell_phone])->get();
         if (sizeof($validate_user) == 0) {
-            $name_user = ucfirst($request->input('name_user'));
-            $last_name_user = ucfirst($request->input('last_name_user'));
-            $mother_last_name_user = ucfirst($request->input('mother_last_name_user'));
+            $name_user = ucfirst($data->name_user);
+            $last_name_user = ucfirst($data->last_name_user);
+            $mother_last_name_user = ucfirst($data->mother_last_name_user);
+            $image_64F = $data->picture_profile;
+            $extends_picture = explode('/', explode(':', substr($image_64F, 0, strpos($image_64F, ';')))[1])[1];
+            $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
+            $imageF = str_replace($replace, '', $image_64F);
+            $imageF = str_replace(' ', '+', $imageF);
+            $imageNameF = 'Picture_User_'. $name_user . uniqid() . '.' . $extends_picture;
+            Storage::disk('public')->put($imageNameF, base64_decode($imageF));
             $created_user = censo_users_v2::insert(
                 [
                     'name_user' => $name_user,
                     'last_name_user' => $last_name_user,
                     'mother_last_name_user' => $mother_last_name_user,
-                    'email' => $request->email,
-                    'id_lada' => $request->id_lada,
-                    'cell_phone' => $request->cell_phone,
-                    'id_state' => $request->id_state,
-                    'picture_profile' => $request->picture_profile
+                    'email' => $data->email,
+                    'id_lada' => $data->id_lada,
+                    'cell_phone' => $data->cell_phone,
+                    'id_state' => $data->id_state,
+                    'picture_profile' => $data->picture_profile
                 ]
             );
             if ($created_user) {

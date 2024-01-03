@@ -883,7 +883,8 @@ class censo_controller_v2 extends Controller
         $name_municipality = ucfirst($request->input('name_municipality'));
         $created_municipality = censo_municipality_v2::insert(
             [
-                'name_municipality' => $name_municipality
+                'name_municipality' => $name_municipality,
+                'id_state' => $request->id_state
             ]
         );
         if ($created_municipality) {

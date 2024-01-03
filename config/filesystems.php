@@ -36,17 +36,17 @@ return [
             'throw' => false,
         ],
 
-        'ocr' => [
+        'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/Temps'),
+            'root' => storage_path('app/public/CensoApp'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
 
-        'public' => [
+        'ocr' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => storage_path('app/public/Temps'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
@@ -79,6 +79,7 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public/Temps'),
+        public_path('CensoApp') => storage_path('app/public/CensoApp'),
     ],
 
 ];

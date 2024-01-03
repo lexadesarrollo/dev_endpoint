@@ -19,7 +19,6 @@ use App\Models\censo_users_v2;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class censo_controller_v2 extends Controller
@@ -707,6 +706,8 @@ class censo_controller_v2 extends Controller
         }
     }
 
+    //-------------------------Funciones State-------------------------//
+
     public function ctl_state()
     {
         $ctl_state = censo_state_v2::all();
@@ -715,6 +716,143 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful response.',
             'data' => $ctl_state
         ], 200);
+    }
+
+    public function created_state(Request $request)
+    {
+        $rules = [
+            'name_state' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $validate_state = censo_state_v2::where([
+            'name_state' => $request->input('name_state')
+        ])->get();
+        if (sizeof($validate_state) == 0) {
+            $name_state = ucfirst($request->input('name_state'));
+            $created_state = censo_state_v2::insert(
+                [
+                    'name_state' => $name_state
+                ]
+            );
+            if ($created_state) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The state has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'State is already registered, verify information.',
+            ], 200);
+        }
+    }
+
+    public function updated_state(Request $request)
+    {
+        $rules = [
+            'id_state' => 'required',
+            'name_state' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $name_state = ucfirst($request->input('name_state'));
+            DB::connection('DevCenso')->update('exec updated_state ?,?', [
+                $request->id_state,
+                $name_state
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'State updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function updated_status_state(Request $request)
+    {
+        $rules = [
+            'id_state' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = censo_state_v2::where('id_state', $request->id_state)->first();
+            switch ($id_status->id_status) {
+                case 1:
+                    censo_state_v2::where('id_state', $request->id_state)->update([
+                        'id_status' => 2
+                    ]);
+                    break;
+                case 2:
+                    censo_state_v2::where('id_state', $request->id_state)->update([
+                        'id_status' => 1
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'State status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_state(Request $request)
+    {
+        $rules = [
+            'id_state' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $state = DB::connection('DevCenso')->table('ctl_state')->where('id_state', $request->id_state)->first();
+        if ($state == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $state
+            ], 200);
+        }
     }
 
     public function ctl_municipality()

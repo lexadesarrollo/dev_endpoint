@@ -184,6 +184,10 @@ Route::prefix('censoApp-v2')->group(function () {
     //      State
     //-----------------
     Route::get('/ctl_state_censo',         [censo_controller_v2::class, 'ctl_state']);
+    Route::post('/created_state_censo', [censo_controller_v2::class, 'created_state']);
+    Route::post('/detail_state_censo', [censo_controller_v2::class, 'detail_state']);
+    Route::put('/updated_status_state_censo', [censo_controller_v2::class, 'updated_status_state']);
+    Route::put('/updated_state_censo', [censo_controller_v2::class, 'updated_state']);
     //-----------------
     //      Municipality
     //-----------------

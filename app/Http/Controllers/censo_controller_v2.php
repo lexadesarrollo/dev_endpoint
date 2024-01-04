@@ -1319,7 +1319,8 @@ class censo_controller_v2 extends Controller
             'id_lada' => 'required',
             'cell_phone' => 'required',
             'id_state' => 'required',
-            'picture_profile' => 'required'
+            'picture_profile' => 'required',
+            'id_role' => 'required'
         ];
         $validator = Validator::make($request->input(), $rules);
         if ($validator->fails()) {
@@ -1343,12 +1344,10 @@ class censo_controller_v2 extends Controller
             $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
             $image = str_replace($replace, '', $image_64F);
             $image = str_replace(' ', '+', $image);
-            $imageNameF = 'CensoApp/' . $name_user.'/Picture_User_'. $name_user . uniqid() . '.' . $extends_picture;
+            $imageNameF = 'CensoApp/usuarios/' . $name_user . '/picture_user' . $name_user . '_' . uniqid() . '.' . $extends_picture;
 
             Storage::disk('public')->put($imageNameF, base64_decode($image));
             $url_profile_user = $imageNameF;
-            // $url_profile_user = $imageNameF;
-
             $created_user = censo_users_v2::insert(
                 [
                     'name_user' => $name_user,
@@ -1358,14 +1357,46 @@ class censo_controller_v2 extends Controller
                     'id_lada' => $data->id_lada,
                     'cell_phone' => $data->cell_phone,
                     'id_state' => $data->id_state,
-                    'picture_profile' => $url_profile_user
+                    'picture_profile' => $url_profile_user,
+                    'id_role' => $data->id_role
                 ]
             );
             if ($created_user) {
-                return response()->json([
-                    'status' => true,
-                    'message' => 'The user has been successfully registered.',
-                ], 200);
+                send_email_global::$empresa = 'CensoApp';
+                $credentials = credentials_global::created_credentials($request->name_user);
+                $name_complete = ucwords(strtolower($request->name_user)) . ' ' . ucwords(strtolower($request->last_name)) . ' ' . ucwords(strtolower($request->mother_last_name));
+                $data = [
+                    'name_complete' => $name_complete,
+                    'email'    => $request->email,
+                    'username' => $credentials['user_name'],
+                    'password' => $credentials['password']
+                ];
+                $email = send_email_global::send_email_credentials($data);
+                if ($email['status'] == true) {
+                    $last_customer_id = censo_users_v2::where('email', $request->email)->first();
+                    $id_user = $last_customer_id->id_users;
+                    $created_credentials = censo_credentials_v2::insert([
+                        'username' => $credentials['user_name'],
+                        'password' => $credentials['password_token'],
+                        'id_user' => $id_user
+                    ]);
+                    if ($created_credentials) {
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'The user has been successfully registered.'
+                        ], 200);
+                    } else {
+                        return response()->json([
+                            'status' => false,
+                            'message' =>  'An error ocurred during query created credentials.'
+                        ], 200);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' =>  'An error occurred, retry later.'
+                    ], 200);
+                }
             } else {
                 return response()->json([
                     'status' => false,
@@ -1401,9 +1432,18 @@ class censo_controller_v2 extends Controller
             ], 200);
         }
         try {
-            $name_user = ucfirst($request->input('name_user'));
-            $last_name_user = ucfirst($request->input('last_name_user'));
-            $mother_last_name_user = ucfirst($request->input('mother_last_name_user'));
+            $data = json_decode($request->getContent());
+            $name_user = ucfirst($data->name_user);
+            $last_name_user = ucfirst($data->last_name_user);
+            $mother_last_name_user = ucfirst($data->mother_last_name_user);
+            $image_64F = $data->picture_profile;
+            $extends_picture = explode('/', explode(':', substr($image_64F, 0, strpos($image_64F, ';')))[1])[1];
+            $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
+            $image = str_replace($replace, '', $image_64F);
+            $image = str_replace(' ', '+', $image);
+            $imageNameF = 'CensoApp/usuarios/' . $name_user . '/picture_user_' . $name_user . '_' . uniqid() . '.' . $extends_picture;
+            Storage::disk('public')->put($imageNameF, base64_decode($image));
+            $url_profile_user = $imageNameF;
             DB::connection('DevCenso')->update('exec updated_user ?,?,?,?,?,?,?,?,?', [
                 $request->id_users,
                 $name_user,
@@ -1413,7 +1453,7 @@ class censo_controller_v2 extends Controller
                 $request->id_lada,
                 $request->cell_phone,
                 $request->id_state,
-                $request->picture_profile
+                $url_profile_user
             ]);
             return response()->json([
                 'status' => true,
@@ -1504,6 +1544,138 @@ class censo_controller_v2 extends Controller
         ], 200);
     }
 
+    public function recover_password(Request $request)
+    {
+        $rules = [
+            'email' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $validate_user = censo_users_v2::where([
+                'email' => $request->email
+            ])->get();
+            if (sizeof($validate_user) == 0) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'User not found, verify information',
+                ], 200);
+            } else {
+                send_email_global::$empresa = 'CensoApp - Recuperación de cuenta';
+                $name_user = censo_users_v2::where('email', $request->email)->first();
+                $data_user = $name_user;
+                $name_user =  $name_user->name_user;
+                $name_complete = ucwords(strtolower($data_user->name_user)) . ' ' . ucwords(strtolower($data_user->last_name_user)) . ' ' . ucwords(strtolower($data_user->mother_last_name_user));
+                $credentials = credentials_global::created_credentials($name_user);
+                $data = [
+                    'name_complete' => $name_complete,
+                    'email'    => $request->email,
+                    'username' => $credentials['user_name'],
+                    'password' => $credentials['password']
+                ];
+                $email = send_email_global::send_email_credentials($data);
+                if ($email['status'] == true) {
+                    try {
+                        DB::connection('DevCenso')->update('exec recover_password ?,?,?', [
+                            $credentials['user_name'],
+                            $credentials['password_token'],
+                            $data_user->id_users
+                        ]);
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'Credential recover successfully'
+                        ], 200);
+                    } catch (Exception $cb) {
+                        return response()->json([
+                            'status' => false,
+                            'message' =>  'An error ocurred during query: ' . $cb
+                        ], 200);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' =>  'An error occurred, retry later.'
+                    ], 200);
+                }
+            }
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function updated_status_credentials(Request $request)
+    {
+        $rules = [
+            'id_user' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = censo_credentials_v2::where('id_user', $request->id_user)->first();
+            switch ($id_status->id_status) {
+                case 1:
+                    censo_credentials_v2::where('id_user', $request->id_user)->update([
+                        'id_status' => 2
+                    ]);
+                    break;
+                case 2:
+                    censo_credentials_v2::where('id_user', $request->id_user)->update([
+                        'id_status' => 1
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Credentials status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_credentials(Request $request)
+    {
+        $rules = [
+            'id_user' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $user = DB::connection('DevCenso')->table('tbl_credentials')->where('id_user', $request->id_user)->first();
+        if ($user == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $user
+            ], 200);
+        }
+    }
+
     //-------------------------Funciones Device User-------------------------//
 
     public function tbl_device_user()
@@ -1516,6 +1688,133 @@ class censo_controller_v2 extends Controller
         ], 200);
     }
 
+    public function created_device_user(Request $request)
+    {
+        $rules = [
+            'androidSDK' => 'required',
+            'iOSVersion' => 'required',
+            'manufacturer' => 'required',
+            'model' => 'required',
+            'nameDevice' => 'required',
+            'operatingSystem' => 'required',
+            'osVersion' => 'required',
+            'platform' => 'required',
+            'id_user' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $validate_censo_device = censo_device_user_v2::where([
+            'id_user' => $request->input('id_user')
+        ])->get();
+        if (sizeof($validate_censo_device) == 0) {
+            $created_device = censo_device_user_v2::insert(
+                [
+                    'androidSDK' => $request->androidSDK,
+                    'iOSVersion' => $request->iOSVersion,
+                    'manufacturer' => $request->manufacturer,
+                    'model' => $request->model,
+                    'nameDevice' => $request->nameDevice,
+                    'operatingSystem' => $request->operatingSystem,
+                    'osVersion' => $request->osVersion,
+                    'platform' => $request->platform,
+                    'id_user' => $request->id_user
+                ]
+            );
+            if ($created_device) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The device user has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Device user is already registered, verify information.',
+            ], 200);
+        }
+    }
+
+    public function updated_device_user(Request $request)
+    {
+        $rules = [
+            'androidSDK' => 'required',
+            'iOSVersion' => 'required',
+            'manufacturer' => 'required',
+            'model' => 'required',
+            'nameDevice' => 'required',
+            'operatingSystem' => 'required',
+            'osVersion' => 'required',
+            'platform' => 'required',
+            'id_user' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            DB::connection('DevCenso')->update('exec updated_device_user ?,?,?,?,?,?,?,?,?', [
+                $request->androidSDK,
+                $request->iOSVersion,
+                $request->manufacturer,
+                $request->model,
+                $request->nameDevice,
+                $request->operatingSystem,
+                $request->osVersion,
+                $request->platform,
+                $request->id_user
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Device user updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_device_user(Request $request)
+    {
+        $rules = [
+            'id_user' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $user = DB::connection('DevCenso')->table('tbl_device_user')->where('id_user', $request->id_user)->first();
+        if ($user == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $user
+            ], 200);
+        }
+    }
+
     //-------------------------Funciones Registered Businesses-------------------------//
 
     public function tbl_registered_businesses()
@@ -1526,6 +1825,137 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful response.',
             'data' => $tbl_registered_businesses
         ], 200);
+    }
+
+
+    public function created_businesses(Request $request)
+    {
+        $rules = [
+            'id_type_business' => 'required',
+            'establishment_name' => 'required',
+            'full_address' => 'required',
+            'first_street' => 'required',
+            'second_street' => 'required',
+            'outdoor_number' => 'required',
+            'postal_code' => 'required',
+            'id_states' => 'required',
+            'id_municipality' => 'required',
+            'picture_businesses' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'id_user' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $data = json_decode($request->getContent());
+        $validate_business = censo_registered_businesses_v2::orwhere([
+            'establishment_name' => $request->input('establishment_name')
+        ])->orwhere([
+            'full_address' => $request->input('full_address')
+        ])->get();
+        if (sizeof($validate_business) == 0) {
+            $name_business = $data->establishment_name;
+            $image_64F = $data->picture_businesses;
+            $extends_picture = explode('/', explode(':', substr($image_64F, 0, strpos($image_64F, ';')))[1])[1];
+            $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
+            $image = str_replace($replace, '', $image_64F);
+            $image = str_replace(' ', '+', $image);
+            $imageNameB = 'CensoApp/negocios/' . $name_business . '/picture_negocio_' . $name_business . '_'. uniqid() . '.' . $extends_picture;
+            Storage::disk('public')->put($imageNameB, base64_decode($image));
+            $url_image_business = $imageNameB;
+            $created_device = censo_registered_businesses_v2::insert(
+                [
+                    'id_type_business' => $data->id_type_business,
+                    'establishment_name' => $data->establishment_name,
+                    'full_address' => $data->full_address,
+                    'first_street' => $data->first_street,
+                    'second_street' => $data->second_street,
+                    'outdoor_number' => $data->outdoor_number,
+                    'postal_code' => $data->postal_code,
+                    'id_states' => $data->id_states,
+                    'id_municipality' => $data->id_municipality,
+                    'picture_businesses' => $url_image_business,
+                    'latitude' => $data->latitude,
+                    'longitude' => $data->longitude,
+                    'id_user' => $data->id_user
+                ]
+            );
+            if ($created_device) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The businesses has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Businesses is already registered, verify information.',
+            ], 200);
+        }
+    }
+
+    public function detail_business(Request $request)
+    {
+        $rules = [
+            'id_registered_businesses' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $user = DB::connection('DevCenso')->table('tbl_registered_businesses')->where('id_registered_businesses', $request->id_registered_businesses)->first();
+        if ($user == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $user
+            ], 200);
+        }
+    }
+
+    public function business_users(Request $request)
+    {
+        $rules = [
+            'id_user' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $user = DB::connection('DevCenso')->table('tbl_registered_businesses')->where('id_user', $request->id_user)->get();
+        if ($user == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $user
+            ], 200);
+        }
     }
     //-------------------------Funciones Comissions-------------------------//
 

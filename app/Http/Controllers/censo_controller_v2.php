@@ -1689,6 +1689,133 @@ class censo_controller_v2 extends Controller
         ], 200);
     }
 
+    public function created_device_user(Request $request)
+    {
+        $rules = [
+            'androidSDK' => 'required',
+            'iOSVersion' => 'required',
+            'manufacturer' => 'required',
+            'model' => 'required',
+            'nameDevice' => 'required',
+            'operatingSystem' => 'required',
+            'osVersion' => 'required',
+            'platform' => 'required',
+            'id_user' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $validate_censo_device = censo_device_user_v2::where([
+            'id_user' => $request->input('id_user')
+        ])->get();
+        if (sizeof($validate_censo_device) == 0) {
+            $created_device = censo_device_user_v2::insert(
+                [
+                    'androidSDK' => $request->androidSDK,
+                    'iOSVersion' => $request->iOSVersion,
+                    'manufacturer' => $request->manufacturer,
+                    'model' => $request->model,
+                    'nameDevice' => $request->nameDevice,
+                    'operatingSystem' => $request->operatingSystem,
+                    'osVersion' => $request->osVersion,
+                    'platform' => $request->platform,
+                    'id_user' => $request->id_user
+                ]
+            );
+            if ($created_device) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The device user has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Device user is already registered, verify information.',
+            ], 200);
+        }
+    }
+
+    public function updated_device_user(Request $request)
+    {
+        $rules = [
+            'androidSDK' => 'required',
+            'iOSVersion' => 'required',
+            'manufacturer' => 'required',
+            'model' => 'required',
+            'nameDevice' => 'required',
+            'operatingSystem' => 'required',
+            'osVersion' => 'required',
+            'platform' => 'required',
+            'id_user' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            DB::connection('DevCenso')->update('exec updated_device_user ?,?,?,?,?,?,?,?,?', [
+                $request->androidSDK,
+                $request->iOSVersion,
+                $request->manufacturer,
+                $request->model,
+                $request->nameDevice,
+                $request->operatingSystem,
+                $request->osVersion,
+                $request->platform,
+                $request->id_user
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Device user updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
+    public function detail_device_user(Request $request)
+    {
+        $rules = [
+            'id_user' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $user = DB::connection('DevCenso')->table('tbl_device_user')->where('id_user', $request->id_user)->first();
+        if ($user == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $user
+            ], 200);
+        }
+    }
+
     //-------------------------Funciones Registered Businesses-------------------------//
 
     public function tbl_registered_businesses()

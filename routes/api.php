@@ -232,6 +232,9 @@ Route::prefix('censoApp-v2')->group(function () {
     //      Device User
     //-----------------
     Route::get('/tbl_device_user_censo',   [censo_controller_v2::class, 'tbl_device_user']);
+    Route::post('/created_device_user_censo',   [censo_controller_v2::class, 'created_device_user']);
+    Route::put('/updated_device_user_censo', [censo_controller_v2::class, 'updated_device_user']);
+    Route::post('/detail_device_user_censo', [censo_controller_v2::class, 'detail_device_user']);
     //-----------------
     //      Registered Businesses
     //-----------------

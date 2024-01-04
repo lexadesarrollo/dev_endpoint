@@ -226,7 +226,8 @@ Route::prefix('censoApp-v2')->group(function () {
     //-----------------
     Route::get('/tbl_credentials_censo',   [censo_controller_v2::class, 'tbl_credentials']);
     Route::put('/recover_password_censo',   [censo_controller_v2::class, 'recover_password']);
-
+    Route::put('/updated_status_credentials_censo', [censo_controller_v2::class, 'updated_status_credentials']);
+    Route::post('/detail_credentials_censo', [censo_controller_v2::class, 'detail_credentials']);
     //-----------------
     //      Device User
     //-----------------

@@ -1615,7 +1615,7 @@ class censo_controller_v2 extends Controller
     public function updated_status_credentials(Request $request)
     {
         $rules = [
-            'id_users' => 'required',
+            'id_user' => 'required',
         ];
         $validator = Validator::make($request->input(), $rules);
         if ($validator->fails()) {
@@ -1625,22 +1625,22 @@ class censo_controller_v2 extends Controller
             ], 200);
         }
         try {
-            $id_status = censo_users_v2::where('id_users', $request->id_users)->first();
+            $id_status = censo_credentials_v2::where('id_user', $request->id_user)->first();
             switch ($id_status->id_status) {
                 case 1:
-                    censo_users_v2::where('id_users', $request->id_users)->update([
+                    censo_credentials_v2::where('id_user', $request->id_user)->update([
                         'id_status' => 2
                     ]);
                     break;
                 case 2:
-                    censo_users_v2::where('id_users', $request->id_users)->update([
+                    censo_credentials_v2::where('id_user', $request->id_user)->update([
                         'id_status' => 1
                     ]);
                     break;
             }
             return response()->json([
                 'status' => true,
-                'message' => 'User status updated successfully'
+                'message' => 'Credentials status updated successfully'
             ], 200);
         } catch (Exception $cb) {
             return response()->json([
@@ -1653,7 +1653,7 @@ class censo_controller_v2 extends Controller
     public function detail_credentials(Request $request)
     {
         $rules = [
-            'id_users' => 'required',
+            'id_user' => 'required',
         ];
         $validator = Validator::make($request->input(), $rules);
         if ($validator->fails()) {
@@ -1663,7 +1663,7 @@ class censo_controller_v2 extends Controller
             ], 200);
         }
 
-        $user = DB::connection('DevCenso')->table('tbl_users')->where('id_users', $request->id_users)->first();
+        $user = DB::connection('DevCenso')->table('tbl_credentials')->where('id_user', $request->id_user)->first();
         if ($user == false) {
             return response()->json([
                 'status' => false,

@@ -241,6 +241,7 @@ Route::prefix('censoApp-v2')->group(function () {
     Route::get('/tbl_registered_businesses_censo', [censo_controller_v2::class, 'tbl_registered_businesses']);
     Route::post('/created_businesses_censo', [censo_controller_v2::class, 'created_businesses']);
     Route::post('/detail_business_censo', [censo_controller_v2::class, 'detail_business']);
+    Route::post('/business_users_censo', [censo_controller_v2::class, 'business_users']);
     //-----------------
     //      Commissions
     //-----------------

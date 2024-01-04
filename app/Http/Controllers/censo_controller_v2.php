@@ -1571,7 +1571,7 @@ class censo_controller_v2 extends Controller
                 ], 200);
             } else {
                 //send_email_global::$empresa = 'CensoApp';
-                var_dump($validate_user);
+                return $validate_user;
                 
             }
         } catch (Exception $cb) {

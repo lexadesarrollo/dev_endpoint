@@ -93,9 +93,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/active_geofences_apprisa', [apprisa_controller::class, 'getActiveGeofences']);
         Route::post('/create_geofence_apprisa', [apprisa_controller::class, 'create_geofence']);
         Route::put('/status_geofence_apprisa', [apprisa_controller::class, 'status_geofence']);
+        
         Route::get('/all_categories_apprisa', [apprisa_controller::class, 'all_categories']);
+        Route::post('/create_category_apprisa', [apprisa_controller::class, 'create_category']);
+        Route::put('/status_category_apprisa', [apprisa_controller::class, 'status_category']);
+        
         Route::get('/all_ladas_apprisa', [apprisa_controller::class, 'all_ladas']);
+
         Route::get('/all_type_documentation_apprisa', [apprisa_controller::class, 'all_type_documentation']);
+        Route::post('/create_type_documentation_apprisa', [apprisa_controller::class, 'create_type_documentation']);
+        Route::put('/status_type_documentation_apprisa', [apprisa_controller::class, 'status_type_documentation']);
+
         Route::get('/all_drawing_modes_apprisa', [apprisa_controller::class, 'all_drawing_modes']);
         Route::get('/all_municipality_apprisa', [apprisa_controller::class, 'all_municipality']);
         Route::get('/all_states_apprisa', [apprisa_controller::class, 'all_states']);
@@ -237,23 +245,14 @@ Route::prefix('censoApp-v2')->group(function () {
     //      Credentials
     //-----------------
     Route::get('/tbl_credentials_censo',   [censo_controller_v2::class, 'tbl_credentials']);
-    Route::put('/recover_password_censo',   [censo_controller_v2::class, 'recover_password']);
-    Route::put('/updated_status_credentials_censo', [censo_controller_v2::class, 'updated_status_credentials']);
-    Route::post('/detail_credentials_censo', [censo_controller_v2::class, 'detail_credentials']);
     //-----------------
     //      Device User
     //-----------------
     Route::get('/tbl_device_user_censo',   [censo_controller_v2::class, 'tbl_device_user']);
-    Route::post('/created_device_user_censo',   [censo_controller_v2::class, 'created_device_user']);
-    Route::put('/updated_device_user_censo', [censo_controller_v2::class, 'updated_device_user']);
-    Route::post('/detail_device_user_censo', [censo_controller_v2::class, 'detail_device_user']);
     //-----------------
     //      Registered Businesses
     //-----------------
     Route::get('/tbl_registered_businesses_censo', [censo_controller_v2::class, 'tbl_registered_businesses']);
-    Route::post('/created_businesses_censo', [censo_controller_v2::class, 'created_businesses']);
-    Route::post('/detail_business_censo', [censo_controller_v2::class, 'detail_business']);
-    Route::post('/business_users_censo', [censo_controller_v2::class, 'business_users']);
     //-----------------
     //      Commissions
     //-----------------

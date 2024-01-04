@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\apprisa_categories_view;
+use App\Models\apprisa_category;
 use App\Models\apprisa_comissions_view;
 use App\Models\apprisa_credentials;
 use App\Models\apprisa_documentation_view;
@@ -595,6 +596,89 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function create_category(Request $request)
+    {
+        try {
+            $rules = [
+                'icon' => 'required',
+                'category' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $validate_category = apprisa_category::where('category', $request->category)->first();
+                if ($validate_category == false || $validate_category == null) {
+                    apprisa_category::insert([
+                        'icon_category' => $request->icon,
+                        'category' => ucwords(strtolower($request->category))
+                    ]);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => "Category has been created"
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function status_category(Request $request)
+    {
+        try {
+            $rules = [
+                "category" => "required",
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $category = apprisa_category::where('id_category', $request->category)->first();
+                if ($category != null || $category == "") {
+                    switch ($category->status) {
+                        case 1:
+                            apprisa_category::where('id_category', $request->category)->update([
+                                "status" => 2
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha inhabilitado la categoria " . $category->category
+                            ], 200);
+                            break;
+
+                        case 2:
+                            apprisa_category::where('id_category', $request->category)->update([
+                                "status" => 1
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha habilitado al usuario " . $category->category
+                            ], 200);
+                            break;
+                    }
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
     public function all_ladas()
     {
         try {
@@ -781,5 +865,4 @@ class apprisa_controller extends Controller
             ], 200);
         }
     }
-
 }

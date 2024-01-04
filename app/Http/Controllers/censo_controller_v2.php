@@ -1572,7 +1572,8 @@ class censo_controller_v2 extends Controller
             } else {
                 $name_user = censo_users_v2::where('email', $request->email)->first();
                 $name_user =  $name_user->name_user;
-                //send_email_global::$empresa = 'CensoApp';
+                $name_complete = ucwords(strtolower($name_user->name_user)) . ' ' . ucwords(strtolower($name_user->last_name)) . ' ' . ucwords(strtolower($name_user->mother_last_name));
+                send_email_global::$empresa = 'CensoApp - Recuperación de cuenta';
                 return $name_user;
             }
         } catch (Exception $cb) {

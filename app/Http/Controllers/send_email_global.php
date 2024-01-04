@@ -10,7 +10,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class send_email_global extends Controller
 {
-    public static  $empresa, $host, $username, $password, $background, $logo, $color, $url, $texto;
+    public static  $empresa, $host, $username, $password, $background, $logo, $color, $url, $texto, $message;
 
     public static function send_email_credentials($data)
     {
@@ -24,6 +24,7 @@ class send_email_global extends Controller
                 self::$color = '#e40f20';
                 self::$url = 'https://haytiro.mx/';
                 self::$texto = 'Iniciar Sesión';
+                self::$message = 'Te damos la bienvenida,';
                 break;
             case 'Apprisa':
                 self::$host = 'apprisa.com.mx';
@@ -34,6 +35,7 @@ class send_email_global extends Controller
                 self::$color = '#ffc100';
                 self::$url = 'https://apprisa.com.mx/';
                 self::$texto = 'Descargar la aplicación';
+                self::$message = 'Te damos la bienvenida,';
                 break;
             case 'CensoApp':
                 self::$host = 'adminalba.mx';
@@ -44,6 +46,18 @@ class send_email_global extends Controller
                 self::$color = '#ead22d';
                 self::$url = 'https://adminalba.mx/';
                 self::$texto = 'Descargar la aplicación';
+                self::$message = 'Te damos la bienvenida,';
+                break;
+            case 'CensoApp - Recuperación de cuenta':
+                self::$host = 'adminalba.mx';
+                self::$username = 'soporte@adminalba.mx';
+                self::$password = '4T,1CUNJ^J8Z';
+                self::$background = 'https://da-pw.mx/storage/Wallpapers/wallpaper_censo.jpg';
+                self::$logo = 'https://adminalba.mx/images/logo.png';
+                self::$color = '#ead22d';
+                self::$url = 'https://adminalba.mx/';
+                self::$texto = 'Descargar la aplicación';
+                self::$message = 'Se ha recuperado tu cuenta,';
                 break;
             case 'SIO':
 
@@ -69,7 +83,7 @@ class send_email_global extends Controller
             $mail->Subject = 'Credenciales de acceso para ' . self::$empresa . '';
             $mail->Body = ' <body style="background-image: url(' . self::$background . ') !important; background-size: cover; background-repeat: no-repeat;">
                                 <center><img style="width:65%; padding-bottom: 1.5em; padding-top: 1.5em" src="' . self::$logo . '"></center>
-                                <h1 style="text-align:center"><b>Te damos la bienvenida, ' . $data['name_complete'] . '</b></h1><br>
+                                <h1 style="text-align:center"><b>'.self::$message.'' . $data['name_complete'] . '</b></h1><br>
                                 <div style="padding: 10px !important; background-color: rgba(255, 255, 255, 0.8); border-radius: 15px; text-align: start; -webkit-box-shadow: 0 2px 10px rgba(0,0,0,0.2);
                                 -moz-box-shadow: 0 2px 10px rgba(0,0,0,0.2);
                                 box-shadow: 0 2px 6px rgba(0,0,0,0.2); backdrop-filter: blur(50px) !important">
@@ -80,7 +94,7 @@ class send_email_global extends Controller
                                 </div>
                                 <br>
                                 <br> 
-                                <center><a style="text-decoration: none; background-color:'. self::$color . '; color: #fff; padding: 10px; border-radius: 15px; cursor: pointer; font-size: 15px" href="'.self::$url.'"><b>'.self::$texto.'</b></a></center>
+                                <center><a style="text-decoration: none; background-color:' . self::$color . '; color: #fff; padding: 10px; border-radius: 15px; cursor: pointer; font-size: 15px" href="' . self::$url . '"><b>' . self::$texto . '</b></a></center>
                                 <br>
                                 <br>
                                 </body>';

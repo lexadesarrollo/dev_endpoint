@@ -2,20 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\apprisa_categories_view;
+use App\Models\apprisa_comissions_view;
 use App\Models\apprisa_credentials;
+use App\Models\apprisa_documentation_view;
 use App\Models\apprisa_drawing_modes;
+use App\Models\apprisa_drawing_modes_view;
 use App\Models\apprisa_geofences;
 use App\Models\apprisa_geofences_coords;
 use App\Models\apprisa_geofences_view;
+use App\Models\apprisa_ladas_view;
+use App\Models\apprisa_municipality_view;
+use App\Models\apprisa_permissions;
+use App\Models\apprisa_roles_view;
+use App\Models\apprisa_states_view;
+use App\Models\apprisa_status;
 use App\Models\apprisa_tokens;
+use App\Models\apprisa_type_person_view;
+use App\Models\apprisa_type_vehicle_view;
 use App\Models\apprisa_user_credential;
 use App\Models\apprisa_users;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
-use function PHPSTORM_META\map;
 
 class apprisa_controller extends Controller
 {
@@ -565,4 +575,211 @@ class apprisa_controller extends Controller
             ], 200);
         }
     }
+
+    /****************************** Funciones de catálogos ***********************************/
+
+    public function all_categories()
+    {
+        try {
+            $categories = apprisa_categories_view::all();
+
+            return response()->json([
+                'status' => true,
+                'data' => $categories
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function all_ladas()
+    {
+        try {
+            $ladas = apprisa_ladas_view::all();
+
+            return response()->json([
+                'status' => true,
+                'data' => $ladas
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function all_type_documentation()
+    {
+        try {
+            $documentation = apprisa_documentation_view::all();
+
+            return response()->json([
+                'status' => true,
+                'data' => $documentation
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function all_drawing_modes()
+    {
+        try {
+            $drawing_modes = apprisa_drawing_modes_view::all();
+
+            return response()->json([
+                'status' => true,
+                'data' => $drawing_modes
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function all_municipality()
+    {
+        try {
+            $municipality = apprisa_municipality_view::all();
+
+            return response()->json([
+                'status' => true,
+                'data' => $municipality
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function all_states()
+    {
+        try {
+            $states = apprisa_states_view::all();
+
+            return response()->json([
+                'status' => true,
+                'data' => $states
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function all_permissions()
+    {
+        try {
+            $permissions = apprisa_permissions::all();
+
+            return response()->json([
+                'status' => true,
+                'data' => $permissions
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function all_roles()
+    {
+        try {
+            $roles = apprisa_roles_view::all();
+
+            return response()->json([
+                'status' => true,
+                'data' => $roles
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function all_comissions()
+    {
+        try {
+            $comissions = apprisa_comissions_view::all();
+
+            return response()->json([
+                'status' => true,
+                'data' => $comissions
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function all_status()
+    {
+        try {
+            $status = apprisa_status::all();
+
+            return response()->json([
+                'status' => true,
+                'data' => $status
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function all_type_person()
+    {
+        try {
+            $type_person = apprisa_type_person_view::all();
+
+            return response()->json([
+                'status' => true,
+                'data' => $type_person
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function all_type_vehicle()
+    {
+        try {
+            $type_vehicle = apprisa_type_vehicle_view::all();
+
+            return response()->json([
+                'status' => true,
+                'data' => $type_vehicle
+            ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
 }

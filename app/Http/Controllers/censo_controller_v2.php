@@ -1570,11 +1570,41 @@ class censo_controller_v2 extends Controller
                     'message' => 'User not found, verify information',
                 ], 200);
             } else {
+                send_email_global::$empresa = 'CensoApp - Recuperación de cuenta';
                 $name_user = censo_users_v2::where('email', $request->email)->first();
                 $name_user =  $name_user->name_user;
                 $name_complete = ucwords(strtolower($name_user->name_user)) . ' ' . ucwords(strtolower($name_user->last_name)) . ' ' . ucwords(strtolower($name_user->mother_last_name));
-                send_email_global::$empresa = 'CensoApp - Recuperación de cuenta';
-                return $name_user;
+                $credentials = credentials_global::created_credentials($request->name_user);
+                $data = [
+                    'name_complete' => $name_complete,
+                    'email'    => $request->email,
+                    'username' => $credentials['user_name'],
+                    'password' => $credentials['password']
+                ];
+                $email = send_email_global::send_email_credentials($data);
+                if ($email['status'] == true) {
+                    try {
+                        DB::connection('DevCenso')->update('exec recover_password ?,?,?', [
+                            $credentials['user_name'],
+                            $credentials['password'],
+                            $name_user->id_users
+                        ]);
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'Credential recover successfully'
+                        ], 200);
+                    } catch (Exception $cb) {
+                        return response()->json([
+                            'status' => false,
+                            'message' =>  'An error ocurred during query: ' . $cb
+                        ], 200);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' =>  'An error occurred, retry later.'
+                    ], 200);
+                }
             }
         } catch (Exception $cb) {
             return response()->json([

@@ -1442,7 +1442,6 @@ class censo_controller_v2 extends Controller
             $image = str_replace($replace, '', $image_64F);
             $image = str_replace(' ', '+', $image);
             $imageNameF = 'CensoApp/' . $name_user . '/Picture_User_' . $name_user . uniqid() . '.' . $extends_picture;
-
             Storage::disk('public')->put($imageNameF, base64_decode($image));
             $url_profile_user = $imageNameF;
             DB::connection('DevCenso')->update('exec updated_user ?,?,?,?,?,?,?,?,?', [
@@ -1826,6 +1825,83 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful response.',
             'data' => $tbl_registered_businesses
         ], 200);
+    }
+
+
+    public function created_businesses(Request $request)
+    {
+        $rules = [
+            'id_type_business' => 'required',
+            'establishment_name' => 'required',
+            'full_address' => 'required',
+            'first_street' => 'required',
+            'second_street' => 'required',
+            'outdoor_number' => 'required',
+            'postal_code' => 'required',
+            'id_states' => 'required',
+            'id_municipality' => 'required',
+            'picture_businesses' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'id_user' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $data = json_decode($request->getContent());
+        $validate_business = censo_registered_businesses_v2::orwhere([
+            'establishment_name' => $request->input('establishment_name')
+        ])->orwhere([
+            'full_address' => $request->input('full_address')
+        ])->get();
+        if (sizeof($validate_business) == 0) {
+            $name_business = $data->establishment_name;
+            $image_64F = $data->picture_profile;
+            $extends_picture = explode('/', explode(':', substr($image_64F, 0, strpos($image_64F, ';')))[1])[1];
+            $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
+            $image = str_replace($replace, '', $image_64F);
+            $image = str_replace(' ', '+', $image);
+            $imageNameB = 'CensoApp/Negocios' . $name_business . '/Picture_Negocio' . $name_business . uniqid() . '.' . $extends_picture;
+            Storage::disk('public')->put($imageNameB, base64_decode($image));
+            $url_profile_user = $imageNameB;
+            $created_device = censo_registered_businesses_v2::insert(
+                [
+                    'id_type_business' => $data->id_type_business,
+                    'establishment_name' => $data->establishment_name,
+                    'full_address' => $data->full_address,
+                    'first_street' => $data->first_street,
+                    'second_street' => $data->second_street,
+                    'outdoor_number' => $data->outdoor_number,
+                    'postal_code' => $data->postal_code,
+                    'id_states' => $data->id_states,
+                    'id_municipality' => $data->id_municipality,
+                    'picture_businesses' => $url_profile_user,
+                    'latitude' => $data->latitude,
+                    'longitude' => $data->longitude,
+                    'id_user' => $data->id_user
+                ]
+            );
+            if ($created_device) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'The businesses has been successfully registered.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'An error occurred while performing the operation.',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Businesses is already registered, verify information.',
+            ], 200);
+        }
     }
     //-------------------------Funciones Comissions-------------------------//
 

@@ -1570,6 +1570,7 @@ class censo_controller_v2 extends Controller
                 send_email_global::$empresa = 'CensoApp - Recuperación de cuenta';
                 $name_user = censo_users_v2::where('email', $request->email)->first();
                 $name_user =  $name_user->name_user;
+                return $name_user;
                 $name_complete = ucwords(strtolower($name_user->name_user)) . ' ' . ucwords(strtolower($name_user->last_name)) . ' ' . ucwords(strtolower($name_user->mother_last_name));
                 $credentials = credentials_global::created_credentials($request->name_user);
                 $data = [

@@ -1584,7 +1584,7 @@ class censo_controller_v2 extends Controller
                     try {
                         DB::connection('DevCenso')->update('exec recover_password ?,?,?', [
                             $credentials['user_name'],
-                            $credentials['password'],
+                            $credentials['password_token'],
                             $data_user->id_users
                         ]);
                         return response()->json([

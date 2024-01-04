@@ -1860,14 +1860,14 @@ class censo_controller_v2 extends Controller
         ])->get();
         if (sizeof($validate_business) == 0) {
             $name_business = $data->establishment_name;
-            $image_64F = $data->picture_profile;
+            $image_64F = $data->picture_businesses;
             $extends_picture = explode('/', explode(':', substr($image_64F, 0, strpos($image_64F, ';')))[1])[1];
             $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
             $image = str_replace($replace, '', $image_64F);
             $image = str_replace(' ', '+', $image);
             $imageNameB = 'CensoApp/Negocios' . $name_business . '/Picture_Negocio' . $name_business . uniqid() . '.' . $extends_picture;
             Storage::disk('public')->put($imageNameB, base64_decode($image));
-            $url_profile_user = $imageNameB;
+            $url_image_business = $imageNameB;
             $created_device = censo_registered_businesses_v2::insert(
                 [
                     'id_type_business' => $data->id_type_business,
@@ -1879,7 +1879,7 @@ class censo_controller_v2 extends Controller
                     'postal_code' => $data->postal_code,
                     'id_states' => $data->id_states,
                     'id_municipality' => $data->id_municipality,
-                    'picture_businesses' => $url_profile_user,
+                    'picture_businesses' => $url_image_business,
                     'latitude' => $data->latitude,
                     'longitude' => $data->longitude,
                     'id_user' => $data->id_user

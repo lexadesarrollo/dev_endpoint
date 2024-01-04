@@ -35,7 +35,7 @@ class send_email_global extends Controller
                 self::$url = 'https://apprisa.com.mx/';
                 self::$texto = 'Descargar la aplicación';
                 break;
-            case 'Censo':
+            case 'CensoApp':
                 self::$host = 'adminalba.mx';
                 self::$username = 'soporte@adminalba.mx';
                 self::$password = '4T,1CUNJ^J8Z';

@@ -1362,7 +1362,7 @@ class censo_controller_v2 extends Controller
                 ]
             );
             if ($created_user) {
-                send_email_global::$empresa = 'Censo';
+                send_email_global::$empresa = 'CensoApp';
                 $credentials = credentials_global::created_credentials($request->name_user);
                 $name_complete = ucwords(strtolower($request->name_user)) . ' ' . ucwords(strtolower($request->last_name)) . ' ' . ucwords(strtolower($request->mother_last_name));
                 $data = [
@@ -1545,18 +1545,13 @@ class censo_controller_v2 extends Controller
         ], 200);
     }
 
-    public function updated_credentials(Request $request)
+    public function recover_password(Request $request)
     {
         $rules = [
-            'id_users' => 'required',
-            'name_user' => 'required',
-            'last_name_user' => 'required',
-            'mother_last_name_user' => 'required',
             'email' => 'required',
-            'id_lada' => 'required',
-            'cell_phone' => 'required',
-            'id_state' => 'required',
-            'picture_profile' => 'required'
+            'username' => 'required',
+            'password' => 'required',
+            'id_user' => 'required'
         ];
         $validator = Validator::make($request->input(), $rules);
         if ($validator->fails()) {
@@ -1566,24 +1561,19 @@ class censo_controller_v2 extends Controller
             ], 200);
         }
         try {
-            $name_user = ucfirst($request->input('name_user'));
-            $last_name_user = ucfirst($request->input('last_name_user'));
-            $mother_last_name_user = ucfirst($request->input('mother_last_name_user'));
-            DB::connection('DevCenso')->update('exec updated_user ?,?,?,?,?,?,?,?,?', [
-                $request->id_users,
-                $name_user,
-                $last_name_user,
-                $mother_last_name_user,
-                $request->email,
-                $request->id_lada,
-                $request->cell_phone,
-                $request->id_state,
-                $request->picture_profile
-            ]);
-            return response()->json([
-                'status' => true,
-                'message' => 'User updated successfully'
-            ], 200);
+            $validate_user = censo_users_v2::orwhere([
+                'email' => $request->email
+            ])->get();
+            if (sizeof($validate_user) == 0) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'User not found, verify information',
+                ], 200);
+            } else {
+                //send_email_global::$empresa = 'CensoApp';
+                var_dump($validate_user);
+                
+            }
         } catch (Exception $cb) {
             return response()->json([
                 'status' => false,

@@ -1570,7 +1570,7 @@ class censo_controller_v2 extends Controller
                     'message' => 'User not found, verify information',
                 ], 200);
             } else {
-                $name_user =  $validate_user->name_user;
+                $name_user =  $validate_user['name_user'];
                 //send_email_global::$empresa = 'CensoApp';
                 return $name_user;
 

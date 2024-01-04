@@ -1561,16 +1561,14 @@ class censo_controller_v2 extends Controller
             ], 200);
         }
         try {
-            $validate_user = censo_users_v2::orwhere([
-                'email' => $request->email
-            ])->get();
+            $validate_user = censo_users_v2::where('email', $request->email)->first();
             if (sizeof($validate_user) == 0) {
                 return response()->json([
                     'status' => false,
                     'message' => 'User not found, verify information',
                 ], 200);
             } else {
-                $name_user =  $validate_user['name_user'];
+                $name_user =  $validate_user->name_user;
                 //send_email_global::$empresa = 'CensoApp';
                 return $name_user;
 

@@ -1930,6 +1930,33 @@ class censo_controller_v2 extends Controller
             ], 200);
         }
     }
+
+    public function business_users(Request $request)
+    {
+        $rules = [
+            'id_user' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+
+        $user = DB::connection('DevCenso')->table('tbl_registered_businesses')->where('id_user', $request->id_user)->get();
+        if ($user == false) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No results found',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => $user
+            ], 200);
+        }
+    }
     //-------------------------Funciones Comissions-------------------------//
 
     public function tbl_commissions()

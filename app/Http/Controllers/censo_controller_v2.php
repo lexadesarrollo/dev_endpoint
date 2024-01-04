@@ -1548,10 +1548,7 @@ class censo_controller_v2 extends Controller
     public function recover_password(Request $request)
     {
         $rules = [
-            'email' => 'required',
-            'username' => 'required',
-            'password' => 'required',
-            'id_user' => 'required'
+            'email' => 'required'
         ];
         $validator = Validator::make($request->input(), $rules);
         if ($validator->fails()) {

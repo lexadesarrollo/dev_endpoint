@@ -1571,8 +1571,8 @@ class censo_controller_v2 extends Controller
                 $name_user = censo_users_v2::where('email', $request->email)->first();
                 $data_user = $name_user;
                 $name_user =  $name_user->name_user;
-                $name_complete = ucwords(strtolower($data_user->name_user)) . ' ' . ucwords(strtolower($data_user->last_name)) . ' ' . ucwords(strtolower($data_user->mother_last_name));
-                $credentials = credentials_global::created_credentials($request->name_user);
+                $name_complete = ucwords(strtolower($data_user->name_user)) . ' ' . ucwords(strtolower($data_user->last_name_user)) . ' ' . ucwords(strtolower($data_user->mother_last_name_user));
+                $credentials = credentials_global::created_credentials($name_user);
                 $data = [
                     'name_complete' => $name_complete,
                     'email'    => $request->email,

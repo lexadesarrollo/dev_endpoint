@@ -93,11 +93,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/active_geofences_apprisa', [apprisa_controller::class, 'getActiveGeofences']);
         Route::post('/create_geofence_apprisa', [apprisa_controller::class, 'create_geofence']);
         Route::put('/status_geofence_apprisa', [apprisa_controller::class, 'status_geofence']);
-        
+
         Route::get('/all_categories_apprisa', [apprisa_controller::class, 'all_categories']);
         Route::post('/create_category_apprisa', [apprisa_controller::class, 'create_category']);
         Route::put('/status_category_apprisa', [apprisa_controller::class, 'status_category']);
-        
+
         Route::get('/all_ladas_apprisa', [apprisa_controller::class, 'all_ladas']);
         Route::post('/create_lada_apprisa', [apprisa_controller::class, 'create_lada']);
         Route::put('/status_lada_apprisa', [apprisa_controller::class, 'status_lada']);
@@ -109,12 +109,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/all_drawing_modes_apprisa', [apprisa_controller::class, 'all_drawing_modes']);
         Route::post('/create_draw_apprisa', [apprisa_controller::class, 'create_draw']);
         Route::put('/status_draw_apprisa', [apprisa_controller::class, 'status_draw']);
-        
+
         Route::get('/all_municipality_apprisa', [apprisa_controller::class, 'all_municipality']);
         Route::post('/create_municipality_apprisa', [apprisa_controller::class, 'create_municipality']);
         Route::put('/status_municipality_apprisa', [apprisa_controller::class, 'status_municipality']);
 
         Route::get('/all_states_apprisa', [apprisa_controller::class, 'all_states']);
+        Route::post('/create_state_apprisa', [apprisa_controller::class, 'create_state']);
+        Route::put('/status_state_apprisa', [apprisa_controller::class, 'status_state']);
 
         Route::get('/all_permissions_apprisa', [apprisa_controller::class, 'all_permissions']);
         Route::post('/create_permission_apprisa', [apprisa_controller::class, 'create_permission']);
@@ -123,9 +125,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/create_rol_apprisa', [apprisa_controller::class, 'create_role']);
 
         Route::get('/all_comissions_apprisa', [apprisa_controller::class, 'all_comissions']);
+        Route::post('/create_comission_apprisa', [apprisa_controller::class, 'create_comission']);
+        Route::put('/status_comission_apprisa', [apprisa_controller::class, 'status_comission']);
+
         Route::get('/all_status_apprisa', [apprisa_controller::class, 'all_status']);
+        Route::post('/create_status_apprisa', [apprisa_controller::class, 'create_status']);
+
         Route::get('/all_type_person_apprisa', [apprisa_controller::class, 'all_type_person']);
+        Route::post('/create_type_person_apprisa', [apprisa_controller::class, 'create_type_person']);
+        Route::put('/status_type_person_apprisa', [apprisa_controller::class, 'status_type_person']);
+
         Route::get('/all_type_vehicle_apprisa', [apprisa_controller::class, 'all_type_vehicle']);
+        Route::post('/create_type_vehicle_apprisa', [apprisa_controller::class, 'create_type_vehicle']);
+        Route::put('/status_type_vehicle_apprisa', [apprisa_controller::class, 'status_type_vehicle']);
     });
 
     Route::prefix('sc_islasg')->group(function () {

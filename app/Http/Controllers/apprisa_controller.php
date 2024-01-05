@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\apprisa_categories_view;
 use App\Models\apprisa_category;
+use App\Models\apprisa_comissions;
 use App\Models\apprisa_comissions_view;
 use App\Models\apprisa_credentials;
 use App\Models\apprisa_documentation;
@@ -21,10 +22,13 @@ use App\Models\apprisa_municipality_view;
 use App\Models\apprisa_permissions;
 use App\Models\apprisa_role;
 use App\Models\apprisa_roles_view;
+use App\Models\apprisa_states;
 use App\Models\apprisa_states_view;
 use App\Models\apprisa_status;
 use App\Models\apprisa_tokens;
+use App\Models\apprisa_type_person;
 use App\Models\apprisa_type_person_view;
+use App\Models\apprisa_type_vehicle;
 use App\Models\apprisa_type_vehicle_view;
 use App\Models\apprisa_user_credential;
 use App\Models\apprisa_users;
@@ -664,7 +668,7 @@ class apprisa_controller extends Controller
 
                             return response()->json([
                                 'status' => true,
-                                'message' => "Se ha inhabilitado la categoria " . $category->category
+                                'message' => "Se ha inhabilitado la categoría " . $category->category
                             ], 200);
                             break;
 
@@ -675,7 +679,7 @@ class apprisa_controller extends Controller
 
                             return response()->json([
                                 'status' => true,
-                                'message' => "Se ha habilitado al usuario " . $category->category
+                                'message' => "Se ha habilitado la categoría " . $category->category
                             ], 200);
                             break;
                     }
@@ -1123,6 +1127,92 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function create_state(Request $request)
+    {
+        try {
+            $rules = [
+                'state' => 'required',
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $validate_state = apprisa_states::where('states', $request->state)->first();
+                if ($validate_state == false || $validate_state == null) {
+                    apprisa_states::insert([
+                        'states' => ucwords(strtolower($request->state)),
+                    ]);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => "state has been created"
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Ya existe el estado."
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function status_state(Request $request)
+    {
+        try {
+            $rules = [
+                "state" => "required",
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $state = apprisa_states::where('id_states', $request->state)->first();
+                if ($state != null || $state == "") {
+                    switch ($state->status) {
+                        case 1:
+                            apprisa_states::where('id_states', $request->state)->update([
+                                "status" => 2
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha inhabilitado el estado " . $state->states
+                            ], 200);
+                            break;
+
+                        case 2:
+                            apprisa_states::where('id_states', $request->state)->update([
+                                "status" => 1
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha habilitado el estado " . $state->states
+                            ], 200);
+                            break;
+                    }
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again. "
+            ], 200);
+        }
+    }
+
     public function all_permissions()
     {
         try {
@@ -1252,6 +1342,94 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function create_comission(Request $request)
+    {
+        try {
+            $rules = [
+                'comission' => 'required',
+                'amount' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $validate_comissions = apprisa_comissions::where('service_commission', $request->comission)->first();
+                if ($validate_comissions == false || $validate_comissions == null) {
+                    apprisa_comissions::insert([
+                        'service_commission' => strtoupper($request->comission),
+                        'commission' => $request->amount
+                    ]);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => "commissions has been created"
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Ya existe la comisión."
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function status_comission(Request $request)
+    {
+        try {
+            $rules = [
+                "comission" => "required",
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $comissions = apprisa_comissions::where('id_service_commission', $request->comission)->first();
+                if ($comissions != null || $comissions == "") {
+                    switch ($comissions->status) {
+                        case 1:
+                            apprisa_comissions::where('id_service_commission', $request->comission)->update([
+                                "status" => 2
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha inhabilitado la comisión " . $comissions->service_commission
+                            ], 200);
+                            break;
+
+                        case 2:
+                            apprisa_comissions::where('id_service_commission', $request->comission)->update([
+                                "status" => 1
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha habilitado la comisión " . $comissions->service_commission
+                            ], 200);
+                            break;
+                    }
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again. "
+            ], 200);
+        }
+    }
+
     public function all_status()
     {
         try {
@@ -1265,6 +1443,44 @@ class apprisa_controller extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function create_status(Request $request)
+    {
+        try {
+            $rules = [
+                'status' => 'required',
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $validate_status = apprisa_status::where('status', $request->status)->first();
+                if ($validate_status == false || $validate_status == null) {
+                    apprisa_status::insert([
+                        'status' => ucwords(strtolower($request->status)),
+                    ]);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => "Status has been created"
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Ya existe el status."
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again." . $th
             ], 200);
         }
     }
@@ -1286,6 +1502,92 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function create_type_person(Request $request)
+    {
+        try {
+            $rules = [
+                'type_person' => 'required',
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $validate_type_person = apprisa_type_person::where('type_person', $request->type_person)->first();
+                if ($validate_type_person == false || $validate_type_person == null) {
+                    apprisa_type_person::insert([
+                        'type_person' => ucwords(strtolower($request->type_person)),
+                    ]);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => "type person has been created"
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Ya existe el tipo de persona."
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function status_type_person(Request $request)
+    {
+        try {
+            $rules = [
+                "type_person" => "required",
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $type_person = apprisa_type_person::where('id_type_person', $request->type_person)->first();
+                if ($type_person != null || $type_person == "") {
+                    switch ($type_person->status) {
+                        case 1:
+                            apprisa_type_person::where('id_type_person', $request->type_person)->update([
+                                "status" => 2
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha inhabilitado el tipo de persona " . $type_person->type_person
+                            ], 200);
+                            break;
+
+                        case 2:
+                            apprisa_type_person::where('id_type_person', $request->type_person)->update([
+                                "status" => 1
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha habilitado el tipo de persona " . $type_person->type_person
+                            ], 200);
+                            break;
+                    }
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again. "
+            ], 200);
+        }
+    }
+
     public function all_type_vehicle()
     {
         try {
@@ -1299,6 +1601,92 @@ class apprisa_controller extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function create_type_vehicle(Request $request)
+    {
+        try {
+            $rules = [
+                'type_vehicle' => 'required',
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $validate_type_vehicle = apprisa_type_vehicle::where('vehicle', $request->type_vehicle)->first();
+                if ($validate_type_vehicle == false || $validate_type_vehicle == null) {
+                    apprisa_type_vehicle::insert([
+                        'vehicle' => ucwords(strtolower($request->type_vehicle)),
+                    ]);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => "type vehicle has been created"
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Ya existe el tipo de vehículo."
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function status_type_vehicle(Request $request)
+    {
+        try {
+            $rules = [
+                "type_vehicle" => "required",
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $type_vehicle = apprisa_type_vehicle::where('id_type_vehicle', $request->type_vehicle)->first();
+                if ($type_vehicle != null || $type_vehicle == "") {
+                    switch ($type_vehicle->status) {
+                        case 1:
+                            apprisa_type_vehicle::where('id_type_vehicle', $request->type_vehicle)->update([
+                                "status" => 2
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha inhabilitado el tipo de vehículo " . $type_vehicle->vehicle
+                            ], 200);
+                            break;
+
+                        case 2:
+                            apprisa_type_vehicle::where('id_type_vehicle', $request->type_vehicle)->update([
+                                "status" => 1
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha habilitado el tipo de vehículo " . $type_vehicle->type_vehicle
+                            ], 200);
+                            break;
+                    }
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again. "
             ], 200);
         }
     }

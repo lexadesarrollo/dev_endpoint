@@ -6,15 +6,20 @@ use App\Models\apprisa_categories_view;
 use App\Models\apprisa_category;
 use App\Models\apprisa_comissions_view;
 use App\Models\apprisa_credentials;
+use App\Models\apprisa_documentation;
 use App\Models\apprisa_documentation_view;
+use App\Models\apprisa_drawing;
 use App\Models\apprisa_drawing_modes;
 use App\Models\apprisa_drawing_modes_view;
 use App\Models\apprisa_geofences;
 use App\Models\apprisa_geofences_coords;
 use App\Models\apprisa_geofences_view;
+use App\Models\apprisa_lada;
 use App\Models\apprisa_ladas_view;
+use App\Models\apprisa_municipality;
 use App\Models\apprisa_municipality_view;
 use App\Models\apprisa_permissions;
+use App\Models\apprisa_role;
 use App\Models\apprisa_roles_view;
 use App\Models\apprisa_states_view;
 use App\Models\apprisa_status;
@@ -621,6 +626,11 @@ class apprisa_controller extends Controller
                         'status' => true,
                         'message' => "Category has been created"
                     ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Ya existe la categoría."
+                    ], 200);
                 }
             }
         } catch (Exception $th) {
@@ -696,6 +706,94 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function create_lada(Request $request)
+    {
+        try {
+            $rules = [
+                'lada' => 'required',
+                'country' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $validate_lada = apprisa_lada::where('lada', $request->lada)->orwhere('country', $request->country)->first();
+                if ($validate_lada == false || $validate_lada == null) {
+                    apprisa_lada::insert([
+                        'lada' => $request->lada,
+                        'country' => ucwords(strtolower($request->country))
+                    ]);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => "Lada has been created"
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Ya existe esta lada o país."
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function status_lada(Request $request)
+    {
+        try {
+            $rules = [
+                "lada" => "required",
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $lada = apprisa_lada::where('id_lada', $request->lada)->first();
+                if ($lada != null || $lada == "") {
+                    switch ($lada->status) {
+                        case 1:
+                            apprisa_lada::where('id_lada', $request->lada)->update([
+                                "status" => 2
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha inhabilitado la lada de " . $lada->country
+                            ], 200);
+                            break;
+
+                        case 2:
+                            apprisa_lada::where('id_lada', $request->lada)->update([
+                                "status" => 1
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha habilitado la lada de " . $lada->country
+                            ], 200);
+                            break;
+                    }
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again. "
+            ], 200);
+        }
+    }
+
     public function all_type_documentation()
     {
         try {
@@ -712,6 +810,93 @@ class apprisa_controller extends Controller
             ], 200);
         }
     }
+
+    public function create_type_documentation(Request $request)
+    {
+        try {
+            $rules = [
+                'documentation' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $validate_documentation = apprisa_documentation::where('type_documentation', $request->documentation)->first();
+                if ($validate_documentation == false || $validate_documentation == null) {
+                    apprisa_documentation::insert([
+                        'type_documentation' => ucwords(strtolower($request->documentation))
+                    ]);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => "Documentation has been created"
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Ya existe el tipo de documento."
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function status_documentation(Request $request)
+    {
+        try {
+            $rules = [
+                "documentation" => "required",
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $documentation = apprisa_documentation::where('id_documentation', $request->documentation)->first();
+                if ($documentation != null || $documentation == "") {
+                    switch ($documentation->status) {
+                        case 1:
+                            apprisa_documentation::where('id_documentation', $request->documentation)->update([
+                                "status" => 2
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha inhabilitado el tipo de documento " . $documentation->type_documentation
+                            ], 200);
+                            break;
+
+                        case 2:
+                            apprisa_documentation::where('id_documentation', $request->documentation)->update([
+                                "status" => 1
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha habilitado el tipo de documento " . $documentation->type_documentation
+                            ], 200);
+                            break;
+                    }
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
 
     public function all_drawing_modes()
     {
@@ -730,6 +915,92 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function create_draw(Request $request)
+    {
+        try {
+            $rules = [
+                'draw' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $validate_documentation = apprisa_drawing::where('mode', $request->draw)->first();
+                if ($validate_documentation == false || $validate_documentation == null) {
+                    apprisa_drawing::insert([
+                        'mode' => ucwords(strtolower($request->draw))
+                    ]);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => "Draw mode has been created"
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Ya existe el tipo de dibujo."
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function status_draw(Request $request)
+    {
+        try {
+            $rules = [
+                "draw" => "required",
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $draw = apprisa_drawing::where('id_draw', $request->draw)->first();
+                if ($draw != null || $draw == "") {
+                    switch ($draw->status) {
+                        case 1:
+                            apprisa_drawing::where('id_draw', $request->draw)->update([
+                                "status" => 2
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha inhabilitado el tipo de dibujo " . $draw->mode
+                            ], 200);
+                            break;
+
+                        case 2:
+                            apprisa_drawing::where('id_draw', $request->draw)->update([
+                                "status" => 1
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha habilitado el tipo de dibujo " . $draw->mode
+                            ], 200);
+                            break;
+                    }
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again. "
+            ], 200);
+        }
+    }
+
     public function all_municipality()
     {
         try {
@@ -743,6 +1014,94 @@ class apprisa_controller extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function create_municipality(Request $request)
+    {
+        try {
+            $rules = [
+                'municipality' => 'required',
+                'state' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $validate_municipality = apprisa_municipality::where('municipality', $request->municipality)->first();
+                if ($validate_municipality == false || $validate_municipality == null) {
+                    apprisa_municipality::insert([
+                        'municipality' => ucwords(strtolower($request->municipality)),
+                        'state' => $request->state
+                    ]);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => "Municipality has been created"
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Ya existe el municipio."
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function status_municipality(Request $request)
+    {
+        try {
+            $rules = [
+                "municipality" => "required",
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $municipality = apprisa_municipality::where('id_municipality', $request->municipality)->first();
+                if ($municipality != null || $municipality == "") {
+                    switch ($municipality->status) {
+                        case 1:
+                            apprisa_municipality::where('id_municipality', $request->municipality)->update([
+                                "status" => 2
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha inhabilitado el municipio " . $municipality->municipality
+                            ], 200);
+                            break;
+
+                        case 2:
+                            apprisa_municipality::where('id_municipality', $request->municipality)->update([
+                                "status" => 1
+                            ]);
+
+                            return response()->json([
+                                'status' => true,
+                                'message' => "Se ha habilitado el municipio " . $municipality->municipality
+                            ], 200);
+                            break;
+                    }
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again. "
             ], 200);
         }
     }
@@ -781,6 +1140,44 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function create_permission(Request $request)
+    {
+        try {
+            $rules = [
+                'permission' => 'required',
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $validate_permissions = apprisa_permissions::where('permission', $request->permissions)->first();
+                if ($validate_permissions == false || $validate_permissions == null) {
+                    apprisa_permissions::insert([
+                        'permission' => ucwords(strtolower($request->permission)),
+                    ]);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => "Permission has been created"
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Ya existe el permiso."
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
     public function all_roles()
     {
         try {
@@ -790,6 +1187,46 @@ class apprisa_controller extends Controller
                 'status' => true,
                 'data' => $roles
             ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function create_role(Request $request)
+    {
+        try {
+            $rules = [
+                'rol' => 'required',
+                'permission' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $validate_roles = apprisa_role::where('role', $request->rol)->first();
+                if ($validate_roles == false || $validate_roles == null) {
+                    apprisa_role::insert([
+                        'role' => ucwords(strtolower($request->rol)),
+                        'permission' => $request->permission
+                    ]);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => "role has been created"
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Ya existe el rol."
+                    ], 200);
+                }
+            }
         } catch (Exception $th) {
             return response()->json([
                 'status' => false,

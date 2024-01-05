@@ -99,16 +99,29 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/status_category_apprisa', [apprisa_controller::class, 'status_category']);
         
         Route::get('/all_ladas_apprisa', [apprisa_controller::class, 'all_ladas']);
+        Route::post('/create_lada_apprisa', [apprisa_controller::class, 'create_lada']);
+        Route::put('/status_lada_apprisa', [apprisa_controller::class, 'status_lada']);
 
         Route::get('/all_type_documentation_apprisa', [apprisa_controller::class, 'all_type_documentation']);
         Route::post('/create_type_documentation_apprisa', [apprisa_controller::class, 'create_type_documentation']);
-        Route::put('/status_type_documentation_apprisa', [apprisa_controller::class, 'status_type_documentation']);
+        Route::put('/status_type_documentation_apprisa', [apprisa_controller::class, 'status_documentation']);
 
         Route::get('/all_drawing_modes_apprisa', [apprisa_controller::class, 'all_drawing_modes']);
+        Route::post('/create_draw_apprisa', [apprisa_controller::class, 'create_draw']);
+        Route::put('/status_draw_apprisa', [apprisa_controller::class, 'status_draw']);
+        
         Route::get('/all_municipality_apprisa', [apprisa_controller::class, 'all_municipality']);
+        Route::post('/create_municipality_apprisa', [apprisa_controller::class, 'create_municipality']);
+        Route::put('/status_municipality_apprisa', [apprisa_controller::class, 'status_municipality']);
+
         Route::get('/all_states_apprisa', [apprisa_controller::class, 'all_states']);
+
         Route::get('/all_permissions_apprisa', [apprisa_controller::class, 'all_permissions']);
+        Route::post('/create_permission_apprisa', [apprisa_controller::class, 'create_permission']);
+
         Route::get('/all_roles_apprisa', [apprisa_controller::class, 'all_roles']);
+        Route::post('/create_rol_apprisa', [apprisa_controller::class, 'create_role']);
+
         Route::get('/all_comissions_apprisa', [apprisa_controller::class, 'all_comissions']);
         Route::get('/all_status_apprisa', [apprisa_controller::class, 'all_status']);
         Route::get('/all_type_person_apprisa', [apprisa_controller::class, 'all_type_person']);

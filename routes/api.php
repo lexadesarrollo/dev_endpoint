@@ -282,4 +282,8 @@ Route::prefix('censoApp-v2')->group(function () {
     //      Commissions
     //-----------------
     Route::get('/tbl_commissions_censo',   [censo_controller_v2::class, 'tbl_commissions']);
+    //-----------------
+    //      Validate Services
+    //-----------------
+    Route::get('/validate_service_censo',   [censo_controller_v2::class, 'validate_service']);
 });

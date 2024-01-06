@@ -1865,7 +1865,7 @@ class censo_controller_v2 extends Controller
             $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
             $image = str_replace($replace, '', $image_64F);
             $image = str_replace(' ', '+', $image);
-            $imageNameB = 'CensoApp/negocios/' . $name_business . '/picture_negocio_' . $name_business . '_'. uniqid() . '.' . $extends_picture;
+            $imageNameB = 'CensoApp/negocios/' . $name_business . '/picture_negocio_' . $name_business . '_' . uniqid() . '.' . $extends_picture;
             Storage::disk('public')->put($imageNameB, base64_decode($image));
             $url_image_business = $imageNameB;
             $created_device = censo_registered_businesses_v2::insert(
@@ -1965,6 +1965,27 @@ class censo_controller_v2 extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Successful response.',
+            'data' => $tbl_commissions
+        ], 200);
+    }
+
+    public function comissions_user()
+    {
+        $tbl_commissions = censo_commissions_v2::all()->where('id_status', 1);
+        return response()->json([
+            'status' => true,
+            'message' => 'Successful response.',
+            'data' => $tbl_commissions
+        ], 200);
+    }
+
+    //-------------------------Funciones Validación Servidor-------------------------//
+    public function validate_service()
+    {
+        $tbl_commissions = censo_status_v2::all()->where('id_status', 7);
+        return response()->json([
+            'status' => true,
+            'message' => 'Successful connection.',
             'data' => $tbl_commissions
         ], 200);
     }

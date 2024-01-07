@@ -1579,12 +1579,13 @@ class censo_controller_v2 extends Controller
                     'username' => $credentials['user_name'],
                     'password' => $credentials['password']
                 ];
+                $password_user = md5($credentials['password']);
                 $email = send_email_global::send_email_credentials($data);
                 if ($email['status'] == true) {
                     try {
                         DB::connection('DevCenso')->update('exec recover_password ?,?,?', [
                             $credentials['user_name'],
-                            $credentials['password_token'],
+                            $password_user,
                             $data_user->id_users
                         ]);
                         return response()->json([

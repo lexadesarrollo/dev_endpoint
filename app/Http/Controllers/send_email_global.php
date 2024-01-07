@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\apprisa_tokens;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use PHPMailer\PHPMailer\PHPMailer;
 

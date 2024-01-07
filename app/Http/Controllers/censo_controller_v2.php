@@ -1630,9 +1630,15 @@ class censo_controller_v2 extends Controller
                     censo_credentials_v2::where('id_user', $request->id_user)->update([
                         'id_status' => 2
                     ]);
+                    censo_users_v2::where('id_user', $request->id_user)->update([
+                        'id_status' => 2
+                    ]);
                     break;
                 case 2:
                     censo_credentials_v2::where('id_user', $request->id_user)->update([
+                        'id_status' => 1
+                    ]);
+                    censo_users_v2::where('id_user', $request->id_user)->update([
                         'id_status' => 1
                     ]);
                     break;

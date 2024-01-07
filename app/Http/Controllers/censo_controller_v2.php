@@ -1371,13 +1371,14 @@ class censo_controller_v2 extends Controller
                     'username' => $credentials['user_name'],
                     'password' => $credentials['password']
                 ];
+                $password_user = md5($credentials['password']);
                 $email = send_email_global::send_email_credentials($data);
                 if ($email['status'] == true) {
                     $last_customer_id = censo_users_v2::where('email', $request->email)->first();
                     $id_user = $last_customer_id->id_users;
                     $created_credentials = censo_credentials_v2::insert([
                         'username' => $credentials['user_name'],
-                        'password' => $credentials['password_token'],
+                        'password' => $password_user,
                         'id_user' => $id_user
                     ]);
                     if ($created_credentials) {

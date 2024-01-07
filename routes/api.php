@@ -269,6 +269,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         //-----------------
         //      Iniciar sesión
         //-----------------
+        Route::post('/login_user_censo',   [censo_controller_v2::class, 'login_user']);
     });
 
     Route::prefix('haytiro')->group(function () {

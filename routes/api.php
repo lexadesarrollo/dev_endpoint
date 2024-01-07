@@ -243,10 +243,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
         //      Credentials
         //-----------------
         Route::get('/tbl_credentials_censo',   [censo_controller_v2::class, 'tbl_credentials']);
+        Route::post('/recover_password_censo', [censo_controller_v2::class, 'recover_password']);
+        Route::post('/detail_credentials_censo', [censo_controller_v2::class, 'detail_credentials']);
+        Route::put('/updated_status_credentials_censo', [censo_controller_v2::class, 'updated_status_credentials']);
         //-----------------
         //      Device User
         //-----------------
         Route::get('/tbl_device_user_censo',   [censo_controller_v2::class, 'tbl_device_user']);
+        Route::post('/created_device_user_censo', [censo_controller_v2::class, 'created_device_user']);
+        Route::post('/detail_device_user_censo', [censo_controller_v2::class, 'detail_device_user']);
+        Route::put('/updated_status_device_user_censo', [censo_controller_v2::class, 'updated_status_device_user']);
+        Route::put('/updated_device_user_censo', [censo_controller_v2::class, 'updated_device_user']);
         //-----------------
         //      Registered Businesses
         //-----------------
@@ -259,6 +266,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         //      Validate Services
         //-----------------
         Route::get('/validate_service_censo',   [censo_controller_v2::class, 'validate_service']);
+        //-----------------
+        //      Iniciar sesión
+        //-----------------
     });
 
     Route::prefix('haytiro')->group(function () {
@@ -286,5 +296,3 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/update_service_haytiro', [haytiro_controller::class, 'update_service']);
     });
 });
-
-

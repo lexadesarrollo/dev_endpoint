@@ -1788,6 +1788,44 @@ class censo_controller_v2 extends Controller
         }
     }
 
+    public function updated_status_device_user(Request $request)
+    {
+        $rules = [
+            'id_user' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = censo_device_user_v2::where('id_user', $request->id_user)->first();
+            switch ($id_status->id_status) {
+                case 1:
+                    censo_device_user_v2::where('id_user', $request->id_user)->update([
+                        'id_status' => 2
+                    ]);
+                    break;
+                case 2:
+                    censo_device_user_v2::where('id_user', $request->id_user)->update([
+                        'id_status' => 1
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Device user status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
     public function detail_device_user(Request $request)
     {
         $rules = [
@@ -1988,5 +2026,72 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful connection.',
             'data' => $tbl_commissions
         ], 200);
+    }
+    //-------------------------Funciones Iniciar sesión-------------------------//
+    public function login_user(Request $request)
+    {
+        $rules = [
+            'username' => 'required',
+            'password' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $password_user = md5($request->input('password'));
+
+        $validate_credentials = DB::connection('DevCenso')->table('users_censo_global')
+            ->where('username_user', $request->input('username'))
+            ->where('password_user', $password_user)->get();
+        if (sizeof($validate_credentials) == 0) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Incorrect username and password.',
+            ], 200);
+        } else {
+            foreach ($validate_credentials as $data) {
+                $id_role = $data->id_role;
+                $id_status_user = $data->id_status;
+                $id_user = $data->id_user;
+                $user_name = $data->username_user;
+                $name_user = $data->name_user;
+                $last_name = $data->last_name;
+                $mother_last_name = $data->mother_last_name;
+                $email = $data->email;
+                $phone_number = $data->phone_number;
+                $url_image_user = $data->url_image_user;
+                $created_at = $data->created_at;
+                $updated_at = $data->updated_at;
+            }
+            $data_user = [
+                'id_role' => $id_role,
+                'id_status_user' => $id_status_user,
+                'id_user' => $id_user,
+                'user_name' => $user_name,
+                'name_user' => $name_user,
+                'last_name' => $last_name,
+                'mother_last_name' => $mother_last_name,
+                'email' => $email,
+                'phone_number' => $phone_number,
+                'url_image_user' => $url_image_user,
+                'created_at' => $created_at,
+                'updated_at' => $updated_at
+            ];
+            if ($id_status_user == 3) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Suspended account.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Successful validation',
+                    'data' => $data_user
+                ]);
+            }
+        }
     }
 }

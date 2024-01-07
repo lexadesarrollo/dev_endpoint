@@ -2049,9 +2049,9 @@ class censo_controller_v2 extends Controller
         }
         $password_user = md5($request->input('password'));
 
-        $validate_credentials = DB::connection('DevCenso')->table('users_censo_global')
-            ->where('username_user', $request->input('username'))
-            ->where('password_user', $password_user)->get();
+        $validate_credentials = DB::connection('DevCenso')->table('view_users_global')
+            ->where('username', $request->input('username'))
+            ->where('password', $password_user)->get();
         if (sizeof($validate_credentials) == 0) {
             return response()->json([
                 'status' => false,
@@ -2059,34 +2059,43 @@ class censo_controller_v2 extends Controller
             ], 200);
         } else {
             foreach ($validate_credentials as $data) {
-                $id_role = $data->id_role;
-                $id_status_user = $data->id_status;
-                $id_user = $data->id_user;
-                $user_name = $data->username_user;
+                $id_users = $data->id_users;
                 $name_user = $data->name_user;
-                $last_name = $data->last_name;
-                $mother_last_name = $data->mother_last_name;
+                $last_name_user = $data->last_name_user;
+                $mother_last_name_user = $data->mother_last_name_user;
                 $email = $data->email;
-                $phone_number = $data->phone_number;
-                $url_image_user = $data->url_image_user;
-                $created_at = $data->created_at;
-                $updated_at = $data->updated_at;
+                $id_lada = $data->id_lada;
+                $cell_phone = $data->cell_phone;
+                $id_state = $data->id_state;
+                $picture_profile = $data->picture_profile;
+                $name_status = $data->name_status;
+                $name_role = $data->name_role;
+                $id_status = $data->id_status;
+                $lada_cell_phone = $data->lada_cell_phone;
+                $name_state = $data->name_state;
             }
             $data_user = [
-                'id_role' => $id_role,
-                'id_status_user' => $id_status_user,
-                'id_user' => $id_user,
-                'user_name' => $user_name,
+                'id_users' => $id_users,
                 'name_user' => $name_user,
-                'last_name' => $last_name,
-                'mother_last_name' => $mother_last_name,
+                'last_name_user' => $last_name_user,
+                'mother_last_name_user' => $mother_last_name_user,
                 'email' => $email,
-                'phone_number' => $phone_number,
-                'url_image_user' => $url_image_user,
-                'created_at' => $created_at,
-                'updated_at' => $updated_at
+                'id_lada' => $id_lada,
+                'cell_phone' => $cell_phone,
+                'id_state' => $id_state,
+                'picture_profile' => $picture_profile,
+                'name_status' => $name_status,
+                'name_role' => $name_role,
+                'id_status' => $id_status,
+                'lada_cell_phone' => $lada_cell_phone,
+                'name_state' => $name_state,
             ];
-            if ($id_status_user == 3) {
+            if ($id_status == 2) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Blocked account.',
+                ], 200);
+            } else if ($id_status == 8) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Suspended account.',

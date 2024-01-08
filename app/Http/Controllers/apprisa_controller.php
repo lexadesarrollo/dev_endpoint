@@ -1014,7 +1014,7 @@ class apprisa_controller extends Controller
                 ], 200);
             } else {
 
-                apprisa_category::where('id_documentation', $request->documentation)
+                apprisa_documentation::where('id_documentation', $request->documentation)
                     ->update([
                         'type_documentation' => ucwords(strtolower($request->type_documentation))
                     ]);
@@ -1027,7 +1027,7 @@ class apprisa_controller extends Controller
         } catch (Exception $th) {
             return response()->json([
                 'status' => false,
-                'message' => "An error ocurred, try again." . $th
+                'message' => "An error ocurred, try again."
             ], 200);
         }
     }

@@ -2111,4 +2111,32 @@ class censo_controller_v2 extends Controller
             }
         }
     }
+    //-------------------------Funciones Validación Correo electronico-------------------------//
+    public function validate_email(Request $request)
+    {
+        $rules = [
+            'email' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $validate_email = censo_users_v2::where([
+            'email' => $request->input('email')
+        ])->get();
+        if (sizeof($validate_email) == 0) {
+            return response()->json([
+                'status' => true,
+                'message' => 'No records',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => 'User found.',
+            ], 200);
+        }
+    }
 }

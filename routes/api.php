@@ -270,6 +270,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         //      Iniciar sesión
         //-----------------
         Route::post('/login_user_censo',   [censo_controller_v2::class, 'login_user']);
+        //-----------------
+        //      Validar usuarios
+        //-----------------
+        Route::post('/validate_email_censo',   [censo_controller_v2::class, 'validate_email']);
     });
 
     Route::prefix('haytiro')->group(function () {

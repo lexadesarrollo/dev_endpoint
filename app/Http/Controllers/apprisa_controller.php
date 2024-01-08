@@ -739,19 +739,19 @@ class apprisa_controller extends Controller
                 if ($request->missing('icon_category')) {
                     apprisa_category::where('id_category', $request->category)
                         ->update([
-                            'category' => $request->name_category
+                            'category' => ucwords(strtolower($request->name_category))
                         ]);
                 } else {
                     apprisa_category::where('id_category', $request->category)
                         ->update([
                             'icon_category' => $request->icon_category,
-                            'category' => $request->name_category
+                            'category' => ucwords(strtolower($request->name_category))
                         ]);
                 }
 
                 return response()->json([
                     'status' => true,
-                    'message' => "Category has been updated."
+                    'message' => "Se actualizó la categoría " . ucwords(strtolower($request->name_category)) . "."
                 ], 200);
             }
         } catch (Exception $th) {
@@ -884,6 +884,35 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function get_type_documentation(Request $request)
+    {
+        try {
+            $rules = [
+                'type_documentation' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $documentation = apprisa_documentation::where('id_documentation', $request->type_documentation)->first();
+                if ($documentation) {
+                    return response()->json([
+                        'status' => true,
+                        'data' => $documentation
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
     public function create_type_documentation(Request $request)
     {
         try {
@@ -961,6 +990,39 @@ class apprisa_controller extends Controller
                             break;
                     }
                 }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function update_documentation(Request $request)
+    {
+        try {
+            $rules = [
+                'documentation' => 'required',
+                'type_documentation' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+
+                apprisa_category::where('id_type_documentation', $request->documentation)
+                    ->update([
+                        'type_documentation' => ucwords(strtolower($request->type_documentation))
+                    ]);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Se actualizó la categoría " . ucwords(strtolower($request->type_documentation)) . "."
+                ], 200);
             }
         } catch (Exception $th) {
             return response()->json([

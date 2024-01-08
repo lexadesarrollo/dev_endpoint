@@ -105,8 +105,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/status_lada_apprisa', [apprisa_controller::class, 'status_lada']);
 
         Route::get('/all_type_documentation_apprisa', [apprisa_controller::class, 'all_type_documentation']);
+        Route::post('/get_type_documentation_apprisa', [apprisa_controller::class, 'get_type_documentation']);
         Route::post('/create_type_documentation_apprisa', [apprisa_controller::class, 'create_type_documentation']);
         Route::put('/status_type_documentation_apprisa', [apprisa_controller::class, 'status_documentation']);
+        Route::put('/update_type_documentation_apprisa', [apprisa_controller::class, 'update_documentation']);
 
         Route::get('/all_drawing_modes_apprisa', [apprisa_controller::class, 'all_drawing_modes']);
         Route::post('/create_draw_apprisa', [apprisa_controller::class, 'create_draw']);

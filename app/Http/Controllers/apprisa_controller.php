@@ -1014,7 +1014,7 @@ class apprisa_controller extends Controller
                 ], 200);
             } else {
 
-                apprisa_category::where('id_type_documentation', $request->documentation)
+                apprisa_category::where('id_documentation', $request->documentation)
                     ->update([
                         'type_documentation' => ucwords(strtolower($request->type_documentation))
                     ]);

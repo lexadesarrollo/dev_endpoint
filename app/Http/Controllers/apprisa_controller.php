@@ -410,7 +410,7 @@ class apprisa_controller extends Controller
                 if ($geofence_validate == false || $geofence_validate = null) {
                     switch ($request->type) {
                         case 'Circle':
-                            $drawing = apprisa_drawing_modes::where('mode', $request->type)->first();
+                            $drawing = apprisa_drawing::where('mode', $request->type)->first();
                             $create_geofence = apprisa_geofences::insert([
                                 "geofence_name" => $request->name,
                                 "geofence_color" => $request->color,
@@ -435,7 +435,7 @@ class apprisa_controller extends Controller
                             break;
 
                         case 'Polygon':
-                            $drawing = apprisa_drawing_modes::where('mode', $request->type)->first();
+                            $drawing = apprisa_drawing::where('mode', $request->type)->first();
                             $create_geofence = apprisa_geofences::insert([
                                 "geofence_name" => $request->name,
                                 "geofence_color" => $request->color,
@@ -1050,6 +1050,35 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function get_draw_mode(Request $request)
+    {
+        try {
+            $rules = [
+                'draw' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $draw = apprisa_drawing::where('id_draw', $request->draw)->first();
+                if ($draw) {
+                    return response()->json([
+                        'status' => true,
+                        'data' => $draw
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
     public function create_draw(Request $request)
     {
         try {
@@ -1132,6 +1161,38 @@ class apprisa_controller extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "An error ocurred, try again. "
+            ], 200);
+        }
+    }
+
+    public function update_draw(Request $request)
+    {
+        try {
+            $rules = [
+                'draw' => 'required',
+                'mode' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                apprisa_drawing::where('id_draw', $request->draw)
+                    ->update([
+                        'mode' => ucwords(strtolower($request->mode))
+                    ]);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Se actualizó el tipo de dibujo " . ucwords(strtolower($request->mode)) . "."
+                ], 200);
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
             ], 200);
         }
     }

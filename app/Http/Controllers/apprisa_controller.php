@@ -605,6 +605,35 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function get_category(Request $request)
+    {
+        try {
+            $rules = [
+                'category' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $category = apprisa_category::where('id_category', $request->category)->first();
+                if ($category) {
+                    return response()->json([
+                        'status' => true,
+                        'data' => $category
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
     public function create_category(Request $request)
     {
         try {
@@ -684,6 +713,46 @@ class apprisa_controller extends Controller
                             break;
                     }
                 }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function update_category(Request $request)
+    {
+        try {
+            $rules = [
+                'category' => 'required',
+                'name_category' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                if ($request->missing('icon_category')) {
+                    apprisa_category::where('id_category', $request->category)
+                        ->update([
+                            'category' => $request->name_category
+                        ]);
+                } else {
+                    apprisa_category::where('id_category', $request->category)
+                        ->update([
+                            'icon_category' => $request->icon_category,
+                            'category' => $request->name_category
+                        ]);
+                }
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Category has been updated."
+                ], 200);
             }
         } catch (Exception $th) {
             return response()->json([

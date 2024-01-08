@@ -2139,4 +2139,14 @@ class censo_controller_v2 extends Controller
             ], 200);
         }
     }
+    //-------------------------Funciones Validación Correo electronico-------------------------//
+    public function selected_ladas(Request $request)
+    {
+        $select_lada = DB::connection('DevCenso')->table('view_lada_selected')->get();
+        return response()->json([
+            'status' => true,
+            'message' => 'Successful response.',
+            'data' => $select_lada
+        ], 200);
+    }
 }

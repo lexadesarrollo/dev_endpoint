@@ -1027,7 +1027,7 @@ class apprisa_controller extends Controller
         } catch (Exception $th) {
             return response()->json([
                 'status' => false,
-                'message' => "An error ocurred, try again."
+                'message' => "An error ocurred, try again." . $th
             ], 200);
         }
     }

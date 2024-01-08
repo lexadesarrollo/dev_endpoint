@@ -95,7 +95,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/status_geofence_apprisa', [apprisa_controller::class, 'status_geofence']);
 
         Route::get('/all_categories_apprisa', [apprisa_controller::class, 'all_categories']);
-        Route::get('/get_category_apprisa', [apprisa_controller::class, 'get_category']);
+        Route::post('/get_category_apprisa', [apprisa_controller::class, 'get_category']);
         Route::post('/create_category_apprisa', [apprisa_controller::class, 'create_category']);
         Route::put('/status_category_apprisa', [apprisa_controller::class, 'status_category']);
         Route::put('/update_category_apprisa', [apprisa_controller::class, 'update_category']);

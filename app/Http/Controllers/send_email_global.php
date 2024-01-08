@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\apprisa_tokens;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -42,7 +41,7 @@ class send_email_global extends Controller
                 self::$username = 'soporte@adminalba.mx';
                 self::$password = '4T,1CUNJ^J8Z';
                 self::$background = 'https://da-pw.mx/storage/Wallpapers/wallpaper_censo.jpg';
-                self::$logo = 'https://adminalba.mx/images/logo.png';
+                self::$logo = 'https://adminalba.mx/imgs/logo.png';
                 self::$color = '#ead22d';
                 self::$url = 'https://adminalba.mx/';
                 self::$texto = 'Descargar la aplicación';
@@ -53,7 +52,7 @@ class send_email_global extends Controller
                 self::$username = 'soporte@adminalba.mx';
                 self::$password = '4T,1CUNJ^J8Z';
                 self::$background = 'https://da-pw.mx/storage/Wallpapers/wallpaper_censo.jpg';
-                self::$logo = 'https://adminalba.mx/images/logo.png';
+                self::$logo = 'https://adminalba.mx/imgs/logo.png';
                 self::$color = '#ead22d';
                 self::$url = 'https://adminalba.mx/';
                 self::$texto = 'Descargar la aplicación';

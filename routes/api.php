@@ -160,6 +160,123 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/create_bussines', [censo_controller::class, 'create_bussnines']);
     });
 
+    Route::prefix('censoApp-v2')->group(function () {
+        //Rutas de catalogos
+        //-----------------
+        //      Status
+        //-----------------
+        Route::get('/ctl_status_censo',        [censo_controller_v2::class, 'ctl_status']);
+        Route::post('/created_status_censo', [censo_controller_v2::class, 'created_status']);
+        Route::put('/updated_status_censo', [censo_controller_v2::class, 'updated_status']);
+        //-----------------
+        //      Role
+        //-----------------
+        Route::get('/ctl_role_censo',          [censo_controller_v2::class, 'ctl_role']);
+        Route::post('/created_role_censo', [censo_controller_v2::class, 'created_role']);
+        Route::post('/detail_role_censo', [censo_controller_v2::class, 'detail_role']);
+        Route::put('/updated_role_censo', [censo_controller_v2::class, 'updated_role']);
+        Route::put('/updated_status_role_censo', [censo_controller_v2::class, 'updated_status_role']);
+        //-----------------
+        //      Company
+        //-----------------
+        Route::get('/ctl_company_censo',       [censo_controller_v2::class, 'ctl_company']);
+        Route::post('/created_company_censo', [censo_controller_v2::class, 'created_company']);
+        Route::post('/detail_company_censo', [censo_controller_v2::class, 'detail_company']);
+        Route::put('/updated_status_company_censo', [censo_controller_v2::class, 'updated_status_company']);
+        Route::put('/updated_company_censo', [censo_controller_v2::class, 'updated_company']);
+        //-----------------
+        //      Lada
+        //-----------------
+        Route::get('/ctl_lada_censo',          [censo_controller_v2::class, 'ctl_lada']);
+        Route::post('/created_lada_censo', [censo_controller_v2::class, 'created_lada']);
+        Route::post('/detail_lada_censo', [censo_controller_v2::class, 'detail_lada']);
+        Route::put('/updated_status_lada_censo', [censo_controller_v2::class, 'updated_status_lada']);
+        Route::put('/updated_lada_censo', [censo_controller_v2::class, 'updated_lada']);
+        //-----------------
+        //      Type Business
+        //-----------------
+        Route::get('/ctl_type_business_censo', [censo_controller_v2::class, 'ctl_type_business']);
+        Route::post('/created_type_business_censo', [censo_controller_v2::class, 'created_type_business']);
+        Route::post('/detail_type_business_censo', [censo_controller_v2::class, 'detail_type_business']);
+        Route::put('/updated_status_type_business_censo', [censo_controller_v2::class, 'updated_status_type_business']);
+        Route::put('/updated_type_business_censo', [censo_controller_v2::class, 'updated_type_business']);
+        //-----------------
+        //      State
+        //-----------------
+        Route::get('/ctl_state_censo',         [censo_controller_v2::class, 'ctl_state']);
+        Route::post('/created_state_censo', [censo_controller_v2::class, 'created_state']);
+        Route::post('/detail_state_censo', [censo_controller_v2::class, 'detail_state']);
+        Route::put('/updated_status_state_censo', [censo_controller_v2::class, 'updated_status_state']);
+        Route::put('/updated_state_censo', [censo_controller_v2::class, 'updated_state']);
+        //-----------------
+        //      Municipality
+        //-----------------
+        Route::get('/ctl_municipality_censo',  [censo_controller_v2::class, 'ctl_municipality']);
+        Route::post('/created_municipality_censo', [censo_controller_v2::class, 'created_municipality']);
+        Route::post('/detail_municipality_censo', [censo_controller_v2::class, 'detail_municipality']);
+        Route::put('/updated_municipality_censo', [censo_controller_v2::class, 'updated_municipality']);
+        Route::put('/updated_status_municipality_censo', [censo_controller_v2::class, 'updated_status_municipality']);
+        //-----------------
+        //      Roads
+        //-----------------
+        Route::get('/ctl_roads_censo',         [censo_controller_v2::class, 'ctl_roads']);
+        Route::post('/created_roads_censo', [censo_controller_v2::class, 'created_roads']);
+        Route::post('/detail_roads_censo', [censo_controller_v2::class, 'detail_roads']);
+        Route::put('/updated_roads_censo', [censo_controller_v2::class, 'updated_roads']);
+        Route::put('/updated_status_roads_censo', [censo_controller_v2::class, 'updated_status_roads']);
+        //-----------------
+        //      Settlements
+        //-----------------
+        Route::get('/ctl_settlements_censo',   [censo_controller_v2::class, 'ctl_settlements']);
+        Route::post('/created_settlements_censo', [censo_controller_v2::class, 'created_settlements']);
+        Route::post('/detail_settlements_censo', [censo_controller_v2::class, 'detail_settlements']);
+        Route::put('/updated_settlements_censo', [censo_controller_v2::class, 'updated_settlements']);
+        Route::put('/updated_status_settlements_censo', [censo_controller_v2::class, 'updated_status_settlements']);
+        //Rutas de tablas
+        //-----------------
+        //      Users
+        //-----------------
+        Route::get('/tbl_users_censo',                 [censo_controller_v2::class, 'tbl_users']);
+        Route::post('/created_users_censo', [censo_controller_v2::class, 'created_users']);
+        Route::post('/detail_users_censo', [censo_controller_v2::class, 'detail_users']);
+        Route::put('/updated_user_censo', [censo_controller_v2::class, 'updated_user']);
+        Route::put('/updated_status_user_censo', [censo_controller_v2::class, 'updated_status_user']);
+        //-----------------
+        //      Credentials
+        //-----------------
+        Route::get('/tbl_credentials_censo',   [censo_controller_v2::class, 'tbl_credentials']);
+        Route::post('/recover_password_censo', [censo_controller_v2::class, 'recover_password']);
+        Route::post('/detail_credentials_censo', [censo_controller_v2::class, 'detail_credentials']);
+        Route::put('/updated_status_credentials_censo', [censo_controller_v2::class, 'updated_status_credentials']);
+        //-----------------
+        //      Device User
+        //-----------------
+        Route::get('/tbl_device_user_censo',   [censo_controller_v2::class, 'tbl_device_user']);
+        Route::post('/created_device_user_censo', [censo_controller_v2::class, 'created_device_user']);
+        Route::post('/detail_device_user_censo', [censo_controller_v2::class, 'detail_device_user']);
+        Route::put('/updated_status_device_user_censo', [censo_controller_v2::class, 'updated_status_device_user']);
+        Route::put('/updated_device_user_censo', [censo_controller_v2::class, 'updated_device_user']);
+        //-----------------
+        //      Registered Businesses
+        //-----------------
+        Route::get('/tbl_registered_businesses_censo', [censo_controller_v2::class, 'tbl_registered_businesses']);
+        //-----------------
+        //      Commissions
+        //-----------------
+        Route::get('/tbl_commissions_censo',   [censo_controller_v2::class, 'tbl_commissions']);
+        //-----------------
+        //      Validate Services
+        //-----------------
+        Route::get('/validate_service_censo',   [censo_controller_v2::class, 'validate_service']);
+        //-----------------
+        //      Iniciar sesión
+        //-----------------
+        Route::post('/login_user_censo',   [censo_controller_v2::class, 'login_user']);
+        //-----------------
+        //      Validar usuarios
+        //-----------------
+        Route::post('/validate_email_censo',   [censo_controller_v2::class, 'validate_email']);
+    });
 
     Route::prefix('haytiro')->group(function () {
         Route::post('/created_users_haytiro', [haytiro_controller::class, 'created_users']);
@@ -185,103 +302,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/service_detail_haytiro', [haytiro_controller::class, 'service_detail']);
         Route::put('/update_service_haytiro', [haytiro_controller::class, 'update_service']);
     });
-});
-
-Route::prefix('censoApp-v2')->group(function () {
-    //Rutas de catalogos
-    //-----------------
-    //      Status
-    //-----------------
-    Route::get('/ctl_status_censo',        [censo_controller_v2::class, 'ctl_status']);
-    Route::post('/created_status_censo', [censo_controller_v2::class, 'created_status']);
-    Route::put('/updated_status_censo', [censo_controller_v2::class, 'updated_status']);
-    //-----------------
-    //      Role
-    //-----------------
-    Route::get('/ctl_role_censo',          [censo_controller_v2::class, 'ctl_role']);
-    Route::post('/created_role_censo', [censo_controller_v2::class, 'created_role']);
-    Route::post('/detail_role_censo', [censo_controller_v2::class, 'detail_role']);
-    Route::put('/updated_role_censo', [censo_controller_v2::class, 'updated_role']);
-    Route::put('/updated_status_role_censo', [censo_controller_v2::class, 'updated_status_role']);
-    //-----------------
-    //      Company
-    //-----------------
-    Route::get('/ctl_company_censo',       [censo_controller_v2::class, 'ctl_company']);
-    Route::post('/created_company_censo', [censo_controller_v2::class, 'created_company']);
-    Route::post('/detail_company_censo', [censo_controller_v2::class, 'detail_company']);
-    Route::put('/updated_status_company_censo', [censo_controller_v2::class, 'updated_status_company']);
-    Route::put('/updated_company_censo', [censo_controller_v2::class, 'updated_company']);
-    //-----------------
-    //      Lada
-    //-----------------
-    Route::get('/ctl_lada_censo',          [censo_controller_v2::class, 'ctl_lada']);
-    Route::post('/created_lada_censo', [censo_controller_v2::class, 'created_lada']);
-    Route::post('/detail_lada_censo', [censo_controller_v2::class, 'detail_lada']);
-    Route::put('/updated_status_lada_censo', [censo_controller_v2::class, 'updated_status_lada']);
-    Route::put('/updated_lada_censo', [censo_controller_v2::class, 'updated_lada']);
-    //-----------------
-    //      Type Business
-    //-----------------
-    Route::get('/ctl_type_business_censo', [censo_controller_v2::class, 'ctl_type_business']);
-    Route::post('/created_type_business_censo', [censo_controller_v2::class, 'created_type_business']);
-    Route::post('/detail_type_business_censo', [censo_controller_v2::class, 'detail_type_business']);
-    Route::put('/updated_status_type_business_censo', [censo_controller_v2::class, 'updated_status_type_business']);
-    Route::put('/updated_type_business_censo', [censo_controller_v2::class, 'updated_type_business']);
-    //-----------------
-    //      State
-    //-----------------
-    Route::get('/ctl_state_censo',         [censo_controller_v2::class, 'ctl_state']);
-    Route::post('/created_state_censo', [censo_controller_v2::class, 'created_state']);
-    Route::post('/detail_state_censo', [censo_controller_v2::class, 'detail_state']);
-    Route::put('/updated_status_state_censo', [censo_controller_v2::class, 'updated_status_state']);
-    Route::put('/updated_state_censo', [censo_controller_v2::class, 'updated_state']);
-    //-----------------
-    //      Municipality
-    //-----------------
-    Route::get('/ctl_municipality_censo',  [censo_controller_v2::class, 'ctl_municipality']);
-    Route::post('/created_municipality_censo', [censo_controller_v2::class, 'created_municipality']);
-    Route::post('/detail_municipality_censo', [censo_controller_v2::class, 'detail_municipality']);
-    Route::put('/updated_municipality_censo', [censo_controller_v2::class, 'updated_municipality']);
-    Route::put('/updated_status_municipality_censo', [censo_controller_v2::class, 'updated_status_municipality']);
-    //-----------------
-    //      Roads
-    //-----------------
-    Route::get('/ctl_roads_censo',         [censo_controller_v2::class, 'ctl_roads']);
-    Route::post('/created_roads_censo', [censo_controller_v2::class, 'created_roads']);
-    Route::post('/detail_roads_censo', [censo_controller_v2::class, 'detail_roads']);
-    Route::put('/updated_roads_censo', [censo_controller_v2::class, 'updated_roads']);
-    Route::put('/updated_status_roads_censo', [censo_controller_v2::class, 'updated_status_roads']);
-    //-----------------
-    //      Settlements
-    //-----------------
-    Route::get('/ctl_settlements_censo',   [censo_controller_v2::class, 'ctl_settlements']);
-    Route::post('/created_settlements_censo', [censo_controller_v2::class, 'created_settlements']);
-    Route::post('/detail_settlements_censo', [censo_controller_v2::class, 'detail_settlements']);
-    Route::put('/updated_settlements_censo', [censo_controller_v2::class, 'updated_settlements']);
-    Route::put('/updated_status_settlements_censo', [censo_controller_v2::class, 'updated_status_settlements']);
-    //Rutas de tablas
-    //-----------------
-    //      Users
-    //-----------------
-    Route::get('/tbl_users_censo',                 [censo_controller_v2::class, 'tbl_users']);
-    Route::post('/created_users_censo', [censo_controller_v2::class, 'created_users']);
-    Route::post('/detail_users_censo', [censo_controller_v2::class, 'detail_users']);
-    Route::put('/updated_user_censo', [censo_controller_v2::class, 'updated_user']);
-    Route::put('/updated_status_user_censo', [censo_controller_v2::class, 'updated_status_user']);
-    //-----------------
-    //      Credentials
-    //-----------------
-    Route::get('/tbl_credentials_censo',   [censo_controller_v2::class, 'tbl_credentials']);
-    //-----------------
-    //      Device User
-    //-----------------
-    Route::get('/tbl_device_user_censo',   [censo_controller_v2::class, 'tbl_device_user']);
-    //-----------------
-    //      Registered Businesses
-    //-----------------
-    Route::get('/tbl_registered_businesses_censo', [censo_controller_v2::class, 'tbl_registered_businesses']);
-    //-----------------
-    //      Commissions
-    //-----------------
-    Route::get('/tbl_commissions_censo',   [censo_controller_v2::class, 'tbl_commissions']);
 });

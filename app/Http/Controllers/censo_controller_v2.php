@@ -1371,13 +1371,14 @@ class censo_controller_v2 extends Controller
                     'username' => $credentials['user_name'],
                     'password' => $credentials['password']
                 ];
+                $password_user = md5($credentials['password']);
                 $email = send_email_global::send_email_credentials($data);
                 if ($email['status'] == true) {
                     $last_customer_id = censo_users_v2::where('email', $request->email)->first();
                     $id_user = $last_customer_id->id_users;
                     $created_credentials = censo_credentials_v2::insert([
                         'username' => $credentials['user_name'],
-                        'password' => $credentials['password_token'],
+                        'password' => $password_user,
                         'id_user' => $id_user
                     ]);
                     if ($created_credentials) {
@@ -1578,12 +1579,13 @@ class censo_controller_v2 extends Controller
                     'username' => $credentials['user_name'],
                     'password' => $credentials['password']
                 ];
+                $password_user = md5($credentials['password']);
                 $email = send_email_global::send_email_credentials($data);
                 if ($email['status'] == true) {
                     try {
                         DB::connection('DevCenso')->update('exec recover_password ?,?,?', [
                             $credentials['user_name'],
-                            $credentials['password_token'],
+                            $password_user,
                             $data_user->id_users
                         ]);
                         return response()->json([
@@ -1630,9 +1632,15 @@ class censo_controller_v2 extends Controller
                     censo_credentials_v2::where('id_user', $request->id_user)->update([
                         'id_status' => 2
                     ]);
+                    censo_users_v2::where('id_users', $request->id_user)->update([
+                        'id_status' => 2
+                    ]);
                     break;
                 case 2:
                     censo_credentials_v2::where('id_user', $request->id_user)->update([
+                        'id_status' => 1
+                    ]);
+                    censo_users_v2::where('id_users', $request->id_user)->update([
                         'id_status' => 1
                     ]);
                     break;
@@ -1788,6 +1796,44 @@ class censo_controller_v2 extends Controller
         }
     }
 
+    public function updated_status_device_user(Request $request)
+    {
+        $rules = [
+            'id_user' => 'required',
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ], 200);
+        }
+        try {
+            $id_status = censo_device_user_v2::where('id_user', $request->id_user)->first();
+            switch ($id_status->id_status) {
+                case 1:
+                    censo_device_user_v2::where('id_user', $request->id_user)->update([
+                        'id_status' => 2
+                    ]);
+                    break;
+                case 2:
+                    censo_device_user_v2::where('id_user', $request->id_user)->update([
+                        'id_status' => 1
+                    ]);
+                    break;
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Device user status updated successfully'
+            ], 200);
+        } catch (Exception $cb) {
+            return response()->json([
+                'status' => false,
+                'message' =>  'An error ocurred during query: ' . $cb
+            ], 200);
+        }
+    }
+
     public function detail_device_user(Request $request)
     {
         $rules = [
@@ -1865,7 +1911,7 @@ class censo_controller_v2 extends Controller
             $replace = substr($image_64F, 0, strpos($image_64F, ',') + 1);
             $image = str_replace($replace, '', $image_64F);
             $image = str_replace(' ', '+', $image);
-            $imageNameB = 'CensoApp/negocios/' . $name_business . '/picture_negocio_' . $name_business . '_'. uniqid() . '.' . $extends_picture;
+            $imageNameB = 'CensoApp/negocios/' . $name_business . '/picture_negocio_' . $name_business . '_' . uniqid() . '.' . $extends_picture;
             Storage::disk('public')->put($imageNameB, base64_decode($image));
             $url_image_business = $imageNameB;
             $created_device = censo_registered_businesses_v2::insert(
@@ -1967,5 +2013,130 @@ class censo_controller_v2 extends Controller
             'message' => 'Successful response.',
             'data' => $tbl_commissions
         ], 200);
+    }
+
+    public function comissions_user()
+    {
+        $tbl_commissions = censo_commissions_v2::all()->where('id_status', 1);
+        return response()->json([
+            'status' => true,
+            'message' => 'Successful response.',
+            'data' => $tbl_commissions
+        ], 200);
+    }
+
+    //-------------------------Funciones Validación Servidor-------------------------//
+    public function validate_service()
+    {
+        $tbl_commissions = censo_status_v2::all()->where('id_status', 7);
+        return response()->json([
+            'status' => true,
+            'message' => 'Successful connection.',
+            'data' => $tbl_commissions
+        ], 200);
+    }
+    //-------------------------Funciones Iniciar sesión-------------------------//
+    public function login_user(Request $request)
+    {
+        $rules = [
+            'username' => 'required',
+            'password' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $password_user = md5($request->input('password'));
+
+        $validate_credentials = DB::connection('DevCenso')->table('view_users_global')
+            ->where('username', $request->input('username'))
+            ->where('password', $password_user)->get();
+        if (sizeof($validate_credentials) == 0) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Incorrect username and password.',
+            ], 200);
+        } else {
+            foreach ($validate_credentials as $data) {
+                $id_users = $data->id_users;
+                $name_user = $data->name_user;
+                $last_name_user = $data->last_name_user;
+                $mother_last_name_user = $data->mother_last_name_user;
+                $email = $data->email;
+                $id_lada = $data->id_lada;
+                $cell_phone = $data->cell_phone;
+                $id_state = $data->id_state;
+                $picture_profile = $data->picture_profile;
+                $name_status = $data->name_status;
+                $name_role = $data->name_role;
+                $id_status = $data->id_status;
+                $lada_cell_phone = $data->lada_cell_phone;
+                $name_state = $data->name_state;
+            }
+            $data_user = [
+                'id_users' => $id_users,
+                'name_user' => $name_user,
+                'last_name_user' => $last_name_user,
+                'mother_last_name_user' => $mother_last_name_user,
+                'email' => $email,
+                'id_lada' => $id_lada,
+                'cell_phone' => $cell_phone,
+                'id_state' => $id_state,
+                'picture_profile' => $picture_profile,
+                'name_status' => $name_status,
+                'name_role' => $name_role,
+                'id_status' => $id_status,
+                'lada_cell_phone' => $lada_cell_phone,
+                'name_state' => $name_state,
+            ];
+            if ($id_status == 2) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Blocked account.',
+                ], 200);
+            } else if ($id_status == 8) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Suspended account.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Successful validation',
+                    'data' => $data_user
+                ]);
+            }
+        }
+    }
+    //-------------------------Funciones Validación Correo electronico-------------------------//
+    public function validate_email(Request $request)
+    {
+        $rules = [
+            'email' => 'required'
+        ];
+        $validator = Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->all()
+            ]);
+        }
+        $validate_email = censo_users_v2::where([
+            'email' => $request->input('email')
+        ])->get();
+        if (sizeof($validate_email) == 0) {
+            return response()->json([
+                'status' => true,
+                'message' => 'No records',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => 'User found.',
+            ], 200);
+        }
     }
 }

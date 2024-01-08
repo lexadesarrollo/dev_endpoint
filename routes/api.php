@@ -276,6 +276,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         //      Validar usuarios
         //-----------------
         Route::post('/validate_email_censo',   [censo_controller_v2::class, 'validate_email']);
+        //-----------------
+        //      Consula de selecteds
+        //-----------------
+        Route::get('/selected_ladas',   [censo_controller_v2::class, 'selected_ladas']);
     });
 
     Route::prefix('haytiro')->group(function () {

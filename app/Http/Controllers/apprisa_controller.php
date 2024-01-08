@@ -10,7 +10,6 @@ use App\Models\apprisa_credentials;
 use App\Models\apprisa_documentation;
 use App\Models\apprisa_documentation_view;
 use App\Models\apprisa_drawing;
-use App\Models\apprisa_drawing_modes;
 use App\Models\apprisa_drawing_modes_view;
 use App\Models\apprisa_geofences;
 use App\Models\apprisa_geofences_coords;

@@ -1794,13 +1794,13 @@ class apprisa_controller extends Controller
             } else {
                 apprisa_comissions::where('id_service_commission', $request->id_comission)
                     ->update([
-                        'service_commission' => ucwords(strtolower($request->comission)),
-                        'commission' => $request->state
+                        'service_commission' => strtoupper($request->service),
+                        'commission' => $request->comission
                     ]);
 
                 return response()->json([
                     'status' => true,
-                    'message' => "Se actualizó la comisión " . ucwords(strtolower($request->service)) . "."
+                    'message' => "Se actualizó la comisión " . strtoupper($request->service) . "."
                 ], 200);
             }
         } catch (Exception $th) {

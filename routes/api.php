@@ -101,8 +101,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/update_category_apprisa', [apprisa_controller::class, 'update_category']);
 
         Route::get('/all_ladas_apprisa', [apprisa_controller::class, 'all_ladas']);
+        Route::post('/get_lada_apprisa', [apprisa_controller::class, 'get_lada']);
         Route::post('/create_lada_apprisa', [apprisa_controller::class, 'create_lada']);
         Route::put('/status_lada_apprisa', [apprisa_controller::class, 'status_lada']);
+        Route::put('/update_lada_apprisa', [apprisa_controller::class, 'update_lada']);
 
         Route::get('/all_type_documentation_apprisa', [apprisa_controller::class, 'all_type_documentation']);
         Route::post('/get_type_documentation_apprisa', [apprisa_controller::class, 'get_type_documentation']);

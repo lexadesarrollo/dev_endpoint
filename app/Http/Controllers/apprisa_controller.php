@@ -778,6 +778,35 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function get_lada(Request $request)
+    {
+        try {
+            $rules = [
+                'lada' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $lada = apprisa_lada::where('id_lada', $request->lada)->first();
+                if ($lada) {
+                    return response()->json([
+                        'status' => true,
+                        'data' => $lada
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
     public function create_lada(Request $request)
     {
         try {
@@ -862,6 +891,41 @@ class apprisa_controller extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "An error ocurred, try again. "
+            ], 200);
+        }
+    }
+
+    public function update_lada(Request $request)
+    {
+        try {
+            $rules = [
+                'id_lada' => 'required',
+                'lada' => 'required',
+                'country' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+
+                apprisa_lada::where('id_lada', $request->id_lada)
+                    ->update([
+                        'lada' => $request->lada,
+                        'country' => ucwords(strtolower($request->country))
+                    ]);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Se actualizó la lada del país " . ucwords(strtolower($request->country)) . "."
+                ], 200);
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
             ], 200);
         }
     }

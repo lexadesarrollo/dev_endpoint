@@ -119,8 +119,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/update_draw_apprisa', [apprisa_controller::class, 'update_draw']);
 
         Route::get('/all_municipality_apprisa', [apprisa_controller::class, 'all_municipality']);
+        Route::post('/get_municipality_apprisa', [apprisa_controller::class, 'get_municipality']);
         Route::post('/create_municipality_apprisa', [apprisa_controller::class, 'create_municipality']);
         Route::put('/status_municipality_apprisa', [apprisa_controller::class, 'status_municipality']);
+        Route::put('/update_municipality_apprisa', [apprisa_controller::class, 'update_municipality']);
+
 
         Route::get('/all_states_apprisa', [apprisa_controller::class, 'all_states']);
         Route::post('/create_state_apprisa', [apprisa_controller::class, 'create_state']);

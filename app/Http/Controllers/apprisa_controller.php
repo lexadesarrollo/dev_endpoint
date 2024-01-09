@@ -1277,6 +1277,35 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function get_municipality(Request $request)
+    {
+        try {
+            $rules = [
+                'municipality' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $municipality = apprisa_municipality::where('id_municipality', $request->municipality)->first();
+                if ($municipality) {
+                    return response()->json([
+                        'status' => true,
+                        'data' => $municipality
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
     public function create_municipality(Request $request)
     {
         try {
@@ -1361,6 +1390,40 @@ class apprisa_controller extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "An error ocurred, try again. "
+            ], 200);
+        }
+    }
+
+    public function update_municipality(Request $request)
+    {
+        try {
+            $rules = [
+                'id_municipality' => 'required',
+                'municipality' => 'required',
+                'state' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                apprisa_municipality::where('id_municipality', $request->id_municipality)
+                    ->update([
+                        'municipality' => ucwords(strtolower($request->municipality)),
+                        'state' => $request->state
+                    ]);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Se actualizó el municipio " . ucwords(strtolower($request->municipality)) . "."
+                ], 200);
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
             ], 200);
         }
     }

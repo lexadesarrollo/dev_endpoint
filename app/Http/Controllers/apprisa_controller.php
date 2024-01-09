@@ -1445,6 +1445,35 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function get_state(Request $request)
+    {
+        try {
+            $rules = [
+                'state' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $state = apprisa_states::where('id_states', $request->state)->first();
+                if ($state) {
+                    return response()->json([
+                        'status' => true,
+                        'data' => $state
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
     public function create_state(Request $request)
     {
         try {
@@ -1527,6 +1556,38 @@ class apprisa_controller extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "An error ocurred, try again. "
+            ], 200);
+        }
+    }
+
+    public function update_state(Request $request)
+    {
+        try {
+            $rules = [
+                'id_state' => 'required',
+                'state' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                apprisa_states::where('id_states', $request->id_state)
+                    ->update([
+                        'states' => ucwords(strtolower($request->state))
+                    ]);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Se actualizó el estado " . ucwords(strtolower($request->state)) . "."
+                ], 200);
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
             ], 200);
         }
     }

@@ -126,8 +126,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
         Route::get('/all_states_apprisa', [apprisa_controller::class, 'all_states']);
+        Route::post('/get_state_apprisa', [apprisa_controller::class, 'get_state']);
         Route::post('/create_state_apprisa', [apprisa_controller::class, 'create_state']);
         Route::put('/status_state_apprisa', [apprisa_controller::class, 'status_state']);
+        Route::put('/update_state_apprisa', [apprisa_controller::class, 'update_state']);
 
         Route::get('/all_permissions_apprisa', [apprisa_controller::class, 'all_permissions']);
         Route::post('/create_permission_apprisa', [apprisa_controller::class, 'create_permission']);

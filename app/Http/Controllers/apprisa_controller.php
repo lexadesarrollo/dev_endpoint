@@ -1660,6 +1660,35 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function get_comission(Request $request)
+    {
+        try {
+            $rules = [
+                'comission' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $comission = apprisa_comissions::where('id_service_commission', $request->comission)->first();
+                if ($comission) {
+                    return response()->json([
+                        'status' => true,
+                        'data' => $comission
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
     public function create_comission(Request $request)
     {
         try {
@@ -1744,6 +1773,40 @@ class apprisa_controller extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "An error ocurred, try again. "
+            ], 200);
+        }
+    }
+
+    public function update_comission(Request $request)
+    {
+        try {
+            $rules = [
+                'id_comission' => 'required',
+                'comission' => 'required',
+                'service' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                apprisa_comissions::where('id_service_commission', $request->id_comission)
+                    ->update([
+                        'service_commission' => ucwords(strtolower($request->comission)),
+                        'commission' => $request->state
+                    ]);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Se actualizó la comisión " . ucwords(strtolower($request->service)) . "."
+                ], 200);
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
             ], 200);
         }
     }

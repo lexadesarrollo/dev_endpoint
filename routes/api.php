@@ -136,8 +136,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/create_rol_apprisa', [apprisa_controller::class, 'create_role']);
 
         Route::get('/all_comissions_apprisa', [apprisa_controller::class, 'all_comissions']);
+        Route::post('/get_comission_apprisa', [apprisa_controller::class, 'get_comission']);
         Route::post('/create_comission_apprisa', [apprisa_controller::class, 'create_comission']);
         Route::put('/status_comission_apprisa', [apprisa_controller::class, 'status_comission']);
+        Route::put('/update_comission_apprisa', [apprisa_controller::class, 'update_comission']);
 
         Route::get('/all_status_apprisa', [apprisa_controller::class, 'all_status']);
         Route::post('/create_status_apprisa', [apprisa_controller::class, 'create_status']);

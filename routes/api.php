@@ -147,12 +147,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/create_status_apprisa', [apprisa_controller::class, 'create_status']);
 
         Route::get('/all_type_person_apprisa', [apprisa_controller::class, 'all_type_person']);
+        Route::post('/get_type_person_apprisa', [apprisa_controller::class, 'get_type_person']);
         Route::post('/create_type_person_apprisa', [apprisa_controller::class, 'create_type_person']);
         Route::put('/status_type_person_apprisa', [apprisa_controller::class, 'status_type_person']);
+        Route::put('/update_type_person_apprisa', [apprisa_controller::class, 'update_type_person']);
 
         Route::get('/all_type_vehicle_apprisa', [apprisa_controller::class, 'all_type_vehicle']);
+        Route::post('/get_type_vehicle_apprisa', [apprisa_controller::class, 'get_type_vehicle']);
         Route::post('/create_type_vehicle_apprisa', [apprisa_controller::class, 'create_type_vehicle']);
         Route::put('/status_type_vehicle_apprisa', [apprisa_controller::class, 'status_type_vehicle']);
+        Route::put('/update_type_vehicle_apprisa', [apprisa_controller::class, 'update_type_vehicle']);
     });
 
     Route::prefix('sc_islasg')->group(function () {

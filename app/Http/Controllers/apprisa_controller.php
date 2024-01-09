@@ -1944,6 +1944,35 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function get_type_person(Request $request)
+    {
+        try {
+            $rules = [
+                'type_person' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $type_person = apprisa_type_person::where('id_type_person', $request->type_person)->first();
+                if ($type_person) {
+                    return response()->json([
+                        'status' => true,
+                        'data' => $type_person
+                    ], 200);
+                }
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
     public function create_type_person(Request $request)
     {
         try {
@@ -2030,6 +2059,38 @@ class apprisa_controller extends Controller
         }
     }
 
+    public function update_type_person(Request $request)
+    {
+        try {
+            $rules = [
+                'id_type_person' => 'required',
+                'type_person' => 'required',
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                apprisa_type_person::where('id_type_person', $request->id_type_person)
+                    ->update([
+                        'type_person' => ucwords(strtolower($request->type_person))
+                    ]);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Se actualizó el tipo de persona " . ucwords(strtolower($request->type_person)) . "."
+                ], 200);
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
     public function all_type_vehicle()
     {
         try {
@@ -2039,6 +2100,35 @@ class apprisa_controller extends Controller
                 'status' => true,
                 'data' => $type_vehicle
             ], 200);
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
+            ], 200);
+        }
+    }
+
+    public function get_type_vehicle(Request $request)
+    {
+        try {
+            $rules = [
+                'type_vehicle' => 'required'
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                $type_vehicle = apprisa_type_vehicle::where('id_type_vehicle', $request->type_vehicle)->first();
+                if ($type_vehicle) {
+                    return response()->json([
+                        'status' => true,
+                        'data' => $type_vehicle
+                    ], 200);
+                }
+            }
         } catch (Exception $th) {
             return response()->json([
                 'status' => false,
@@ -2129,6 +2219,38 @@ class apprisa_controller extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "An error ocurred, try again. "
+            ], 200);
+        }
+    }
+
+    public function update_type_vehicle(Request $request)
+    {
+        try {
+            $rules = [
+                'id_type_vehicle' => 'required',
+                'type_vehicle' => 'required',
+            ];
+            $validator = Validator::make($request->input(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->all()
+                ], 200);
+            } else {
+                apprisa_type_vehicle::where('id_type_vehicle', $request->id_type_vehicle)
+                    ->update([
+                        'vehicle' => ucwords(strtolower($request->type_vehicle))
+                    ]);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Se actualizó el vehículo " . ucwords(strtolower($request->type_vehicle)) . "."
+                ], 200);
+            }
+        } catch (Exception $th) {
+            return response()->json([
+                'status' => false,
+                'message' => "An error ocurred, try again."
             ], 200);
         }
     }

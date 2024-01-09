@@ -160,6 +160,12 @@ class send_email_global extends Controller
                 self::$host = 'adminalba.mx';
                 self::$username = 'soporte@adminalba.mx';
                 self::$password = '4T,1CUNJ^J8Z';
+                self::$background = 'https://da-pw.mx/storage/Wallpapers/wallpaper_censo.jpg';
+                self::$logo = 'https://adminalba.mx/imgs/logo.png';
+                self::$color = '#ead22d';
+                self::$url = 'https://adminalba.mx/';
+                self::$texto = 'Descargar la aplicación';
+                self::$message = 'Te damos la bienvenida,';
 
                 $comb = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890{[(-._;,)-]}';
                 $pass = array();
@@ -187,7 +193,8 @@ class send_email_global extends Controller
                 $mail->addAddress($data["email"]);
                 $mail->isHTML(true);
                 $mail->Subject = 'Comprobación de autenticación 2FA Alba';
-                $mail->Body = ' <body style="background-size: cover; background-repeat: no-repeat;">
+                $mail->Body = ' <body style="background-image: url(' . self::$background . '); background-size: cover; background-repeat: no-repeat;">
+                                <center><img style="width:65%; padding-bottom: 1.5em; padding-top: 1.5em" src="' . self::$logo . '"></center>
                                 <h1 style="text-align:center"><b>Código de seguridad para Alba</b></h1><br>
                                 <div style="padding: 10px !important; background-color: rgba(255, 255, 255, 0.8); border-radius: 15px; text-align: justify; -webkit-box-shadow: 0 2px 10px rgba(0,0,0,0.2);
                                 -moz-box-shadow: 0 2px 10px rgba(0,0,0,0.2);
